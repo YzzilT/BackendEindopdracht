@@ -1,8 +1,16 @@
 package com.example.backendeindopdracht.DTO.outputDto;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-public class ProductOutputDto {
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public class ProductOutputDTO {
 
     private Long id;
     private String name;
