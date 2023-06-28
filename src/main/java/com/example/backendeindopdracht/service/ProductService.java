@@ -8,6 +8,9 @@ import com.example.backendeindopdracht.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @AllArgsConstructor
 @Service
@@ -21,6 +24,17 @@ public class ProductService {
         Product product = transferInputDTOProductToProduct(productInputDTO);
         productRepository.save(product);
         return transferProductToDTO(product);
+    }
+
+    //GET ALL
+    public List<ProductOutputDTO> getAllProducts(){
+        Iterable<Product> products = productRepository.findAll();
+        List<ProductOutputDTO> productOutputDTOList = new ArrayList<>();
+
+        for (Product product : products){
+            productOutputDTOList.add(transferProductToDTO(product));
+        }
+        return productOutputDTOList;
     }
 
 
