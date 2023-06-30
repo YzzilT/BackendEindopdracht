@@ -8,6 +8,9 @@ import com.example.backendeindopdracht.repository.InvoiceRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @AllArgsConstructor
 @Service
 public class InvoiceService {
@@ -19,10 +22,20 @@ public class InvoiceService {
     public InvoiceOutputDTO addInvoice (InvoiceInputDTO invoiceInputDTO){
 
         Invoice invoice = transferInvoiceInputDtoToInvoice(invoiceInputDTO);
-
         invoiceRepository.save(invoice);
 
         return transferInvoiceToOutputDTO(invoice);
+    }
+
+    //GET ALL
+    public List<InvoiceOutputDTO> getAllInvoices(){
+        Iterable<Invoice> invoices = invoiceRepository.findAll();
+        List<InvoiceOutputDTO> invoiceOutputDTOList = new ArrayList<>();
+
+        for (Invoice invoice : invoices){
+            invoiceOutputDTOList.add(transferInvoiceToOutputDTO(invoice));
+        }
+        return invoiceOutputDTOList;
     }
 
 
