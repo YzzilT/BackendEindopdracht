@@ -3,6 +3,7 @@ package com.example.backendeindopdracht.controller;
 
 import com.example.backendeindopdracht.DTO.inputDto.InvoiceInputDTO;
 import com.example.backendeindopdracht.DTO.outputDto.InvoiceOutputDTO;
+import com.example.backendeindopdracht.model.Invoice;
 import com.example.backendeindopdracht.service.InvoiceService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,5 +30,21 @@ public class InvoiceController {
     @GetMapping
     public ResponseEntity<List<InvoiceOutputDTO>> getAllInvoices(){
         return ResponseEntity.ok().body(invoiceService.getAllInvoices());
+    }
+
+    //GET BY ID
+    @GetMapping("/{id}")
+    public ResponseEntity<InvoiceOutputDTO> getInvoiceById(@PathVariable Long id){
+        return ResponseEntity.ok().body(invoiceService.getInvoiceById(id));
+    }
+
+    //PUT
+
+
+    //DELETE
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Invoice> deleteInvoice (@PathVariable Long id){
+        invoiceService.deleteInvoice(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -43,7 +43,7 @@ public class ProductService {
     public ProductOutputDTO getProductById( Long id){
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isEmpty()){
-            throw new RecordNotFoundException("No product find with id: " + id);
+            throw new RecordNotFoundException("No product found with id: " + id);
         }
         Product product = optionalProduct.get();
         return transferProductToDTO(product);
