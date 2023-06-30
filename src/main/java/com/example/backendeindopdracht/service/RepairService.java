@@ -13,6 +13,13 @@ public class RepairService {
 
     private final RepairRepository repairRepository;
 
+    //POST
+    public RepairOutputDTO addRepair (RepairInputDTO repairInputDTO){
+        Repair repair = transferInputDtoRepairToRepair(repairInputDTO);
+        repairRepository.save(repair);
+        return transferRepairToDTO(repair);
+    }
+
 
 
 
