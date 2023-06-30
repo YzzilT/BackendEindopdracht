@@ -3,6 +3,7 @@ package com.example.backendeindopdracht.controller;
 
 import com.example.backendeindopdracht.DTO.inputDto.OrderInputDTO;
 import com.example.backendeindopdracht.DTO.outputDto.OrderOutputDTO;
+import com.example.backendeindopdracht.model.Order;
 import com.example.backendeindopdracht.service.OrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,17 @@ public class OrderController {
     @GetMapping("/{id}")
     public ResponseEntity<OrderOutputDTO> getOrderById (@PathVariable Long id){
         return ResponseEntity.ok().body(orderService.getOrderById(id));
+    }
+
+    //PUT
+
+
+
+    //DELETE
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Order> deleteOrder (@PathVariable Long id){
+        orderService.deleteOrder(id);
+        return ResponseEntity.noContent().build();
     }
 
 

@@ -49,6 +49,18 @@ public class OrderService {
         return transferOrderToOutputDTO(order);
     }
 
+    //PUT
+
+
+    //DELETE
+    public void deleteOrder(Long id){
+        Optional<Order> optionalOrder = orderRepository.findById(id);
+        if (optionalOrder.isEmpty()){
+            throw new RecordNotFoundException("No order was found with id: " + id);
+        }
+        orderRepository.deleteById(id);
+    }
+
 
 
 
