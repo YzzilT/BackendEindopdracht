@@ -6,22 +6,19 @@ import com.example.backendeindopdracht.DTO.outputDto.ProductOutputDTO;
 import com.example.backendeindopdracht.model.Product;
 import com.example.backendeindopdracht.service.ProductService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@AllArgsConstructor
 @RestController
 @RequestMapping("/products")
 public class ProductController {
 
     private final ProductService productService;
-
-    public ProductController(ProductService productService) {
-        this.productService = productService;
-    }
 
     //POST
     @PostMapping("/add")
