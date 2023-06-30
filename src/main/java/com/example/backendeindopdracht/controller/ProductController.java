@@ -3,9 +3,12 @@ package com.example.backendeindopdracht.controller;
 
 import com.example.backendeindopdracht.DTO.inputDto.ProductInputDTO;
 import com.example.backendeindopdracht.DTO.outputDto.ProductOutputDTO;
+import com.example.backendeindopdracht.model.Product;
 import com.example.backendeindopdracht.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,6 +42,23 @@ public class ProductController {
         return ResponseEntity.ok().body(productService.getProductById(id));
     }
 
+   /* //PUT
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductOutputDTO> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductInputDTO productInputDTO){
+        return ResponseEntity.ok().body(productService.updateProduct(productInputDTO, id));
+    }*/
+
+
+    //DELETE
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Product> deleteProduct (@PathVariable Long id){
+        productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
+    }
 
 
 }
+
+
+
+

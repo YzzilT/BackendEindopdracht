@@ -50,9 +50,36 @@ public class ProductService {
     }
 
 
+   /*//PUT
+    public ProductOutputDTO updateProduct(ProductInputDTO productInputDTO, Long id){
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isEmpty()){
+            throw new RecordNotFoundException("No product found with id: " + id);
+        } else {
+            ProductOutputDTO updateProduct = transferInputDTOProductToProduct(productInputDTO, id);
+            updateProduct.setId(id);
+
+            return updateProduct;
+        }
+
+    }*/
+
+
+    //DELETE
+    public void deleteProduct(Long id){
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isEmpty()){
+            throw new RecordNotFoundException("No product found with id: " + id);
+        }
+        productRepository.deleteById(id);
+    }
+
+
+
     public Product transferInputDTOProductToProduct(ProductInputDTO productInputDTO){
         Product product = new Product();
 
+        //product.setId(productInputDTO.getId());
         product.setName(productInputDTO.getName());
         product.setPrice(productInputDTO.getPrice());
         product.setCurrentStock(productInputDTO.getCurrentStock());

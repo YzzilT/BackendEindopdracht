@@ -13,6 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ProductInputDTO {
 
+    private Long id;
     @NotBlank
     private String name;
     @Min(value = 0 , message = "The product cant be negative in price")
