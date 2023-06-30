@@ -8,6 +8,9 @@ import com.example.backendeindopdracht.repository.OrderRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @AllArgsConstructor
 @Service
 public class OrderService {
@@ -21,6 +24,17 @@ public class OrderService {
         orderRepository.save(order);
         return transferOrderToOutputDTO(order);
 
+    }
+
+    //GET ALL
+    public List<OrderOutputDTO> getAllOrders(){
+        Iterable<Order> orders = orderRepository.findAll();
+        List<OrderOutputDTO> orderOutputDTOList = new ArrayList<>();
+
+        for (Order order : orders){
+            orderOutputDTOList.add(transferOrderToOutputDTO(order));
+        }
+        return orderOutputDTOList;
     }
 
 
