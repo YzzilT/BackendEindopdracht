@@ -2,19 +2,12 @@ package com.example.backendeindopdracht.controller;
 
 
 import com.example.backendeindopdracht.DTO.inputDto.OrderInputDTO;
-import com.example.backendeindopdracht.DTO.inputDto.ProductInputDTO;
 import com.example.backendeindopdracht.DTO.outputDto.OrderOutputDTO;
-import com.example.backendeindopdracht.DTO.outputDto.ProductOutputDTO;
-import com.example.backendeindopdracht.model.Order;
 import com.example.backendeindopdracht.service.OrderService;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @AllArgsConstructor
@@ -35,6 +28,12 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<List<OrderOutputDTO>> getAllProducts(){
         return ResponseEntity.ok().body(orderService.getAllOrders());
+    }
+
+    //GET BY ID
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderOutputDTO> getOrderById (@PathVariable Long id){
+        return ResponseEntity.ok().body(orderService.getOrderById(id));
     }
 
 

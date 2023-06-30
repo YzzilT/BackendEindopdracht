@@ -3,6 +3,7 @@ package com.example.backendeindopdracht.service;
 
 import com.example.backendeindopdracht.DTO.inputDto.OrderInputDTO;
 import com.example.backendeindopdracht.DTO.outputDto.OrderOutputDTO;
+import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
 import com.example.backendeindopdracht.model.Order;
 import com.example.backendeindopdracht.repository.OrderRepository;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -35,6 +37,16 @@ public class OrderService {
             orderOutputDTOList.add(transferOrderToOutputDTO(order));
         }
         return orderOutputDTOList;
+    }
+
+    //GET BY ID
+    public OrderOutputDTO getOrderById(Long id){
+        Optional<Order> optionalOrder = orderRepository.findById(id);
+        if (optionalOrder.isEmpty()){
+            throw new RecordNotFoundException("No order found with id: " + id);
+        }
+        Order order = optionalOrder.get();
+        return transferOrderToOutputDTO(order);
     }
 
 
