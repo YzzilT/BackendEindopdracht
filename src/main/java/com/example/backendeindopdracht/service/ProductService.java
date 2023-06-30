@@ -23,7 +23,7 @@ public class ProductService {
 
     //POST
     public ProductOutputDTO addProduct (ProductInputDTO productInputDTO){
-        Product product = transferInputDTOProductToProduct(productInputDTO);
+        Product product = transferInputDtoProductToProduct(productInputDTO);
         productRepository.save(product);
         return transferProductToDTO(product);
     }
@@ -56,7 +56,7 @@ public class ProductService {
         if (optionalProduct.isEmpty()){
             throw new RecordNotFoundException("No product found with id: " + id);
         } else {
-            ProductOutputDTO updateProduct = transferInputDTOProductToProduct(productInputDTO, id);
+            ProductOutputDTO updateProduct = transferInputDtoProductToProduct(productInputDTO, id);
             updateProduct.setId(id);
 
             return updateProduct;
@@ -76,7 +76,7 @@ public class ProductService {
 
 
 
-    public Product transferInputDTOProductToProduct(ProductInputDTO productInputDTO){
+    public Product transferInputDtoProductToProduct(ProductInputDTO productInputDTO){
         Product product = new Product();
 
         //product.setId(productInputDTO.getId());
