@@ -1,27 +1,24 @@
-package com.example.backendeindopdracht.model;
+package com.example.backendeindopdracht.DTO.inputDto;
 
-import jakarta.persistence.*;
+import com.example.backendeindopdracht.model.Role;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@Getter
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "users")
-public class User {
+public class UserInputDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String firstName;
     private String lastName;
     private String password;
     private String email;
     @Enumerated(EnumType.STRING)
-    @Column(name = "role")
     private Role role;
 }
