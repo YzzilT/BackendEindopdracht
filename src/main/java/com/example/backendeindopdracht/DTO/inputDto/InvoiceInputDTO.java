@@ -16,7 +16,8 @@ public class InvoiceInputDTO {
 
     private Long invoiceNumber;
     private String customerName;
-    private LocalDate invoiceDate;
+    private String invoiceDate;
     //private List<Product> products;
     private BigDecimal totalAmount;
+    private String email;
 }

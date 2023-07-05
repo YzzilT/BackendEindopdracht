@@ -1,5 +1,6 @@
 package com.example.backendeindopdracht.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,10 +20,13 @@ import java.util.List;
 public class Invoice {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String email;
+    @OneToOne(mappedBy = "invoice")
+    @JsonIgnore
+    private Order order;
     private Long invoiceNumber;
     private String customerName;
-    private LocalDate invoiceDate;
-    //private List<Product> products;
+    private String invoiceDate;
     private BigDecimal totalAmount;
+
 }

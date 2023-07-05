@@ -24,6 +24,9 @@ public class Product {
     private int currentStock;
     private String description;
 
+    @ManyToOne
+    @JoinColumn
+    private Order order;
 
 }
 
