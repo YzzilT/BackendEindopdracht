@@ -5,20 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
-
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class InvoiceOutputDTO {
+public class RepairOutputDTO {
 
-    private Long invoiceNumber;
+    private Long repairNumber;
     private String customerName;
-    private String invoiceDate;
-    //private List<Product> products;
-    private BigDecimal totalAmount;
-    private String email;
+    private String productName;
+    private String problemDescription;
 }

@@ -64,10 +64,11 @@ public class OrderService {
 
 
 
+
+
     public Order transferOrderInputDtoToOrder(OrderInputDTO orderInputDTO){
         Order order = new Order();
 
-        order.setProductName(orderInputDTO.getProductName());
         order.setCustomerName(orderInputDTO.getCustomerName());
         order.setUnitPrice(orderInputDTO.getUnitPrice());
         order.setQuantity(orderInputDTO.getQuantity());
@@ -80,7 +81,7 @@ public class OrderService {
 
         OrderOutputDTO orderOutputDTO = new OrderOutputDTO();
 
-        orderOutputDTO.setProductName(order.getProductName());
+
         orderOutputDTO.setCustomerName(order.getCustomerName());
         orderOutputDTO.setUnitPrice(order.getUnitPrice());
         orderOutputDTO.setQuantity(order.getQuantity());

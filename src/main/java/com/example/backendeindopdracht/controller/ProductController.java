@@ -39,7 +39,7 @@ public class ProductController {
         return ResponseEntity.ok().body(productService.getProductById(id));
     }
 
-   /* //PUT
+  /* //PUT
     @PutMapping("/{id}")
     public ResponseEntity<ProductOutputDTO> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductInputDTO productInputDTO){
         return ResponseEntity.ok().body(productService.updateProduct(productInputDTO, id));

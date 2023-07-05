@@ -22,6 +22,8 @@ public class OrderController {
     @PostMapping("/add")
     public ResponseEntity<OrderOutputDTO> addOrder (@RequestBody OrderInputDTO orderInputDTO){
         OrderOutputDTO addedOrder = orderService.addOrder(orderInputDTO);
+        //TODO addedOrder.updateStock();
+        //addedOrder.calculateTotalPrice();
         return ResponseEntity.status(HttpStatus.CREATED).body(addedOrder);
     }
 
@@ -49,6 +51,11 @@ public class OrderController {
     }
 
 
+   /* public void calculateStock() {
+        Order o = null;
+        o.quantity = 0;
+        o.setQuantity(0);
+    }*/
 
 
 

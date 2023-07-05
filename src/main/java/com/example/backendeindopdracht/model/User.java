@@ -1,32 +1,27 @@
 package com.example.backendeindopdracht.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Setter
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "products")
-public class Product {
+@Table(name = "users")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private double price;
-    private int originalStock;
-    private int currentStock;
-    private String description;
-
-    @ManyToOne
-    @JoinColumn
-    private Order order;
-
+    private String firstName;
+    private String lastName;
+    private String password;
+    private String email;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private Role role;
 }
-
