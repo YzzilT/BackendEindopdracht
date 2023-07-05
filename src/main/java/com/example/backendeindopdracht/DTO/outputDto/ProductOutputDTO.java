@@ -1,6 +1,7 @@
 package com.example.backendeindopdracht.DTO.outputDto;
 
 
+import com.example.backendeindopdracht.model.ProductType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,4 +19,5 @@ public class ProductOutputDTO {
     private int originalStock;
     private int currentStock;
     private String description;
+    private ProductType productType;
 }
