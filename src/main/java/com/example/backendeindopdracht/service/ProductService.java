@@ -85,6 +85,7 @@ public class ProductService {
         product.setCurrentStock(productInputDTO.getCurrentStock());
         product.setOriginalStock(productInputDTO.getOriginalStock());
         product.setDescription(productInputDTO.getDescription());
+        product.setProductType(productInputDTO.getProductType());
 
         return product;
 
@@ -99,6 +100,7 @@ public class ProductService {
         productOutputDTO.setOriginalStock(product.getOriginalStock());
         productOutputDTO.setPrice(product.getPrice());
         productOutputDTO.setDescription(product.getDescription());
+        productOutputDTO.setProductType(product.getProductType());
 
         return productOutputDTO;
     }
