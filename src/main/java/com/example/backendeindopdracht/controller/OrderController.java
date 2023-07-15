@@ -4,6 +4,9 @@ package com.example.backendeindopdracht.controller;
 import com.example.backendeindopdracht.DTO.inputDto.OrderInputDTO;
 import com.example.backendeindopdracht.DTO.outputDto.OrderOutputDTO;
 import com.example.backendeindopdracht.model.Order;
+import com.example.backendeindopdracht.model.OrderLine;
+import com.example.backendeindopdracht.repository.OrderLineRepository;
+import com.example.backendeindopdracht.repository.OrderRepository;
 import com.example.backendeindopdracht.service.OrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +21,7 @@ public class OrderController {
 
     private final OrderService orderService;
 
+
     //POST
     @PostMapping("/add")
     public ResponseEntity<OrderOutputDTO> addOrder (@RequestBody OrderInputDTO orderInputDTO){
@@ -27,9 +31,22 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(addedOrder);
     }
 
+    private final OrderLineRepository orderLineRepository;
+    private final OrderRepository orderRepository;
+
+    @PostMapping("/addOrderLine/{orderid}/{product}")
+    public ResponseEntity<OrderLine> addOrder (@RequestBody OrderLine orderline,@PathVariable int orderid){
+        Order order = orderRepository.findById((long) orderid).get();
+        orderline.setOrder(order);
+        OrderLine orderlineout = orderLineRepository.save(orderline);
+        orderlineout.setOrder(null);
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderlineout);
+    }
+
+
     //GET ALL
     @GetMapping
-    public ResponseEntity<List<OrderOutputDTO>> getAllProducts(){
+    public ResponseEntity<List<OrderOutputDTO>> getAllOrders(){
         return ResponseEntity.ok().body(orderService.getAllOrders());
     }
 

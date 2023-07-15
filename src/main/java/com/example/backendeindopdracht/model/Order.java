@@ -23,13 +23,23 @@ public class Order {
     private Long id;
     @OneToOne
     private Invoice invoice;
-    @OneToMany(mappedBy = "order")
-    @JsonIgnore
-    private List<Product> products;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderLine> orderLines;
     private String customerName;
     private double unitPrice;
-    private double quantity;
+    private int quantity;
     private BigDecimal totalAmount;
+
+
+    public void addOrderLine(OrderLine orderLine) {
+        if (orderLines == null) {
+            orderLines = new ArrayList<>();
+        }
+        orderLines.add(orderLine);
+        orderLine.setOrder(this);
+    }
+
+
 
     /*public void setQuantity(double q) {
         if q < 0 {
@@ -54,6 +64,13 @@ public void updateStock() {
         }
         return totalAmount;
     }
+
+    public BigDecimal calculateTotal(){
+		BigDecimal total = BigDecimal.ZERO;
+		for (LineItem lineItem : this.getLinesItems()) {
+			total.add(lineItem.getPrice().multiply(new BigDecimal(lineItem.getQuantity())));
+		}
+		return total;
 
 
 

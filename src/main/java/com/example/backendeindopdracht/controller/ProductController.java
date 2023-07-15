@@ -5,11 +5,9 @@ import com.example.backendeindopdracht.DTO.inputDto.ProductInputDTO;
 import com.example.backendeindopdracht.DTO.outputDto.ProductOutputDTO;
 import com.example.backendeindopdracht.model.Product;
 import com.example.backendeindopdracht.service.ProductService;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,8 +20,8 @@ public class ProductController {
 
     //POST
     @PostMapping("/add")
-    public ResponseEntity<ProductOutputDTO> addProduct (@RequestBody ProductInputDTO productInputDto){
-        ProductOutputDTO addedProduct = productService.addProduct(productInputDto);
+    public ResponseEntity<ProductOutputDTO> createProduct(@RequestBody ProductInputDTO productInputDto){
+        ProductOutputDTO addedProduct = productService.createProduct(productInputDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(addedProduct);
     }
 

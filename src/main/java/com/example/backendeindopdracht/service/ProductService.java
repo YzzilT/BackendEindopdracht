@@ -4,7 +4,10 @@ package com.example.backendeindopdracht.service;
 import com.example.backendeindopdracht.DTO.inputDto.ProductInputDTO;
 import com.example.backendeindopdracht.DTO.outputDto.ProductOutputDTO;
 import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
+import com.example.backendeindopdracht.model.Order;
+import com.example.backendeindopdracht.model.OrderLine;
 import com.example.backendeindopdracht.model.Product;
+import com.example.backendeindopdracht.repository.OrderRepository;
 import com.example.backendeindopdracht.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,14 +22,31 @@ import java.util.Optional;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final OrderRepository orderRepository;
 
 
     //POST
-    public ProductOutputDTO addProduct (ProductInputDTO productInputDTO){
-        Product product = transferInputDtoProductToProduct(productInputDTO);
+    public ProductOutputDTO createProduct (ProductInputDTO productInputDTO){
+        Product product = new Product();
+        Order order = new Order();
+        OrderLine orderLine = new OrderLine();
+        product.setOrder(order);
+        order.addOrderLine(orderLine);
         productRepository.save(product);
+        orderRepository.save(order);
+
         return transferProductToDTO(product);
     }
+    /*public ProductOutputDTO addProduct (ProductInputDTO productInputDTO, Long orderId){
+        Product product = transferInputDtoProductToProduct(productInputDTO);
+        Order order = orderRepository.findById(orderId).orElseThrow(()-> new RecordNotFoundException("no order found with id: " + orderId));
+        product.setOrder(order);
+        order.getProducts().add(product);
+
+        orderRepository.save(order); //save both the order and the product together
+
+        return transferProductToDTO(product);
+    }*/
 
     //GET ALL
     public List<ProductOutputDTO> getAllProducts(){
@@ -48,6 +68,8 @@ public class ProductService {
         Product product = optionalProduct.get();
         return transferProductToDTO(product);
     }
+
+
 
 
    /*//PUT
@@ -86,6 +108,7 @@ public class ProductService {
         product.setOriginalStock(productInputDTO.getOriginalStock());
         product.setDescription(productInputDTO.getDescription());
         product.setProductType(productInputDTO.getProductType());
+
 
         return product;
 

@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Setter
 @Getter
@@ -23,15 +26,20 @@ public class Product {
     private int originalStock;
     private int currentStock;
     private String description;
-    @NotNull(message = "Product type must be selected")
+    //@NotNull(message = "Product type must be selected")
     @Enumerated(EnumType.STRING)
     private ProductType productType;
     //TODO message doesn't work, fix later
-    //TODO where does order_id in pgAdmin come from?
+    //TODO order_id
 
-    @ManyToOne
-    @JoinColumn
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "order_id", insertable = false, updatable = false)
     private Order order;
+
+    @OneToMany(mappedBy = "product")//,fetch = FetchType.LAZY
+    private List<OrderLine> orderLines = new ArrayList<>();
+
+
 
 }
 

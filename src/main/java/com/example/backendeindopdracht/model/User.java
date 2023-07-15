@@ -21,7 +21,9 @@ public class User {
     private String lastName;
     private String password;
     private String email;
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role")
+    @ManyToOne
+    @JoinColumn(name = "role_id")
     private Role role;
+
+    private int roleid;
 }
