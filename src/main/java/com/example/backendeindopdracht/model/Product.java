@@ -30,13 +30,13 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private ProductType productType;
     //TODO message doesn't work, fix later
-    //TODO order_id
+
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "order_id", insertable = false, updatable = false)
     private Order order;
 
-    @OneToMany(mappedBy = "product")//,fetch = FetchType.LAZY
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
     private List<OrderLine> orderLines = new ArrayList<>();
 
 

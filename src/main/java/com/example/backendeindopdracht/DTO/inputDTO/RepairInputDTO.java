@@ -1,4 +1,4 @@
-package com.example.backendeindopdracht.DTO.inputDto;
+package com.example.backendeindopdracht.DTO.inputDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,10 +9,10 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderLineInputDto {
+public class RepairInputDTO {
 
-    private Long orderId;
+    private Long repairNumber;
+    private String customerName;
     private String productName;
-    private int quantity;
-    private double unitPrice;
+    private String problemDescription;
 }

@@ -1,4 +1,4 @@
-package com.example.backendeindopdracht.DTO.inputDto;
+package com.example.backendeindopdracht.DTO.inputDTO;
 
 import com.example.backendeindopdracht.model.Role;
 import jakarta.persistence.EnumType;
@@ -19,6 +19,5 @@ public class UserInputDTO {
     private String lastName;
     private String password;
     private String email;
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    private Long roleid;
 }

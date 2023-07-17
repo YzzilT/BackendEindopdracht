@@ -1,18 +1,18 @@
 package com.example.backendeindopdracht.service;
 
 
-import com.example.backendeindopdracht.DTO.inputDto.OrderInputDTO;
-import com.example.backendeindopdracht.DTO.inputDto.OrderLineInputDto;
-import com.example.backendeindopdracht.DTO.outputDto.OrderLineOutputDto;
-import com.example.backendeindopdracht.DTO.outputDto.OrderOutputDTO;
+import com.example.backendeindopdracht.DTO.inputDTO.OrderInputDTO;
+import com.example.backendeindopdracht.DTO.inputDTO.OrderlineInputDTO;
+import com.example.backendeindopdracht.DTO.outputDTO.OrderLineOutputDTO;
+import com.example.backendeindopdracht.DTO.outputDTO.OrderOutputDTO;
 import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
+import com.example.backendeindopdracht.model.User;
 import com.example.backendeindopdracht.model.Order;
 import com.example.backendeindopdracht.model.OrderLine;
-import com.example.backendeindopdracht.model.Product;
 import com.example.backendeindopdracht.repository.OrderRepository;
 import com.example.backendeindopdracht.repository.ProductRepository;
+import com.example.backendeindopdracht.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
-
+    private final UserRepository userRepository;
 
 
 
@@ -35,7 +35,6 @@ public class OrderService {
         Order order = transferOrderInputDtoToOrder(orderInputDTO);
         order = orderRepository.save(order);
         return transferOrderToOutputDTO(order);
-
     }
 
     //GET ALL
@@ -91,7 +90,7 @@ public class OrderService {
         return transferOrderToOutputDTO(order);
     }
 */
-    public OrderLineOutputDto addOrderLine(Long orderId, OrderLineInputDto orderLineInputDto){
+    public OrderLineOutputDTO addOrderLine(Long orderId, OrderlineInputDTO orderLineInputDto){
         Order order = orderRepository.findById(orderId).orElseThrow(()-> new RecordNotFoundException("No order found with id: " + orderId));
 
         OrderLine orderLine = new OrderLine();
@@ -103,7 +102,7 @@ public class OrderService {
 
         orderRepository.save(order);
 
-        return new OrderLineOutputDto(orderLine.getOrderId(), orderLine.getQuantity(), orderLine.getUnitPrice(), orderLine.getProductName());
+        return new OrderLineOutputDTO(orderLine.getId(), orderLine.getQuantity(), orderLine.getUnitPrice(), orderLine.getProductName());
     }
 
    /* public void addProductToOrder(Order order, Product product){
@@ -118,11 +117,12 @@ public class OrderService {
     public Order transferOrderInputDtoToOrder(OrderInputDTO orderInputDTO){
         Order order = new Order();
 
+        order.setId(orderInputDTO.getId());
+        order.setInvoice(orderInputDTO.getInvoice());
+        order.setOrderLines(orderInputDTO.getOrderLines());
         order.setCustomerName(orderInputDTO.getCustomerName());
-        order.setUnitPrice(orderInputDTO.getUnitPrice());
-        order.setQuantity(orderInputDTO.getQuantity());
         order.setTotalAmount(orderInputDTO.getTotalAmount());
-
+        order.setUserid(orderInputDTO.getUserId());
         return order;
     }
 
@@ -131,10 +131,11 @@ public class OrderService {
         OrderOutputDTO orderOutputDTO = new OrderOutputDTO();
 
         orderOutputDTO.setId(order.getId());
+        orderOutputDTO.setInvoice(order.getInvoice());
+        orderOutputDTO.setOrderLines(order.getOrderLines());
         orderOutputDTO.setCustomerName(order.getCustomerName());
-        orderOutputDTO.setUnitPrice(order.getUnitPrice());
-        orderOutputDTO.setQuantity(order.getQuantity());
         orderOutputDTO.setTotalAmount(order.getTotalAmount());
+        orderOutputDTO.setUserid(order.getUserid());
 
         return orderOutputDTO;
 

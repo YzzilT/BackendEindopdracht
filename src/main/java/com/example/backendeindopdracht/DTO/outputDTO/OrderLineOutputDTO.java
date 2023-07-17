@@ -1,4 +1,4 @@
-package com.example.backendeindopdracht.DTO.outputDto;
+package com.example.backendeindopdracht.DTO.outputDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderLineOutputDto {
+public class OrderLineOutputDTO {
 
 
     private String productName;
@@ -17,6 +17,6 @@ public class OrderLineOutputDto {
     private double unitPrice;
 
 
-    public OrderLineOutputDto(Long orderId, int quantity, double unitPrice, String productName) {
+    public OrderLineOutputDTO(Long orderId, int quantity, double unitPrice, String productName) {
     }
 }

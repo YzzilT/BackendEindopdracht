@@ -1,7 +1,7 @@
 package com.example.backendeindopdracht.controller;
 
-import com.example.backendeindopdracht.DTO.inputDto.RepairInputDTO;
-import com.example.backendeindopdracht.DTO.outputDto.RepairOutputDTO;
+import com.example.backendeindopdracht.DTO.inputDTO.RepairInputDTO;
+import com.example.backendeindopdracht.DTO.outputDTO.RepairOutputDTO;
 import com.example.backendeindopdracht.service.RepairService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

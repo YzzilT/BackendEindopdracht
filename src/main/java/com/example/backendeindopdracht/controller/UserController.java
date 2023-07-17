@@ -1,8 +1,9 @@
 package com.example.backendeindopdracht.controller;
 
-import com.example.backendeindopdracht.DTO.inputDto.UserInputDTO;
-import com.example.backendeindopdracht.DTO.outputDto.UserOutputDTO;
-import com.example.backendeindopdracht.model.Role;
+import com.example.backendeindopdracht.DTO.inputDTO.OrderInputDTO;
+import com.example.backendeindopdracht.DTO.inputDTO.UserInputDTO;
+import com.example.backendeindopdracht.DTO.outputDTO.OrderOutputDTO;
+import com.example.backendeindopdracht.DTO.outputDTO.UserOutputDTO;
 import com.example.backendeindopdracht.model.User;
 import com.example.backendeindopdracht.repository.OrderRepository;
 import com.example.backendeindopdracht.repository.RoleRepository;
@@ -20,6 +21,7 @@ public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final OrderRepository orderRepository;
     @GetMapping()
     public ResponseEntity<Iterable<User>> getAllUser (){
         return ResponseEntity.status(HttpStatus.OK).body(userRepository.findAll());
@@ -31,12 +33,20 @@ public class UserController {
     }
 
     //POST
+    /*
     @PostMapping()
     public ResponseEntity<User> addUser (@RequestBody User user){
         var role = roleRepository.findById((long) user.getRoleid()).get();
         user.setRole(role);
         user = userRepository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
+    } */
+
+    @PostMapping("")
+    public ResponseEntity<UserOutputDTO> addOrder (@RequestBody UserInputDTO userInputDTO){
+        UserOutputDTO addedUser = userService.addUser(userInputDTO);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(addedUser);
     }
 
     @PutMapping()

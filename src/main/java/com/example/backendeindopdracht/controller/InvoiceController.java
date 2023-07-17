@@ -1,9 +1,11 @@
 package com.example.backendeindopdracht.controller;
 
 
-import com.example.backendeindopdracht.DTO.inputDto.InvoiceInputDTO;
-import com.example.backendeindopdracht.DTO.outputDto.InvoiceOutputDTO;
+import com.example.backendeindopdracht.DTO.inputDTO.InvoiceInputDTO;
+import com.example.backendeindopdracht.DTO.outputDTO.InvoiceOutputDTO;
 import com.example.backendeindopdracht.model.Invoice;
+import com.example.backendeindopdracht.repository.InvoiceRepository;
+import com.example.backendeindopdracht.repository.OrderRepository;
 import com.example.backendeindopdracht.service.InvoiceService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,12 +20,24 @@ import java.util.List;
 public class InvoiceController {
 
     private final InvoiceService invoiceService;
+    private final InvoiceRepository invoiceRepository;
+    private final OrderRepository orderRepository;
 
     //POST
-    @PostMapping("/add")
-    public ResponseEntity<InvoiceOutputDTO> addInvoice (@RequestBody InvoiceInputDTO invoiceInputDTO){
-        InvoiceOutputDTO addedInvoice = invoiceService.addInvoice(invoiceInputDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(addedInvoice);
+    @PostMapping()
+    public ResponseEntity<Invoice> addInvoice (@RequestBody Invoice invoice){
+        var order = orderRepository.findById(invoice.getOrderid()).get();
+        invoice.setOrder(order);
+        invoice = invoiceRepository.save(invoice);
+        return ResponseEntity.status(HttpStatus.CREATED).body(invoice);
+    }
+
+    @PutMapping()
+    public ResponseEntity<Invoice> updateInvoice (@RequestBody Invoice invoice){
+        var order = orderRepository.findById(invoice.getOrderid()).get();
+        invoice.setOrder(order);
+        invoice = invoiceRepository.save(invoice);
+        return ResponseEntity.status(HttpStatus.CREATED).body(invoice);
     }
 
     //GET ALL

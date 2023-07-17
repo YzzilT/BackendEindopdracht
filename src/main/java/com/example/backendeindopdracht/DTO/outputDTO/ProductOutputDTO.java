@@ -1,4 +1,4 @@
-package com.example.backendeindopdracht.DTO.outputDto;
+package com.example.backendeindopdracht.DTO.outputDTO;
 
 
 import com.example.backendeindopdracht.model.ProductType;

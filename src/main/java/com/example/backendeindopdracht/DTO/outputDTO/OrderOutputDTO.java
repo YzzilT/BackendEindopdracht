@@ -1,8 +1,9 @@
-package com.example.backendeindopdracht.DTO.outputDto;
+package com.example.backendeindopdracht.DTO.outputDTO;
 
 
 import com.example.backendeindopdracht.model.Invoice;
 import com.example.backendeindopdracht.model.OrderLine;
+import com.example.backendeindopdracht.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,6 @@ public class OrderOutputDTO {
     private Invoice invoice;
     private List<OrderLine> orderLines;
     private String customerName;
-    private double unitPrice;
-    private int quantity;
     private BigDecimal totalAmount;
+    private Long userid;
 }

@@ -3,6 +3,8 @@ package com.example.backendeindopdracht.controller;
 import com.example.backendeindopdracht.model.OrderLine;
 import com.example.backendeindopdracht.model.Role;
 import com.example.backendeindopdracht.repository.OrderLineRepository;
+import com.example.backendeindopdracht.repository.OrderRepository;
+import com.example.backendeindopdracht.repository.ProductRepository;
 import com.example.backendeindopdracht.repository.RoleRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,10 +13,12 @@ import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/roles")
+@RequestMapping("/orderlines")
 public class OrderLineController {
 
     private final OrderLineRepository orderLineRepository;
+    private final ProductRepository productRepository;
+    private final OrderRepository orderRepository;
 
     @GetMapping()
     public ResponseEntity<Iterable<OrderLine>> getAllOrderLines(){
@@ -29,6 +33,8 @@ public class OrderLineController {
     //POST
     @PostMapping()
     public ResponseEntity<OrderLine> addOrderLine (@RequestBody OrderLine orderLine){
+        orderLine.setProduct(productRepository.findById(orderLine.getProductid()).get());
+        orderLine.setOrder(orderRepository.findById(orderLine.getOrderid()).get());
         orderLine = orderLineRepository.save(orderLine);
         return ResponseEntity.status(HttpStatus.CREATED).body(orderLine);
     }

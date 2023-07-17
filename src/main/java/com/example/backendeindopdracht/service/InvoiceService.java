@@ -1,8 +1,8 @@
 package com.example.backendeindopdracht.service;
 
 
-import com.example.backendeindopdracht.DTO.inputDto.InvoiceInputDTO;
-import com.example.backendeindopdracht.DTO.outputDto.InvoiceOutputDTO;
+import com.example.backendeindopdracht.DTO.inputDTO.InvoiceInputDTO;
+import com.example.backendeindopdracht.DTO.outputDTO.InvoiceOutputDTO;
 import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
 import com.example.backendeindopdracht.model.Invoice;
 import com.example.backendeindopdracht.repository.InvoiceRepository;
@@ -70,7 +70,6 @@ public class InvoiceService {
 
         Invoice invoice = new Invoice();
 
-        invoice.setInvoiceNumber(invoiceInputDTO.getInvoiceNumber());
         invoice.setCustomerName(invoiceInputDTO.getCustomerName());
         invoice.setInvoiceDate(invoiceInputDTO.getInvoiceDate());
         invoice.setTotalAmount(invoiceInputDTO.getTotalAmount());
@@ -83,7 +82,6 @@ public class InvoiceService {
 
         InvoiceOutputDTO invoiceOutputDTO = new InvoiceOutputDTO();
 
-        invoiceOutputDTO.setInvoiceNumber(invoice.getInvoiceNumber());
         invoice.setCustomerName(invoice.getCustomerName());
         invoice.setInvoiceDate(invoice.getInvoiceDate());
         invoice.setTotalAmount(invoice.getTotalAmount());

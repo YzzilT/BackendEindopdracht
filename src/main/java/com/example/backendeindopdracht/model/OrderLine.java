@@ -22,26 +22,18 @@ public class OrderLine {
     private double unitPrice;
 
 
-
-    //@Id
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
+    private Long orderid;
 
-    //@Id
+
+    @JsonIgnore
     @ManyToOne
-//    @JsonIgnore
     @JoinColumn(name = "product_id")
     private Product product;
-
-
-
-
-    //can't i change/delete this method? i already have a getter?
-    public Long getOrderId() {
-        return id;
-    }
-
+    private Long productid;
 
 
 }

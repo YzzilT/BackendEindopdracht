@@ -1,8 +1,8 @@
 package com.example.backendeindopdracht.controller;
 
 
-import com.example.backendeindopdracht.DTO.inputDto.ProductInputDTO;
-import com.example.backendeindopdracht.DTO.outputDto.ProductOutputDTO;
+import com.example.backendeindopdracht.DTO.inputDTO.ProductInputDTO;
+import com.example.backendeindopdracht.DTO.outputDTO.ProductOutputDTO;
 import com.example.backendeindopdracht.model.Product;
 import com.example.backendeindopdracht.service.ProductService;
 import lombok.AllArgsConstructor;

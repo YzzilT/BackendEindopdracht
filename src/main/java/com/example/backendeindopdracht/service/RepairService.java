@@ -1,7 +1,7 @@
 package com.example.backendeindopdracht.service;
 
-import com.example.backendeindopdracht.DTO.inputDto.RepairInputDTO;
-import com.example.backendeindopdracht.DTO.outputDto.RepairOutputDTO;
+import com.example.backendeindopdracht.DTO.inputDTO.RepairInputDTO;
+import com.example.backendeindopdracht.DTO.outputDTO.RepairOutputDTO;
 import com.example.backendeindopdracht.model.Repair;
 import com.example.backendeindopdracht.repository.RepairRepository;
 import lombok.AllArgsConstructor;

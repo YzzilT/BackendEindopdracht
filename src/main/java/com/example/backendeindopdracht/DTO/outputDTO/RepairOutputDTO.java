@@ -1,4 +1,4 @@
-package com.example.backendeindopdracht.DTO.inputDto;
+package com.example.backendeindopdracht.DTO.outputDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RepairInputDTO {
+public class RepairOutputDTO {
 
     private Long repairNumber;
     private String customerName;

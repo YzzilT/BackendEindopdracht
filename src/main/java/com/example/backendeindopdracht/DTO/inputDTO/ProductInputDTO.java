@@ -1,4 +1,4 @@
-package com.example.backendeindopdracht.DTO.inputDto;
+package com.example.backendeindopdracht.DTO.inputDTO;
 
 import com.example.backendeindopdracht.model.ProductType;
 import jakarta.validation.constraints.Min;

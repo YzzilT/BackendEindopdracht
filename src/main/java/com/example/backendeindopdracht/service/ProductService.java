@@ -1,8 +1,8 @@
 package com.example.backendeindopdracht.service;
 
 
-import com.example.backendeindopdracht.DTO.inputDto.ProductInputDTO;
-import com.example.backendeindopdracht.DTO.outputDto.ProductOutputDTO;
+import com.example.backendeindopdracht.DTO.inputDTO.ProductInputDTO;
+import com.example.backendeindopdracht.DTO.outputDTO.ProductOutputDTO;
 import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
 import com.example.backendeindopdracht.model.Order;
 import com.example.backendeindopdracht.model.OrderLine;
@@ -27,15 +27,14 @@ public class ProductService {
 
     //POST
     public ProductOutputDTO createProduct (ProductInputDTO productInputDTO){
-        Product product = new Product();
-        Order order = new Order();
-        OrderLine orderLine = new OrderLine();
-        product.setOrder(order);
-        order.addOrderLine(orderLine);
-        productRepository.save(product);
-        orderRepository.save(order);
 
-        return transferProductToDTO(product);
+        Product product = transferInputDtoProductToProduct(productInputDTO);
+
+        productRepository.save(product);
+
+        ProductOutputDTO productOutputDTO = transferProductToDTO(product);
+
+        return productOutputDTO;
     }
     /*public ProductOutputDTO addProduct (ProductInputDTO productInputDTO, Long orderId){
         Product product = transferInputDtoProductToProduct(productInputDTO);

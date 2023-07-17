@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -24,6 +26,9 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
+    private Long roleid;
 
-    private int roleid;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<Order> orders;
+
 }

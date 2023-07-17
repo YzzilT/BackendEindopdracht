@@ -20,13 +20,14 @@ import java.util.List;
 public class Invoice {
 
     @Id
-    private String email;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @OneToOne(mappedBy = "invoice")
     @JsonIgnore
     private Order order;
-    private Long invoiceNumber;
     private String customerName;
     private String invoiceDate;
     private BigDecimal totalAmount;
+    private long orderid;
 
 }
