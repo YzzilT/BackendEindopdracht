@@ -43,7 +43,7 @@ public class UserController {
     } */
 
     @PostMapping("")
-    public ResponseEntity<UserOutputDTO> addOrder (@RequestBody UserInputDTO userInputDTO){
+    public ResponseEntity<UserOutputDTO> addUser (@RequestBody UserInputDTO userInputDTO){
         UserOutputDTO addedUser = userService.addUser(userInputDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(addedUser);
