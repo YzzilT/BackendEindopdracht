@@ -1,5 +1,6 @@
 package com.example.backendeindopdracht.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,9 +18,17 @@ public class Repair {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long repairNumber;
-    private String customerName;
-    private String productName;
+    @JsonIgnore
+    @JoinColumn(name = "user_id")
+    @ManyToOne
+    private User user;
+    @JsonIgnore
+    @JoinColumn(name = "product_id")
+    @ManyToOne
+    private Product product;
     private String problemDescription;
+    private long userid;
+    private long productid;
 
 
 }
