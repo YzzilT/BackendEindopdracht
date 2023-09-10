@@ -27,6 +27,7 @@ public class User {
     @JoinColumn(name = "role_id")
     private Role role;
     private Long roleid;
+    private String jwt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Order> orders;

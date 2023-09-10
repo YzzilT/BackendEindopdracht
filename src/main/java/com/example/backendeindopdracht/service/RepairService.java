@@ -27,8 +27,6 @@ public class RepairService {
         Repair repair = new Repair();
 
         repair.setRepairNumber(repairInputDTO.getRepairNumber());
-        repair.setCustomerName(repairInputDTO.getCustomerName());
-        repair.setProductName(repairInputDTO.getProductName());
         repair.setProblemDescription(repairInputDTO.getProblemDescription());
 
         return repair;
@@ -38,8 +36,6 @@ public class RepairService {
         RepairOutputDTO repairOutputDTO = new RepairOutputDTO();
 
         repairOutputDTO.setRepairNumber(repair.getRepairNumber());
-        repairOutputDTO.setCustomerName(repair.getCustomerName());
-        repairOutputDTO.setProductName(repair.getProductName());
         repairOutputDTO.setProblemDescription(repair.getProblemDescription());
 
         return repairOutputDTO;

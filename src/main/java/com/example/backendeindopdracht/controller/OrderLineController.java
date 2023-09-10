@@ -33,6 +33,11 @@ public class OrderLineController {
     //POST
     @PostMapping()
     public ResponseEntity<OrderLine> addOrderLine (@RequestBody OrderLine orderLine){
+        //userrepo.find(jwt)
+//        if(user.role.name != "backendmedewerker"){
+//            throw NotauthorizedException();
+//        }
+
         orderLine.setProduct(productRepository.findById(orderLine.getProductid()).get());
         orderLine.setOrder(orderRepository.findById(orderLine.getOrderid()).get());
         orderLine = orderLineRepository.save(orderLine);
