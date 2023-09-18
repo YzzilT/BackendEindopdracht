@@ -15,6 +15,8 @@ public class Interceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler){
+
+        // lijst van "wie mag waarbij"
         var permissions = new ArrayList<Permission>(){{
             add(new Permission("users","POST","backendmedewerker"));
             add(new Permission("users", "PUT", "backendmedewerker"));
@@ -28,8 +30,10 @@ public class Interceptor implements HandlerInterceptor {
 
         }};
 
+        //ontvangt de url van binnenkomend http request en slaat dit op in 'url'
         var url = request.getRequestURI();
 
+        // itereren door 'permissions' lijst om matchende permissie te vinden (waar zoekt hij op? pattern en method?)
         Permission perm = null;
         for (int i = 0; i < permissions.size(); i++){
             var permission = permissions.get(i);
@@ -38,7 +42,7 @@ public class Interceptor implements HandlerInterceptor {
                 break;
             }
         }
-
+// als er geen matching permissie is gevonden mag het request verder zonder restricties? mag overal bij??
         if(perm == null){
 
             return true;
@@ -50,7 +54,7 @@ public class Interceptor implements HandlerInterceptor {
             if(jwt.equals("test")){
                 return true;
             }
-
+//zoeken naar een user wiens jwt matched met het jwt van het request, bij geen match, status 404
             User user2 = null;
             for(User user:userrepo.findAll()){
                 if(user.getJwt().equals(jwt)){
@@ -61,6 +65,8 @@ public class Interceptor implements HandlerInterceptor {
                 response.setStatus(404);
                 return false;
             }
+
+            // check of de rol matched bij benodigd rol, als niet, geen toegang
 
             if(user2.getRole().getRoleName().equals(perm.getRole())){
                 return true;

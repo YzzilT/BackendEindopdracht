@@ -40,70 +40,51 @@ class BackendEindopdrachtApplicationTests {
 	}
 	@Test
 	void createRoleAndUser() throws Exception {
-		assertThat(roleController).isNotNull();
-
-//		this.mockMvc.perform(post("/users")).andDo(print()).andExpect(status().isOk())
-//				.andExpect(content().string(containsString("Hello, World")));
-//
-//		this.mockMvc.perform(get("").contentType(MediaType.ALL).content("").header("","").queryParam("",""));
-//		this.mockMvc.perform(post("").content("").header("",""));
-
-		var jsonrole = """
-				{
-					 "roleName" : "Customer"
-				 }
-				""";
-		this.mockMvc.perform(post("/roles").content(jsonrole).contentType(MediaType.APPLICATION_JSON).header("Authorization", "test"));
-
-
-		var user = """
-		{
-			"firstName" : "Lizzy",
-			"lastName" : "Telford",
-			"password" : "lizzytelford",
-			"email" : "lizzytelford@hotmail.com",
-			"roleid" : 1
-		}
-		""";
-
-		this.mockMvc.perform(post("/users").content(user).contentType(MediaType.APPLICATION_JSON).header("Authorization", "test"));
-
-		var getUser = """
-				{				{
-				        "id": 1,
-				        "firstName": "Lizzy",
-				        "lastName": "Telford",
-				        "password": "lizzytelford",
-				        "email": "lizzytelford@hotmail.com",
-				        "role": {
-				            "id": 1,
-				            "roleName": "Customer"
-				        },
-				        "roleid": 1,
-				        "jwt": "91b05f19-e1fe-4514-9012-18294eddba69",
-				        "orders": []
-				    }
-				}
-				""";
-		this.mockMvc.perform(get("/users")).andExpect(jsonPath("$[0].firstName", is("Lizzy")));
 
 
 
-//		var role = new Role();
-//		role.setRoleName("testrole");
-//		var roleres = roleController.addRole(role);
+//		assertThat(roleController).isNotNull();
 //
 //
-//		var user = new UserInputDTO();
-//		user.setRoleid(roleres.getBody().getId());
-//		user.setFirstName("Lizzy");
-//		user.setLastName("Telford");
-//		user.setPassword("lizzytelford");
-//		user.setEmail("lizzytelford@hotmail.com");
+//		var jsonrole = """
+//				{
+//					 "roleName" : "Customer"
+//				 }
+//				""";
+//		this.mockMvc.perform(post("/roles").content(jsonrole).contentType(MediaType.APPLICATION_JSON).header("Authorization", "test"));
 //
 //
-//		var userres = userController.addUser(user);
-//		userres.getBody().getId();
+//		var user = """
+//		{
+//			"firstName" : "Lizzy",
+//			"lastName" : "Telford",
+//			"password" : "lizzytelford",
+//			"email" : "lizzytelford@hotmail.com",
+//			"roleid" : 1
+//		}
+//		""";
+//
+//		this.mockMvc.perform(post("/users").content(user).contentType(MediaType.APPLICATION_JSON).header("Authorization", "test"));
+//
+//		var getUser = """
+//				{				{
+//				        "id": 1,
+//				        "firstName": "Lizzy",
+//				        "lastName": "Telford",
+//				        "password": "lizzytelford",
+//				        "email": "lizzytelford@hotmail.com",
+//				        "role": {
+//				            "id": 1,
+//				            "roleName": "Customer"
+//				        },
+//				        "roleid": 1,
+//				        "jwt": "91b05f19-e1fe-4514-9012-18294eddba69",
+//				        "orders": []
+//				    }
+//				}
+//				""";
+//		this.mockMvc.perform(get("/users")).andExpect(jsonPath("$[0].firstName", is("Lizzy")));
+
 
 	}
 
