@@ -29,14 +29,14 @@ public class UserService {
     //POST
     public UserOutputDTO addUser (UserInputDTO userInputDTO){
         User user = transferInputDtoUserToUser(userInputDTO);
-        Long roleId = userInputDTO.getRoleId();
+        Long roleId = userInputDTO.getRoleid();
         if (roleId == null){
             throw new IllegalArgumentException("Role ID is required");
         }
 
         Optional<Role> optionalRole = roleRepository.findById(roleId);
         if (optionalRole.isEmpty()){
-            throw new RecordNotFoundException("No role found with id: " + userInputDTO.getRoleId());
+            throw new RecordNotFoundException("No role found with id: " + userInputDTO.getRoleid());
         }
 
         user.setRole(optionalRole.get());
@@ -87,7 +87,7 @@ public class UserService {
         user.setPassword(userInputDTO.getPassword());
         user.setEmail(userInputDTO.getEmail());
 
-        user.setRoleid(userInputDTO.getRoleId());
+        user.setRoleid(userInputDTO.getRoleid());
         Optional<Role> optionalRole = roleRepository.findById(user.getRoleid());
 
         if (optionalRole.isEmpty()) {

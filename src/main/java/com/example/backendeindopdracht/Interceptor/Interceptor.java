@@ -28,6 +28,11 @@ public class Interceptor implements HandlerInterceptor {
             add(new Permission("invoices", "GET", "backendmedewerker"));
             add(new Permission("invoices", "DELETE", "backendmedewerker"));
 
+
+            add(new Permission("repair", "POST", "magazijnmedewerker"));
+            add(new Permission("repair", "PUT", "magazijnmedewerker"));
+            add(new Permission("repair", "GET", "magazijnmedewerker"));
+            add(new Permission("repair", "DELETE", "magazijnmedewerker"));
         }};
 
         //ontvangt de url van binnenkomend http request en slaat dit op in 'url'
@@ -62,7 +67,7 @@ public class Interceptor implements HandlerInterceptor {
                 }
             }
             if(user2 == null){
-                response.setStatus(404);
+                response.setStatus(403);//user not found, unauthenticated 403
                 return false;
             }
 
@@ -71,7 +76,7 @@ public class Interceptor implements HandlerInterceptor {
             if(user2.getRole().getRoleName().equals(perm.getRole())){
                 return true;
             }else{
-                response.setStatus(403);
+                response.setStatus(401);//user found but wrong permissions, unauthorized 401
                 return false;
             }
 

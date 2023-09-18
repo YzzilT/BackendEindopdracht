@@ -48,21 +48,21 @@ class UserServiceTest {
         userInputDTO.setLastName("Telford");
         userInputDTO.setPassword("password");
         userInputDTO.setEmail("lizzytelford@gmail.com");
-        userInputDTO.setRoleId(3L);
+        userInputDTO.setRoleid(3L);
 
 
 
-        Optional<Role> optionalRole = roleRepository.findById(userInputDTO.getRoleId());
+        Optional<Role> optionalRole = roleRepository.findById(userInputDTO.getRoleid());
         if (optionalRole.isEmpty()){
-            throw new RecordNotFoundException("No role found with id: " + userInputDTO.getRoleId());
+            throw new RecordNotFoundException("No role found with id: " + userInputDTO.getRoleid());
         }
 
-        userInputDTO.setRoleId(optionalRole.get().getId());
+        userInputDTO.setRoleid(optionalRole.get().getId());
 
 
 
         //Role role = new Role(678L, "customer");
-        userInputDTO.setRoleId(optionalRole.get().getId());
+        userInputDTO.setRoleid(optionalRole.get().getId());
        // Mockito.when(roleRepository.findById(3L)).thenReturn(Optional.of(optionalRole));
         //Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
 

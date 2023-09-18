@@ -17,6 +17,6 @@ public class UserInputDTO {
     private String lastName;
     private String password;
     private String email;
-    private Long roleId;
+    private Long roleid;
 
 }
