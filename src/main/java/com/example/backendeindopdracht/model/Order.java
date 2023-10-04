@@ -29,6 +29,9 @@ public class Order {
     @ManyToOne
     @JsonIgnore
     private User user;
-    private Long userid;
+
+
+
+
 
 }

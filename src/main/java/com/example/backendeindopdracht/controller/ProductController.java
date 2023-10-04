@@ -5,6 +5,7 @@ import com.example.backendeindopdracht.DTO.inputDTO.ProductInputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.ProductOutputDTO;
 import com.example.backendeindopdracht.model.Product;
 import com.example.backendeindopdracht.service.ProductService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,11 +38,11 @@ public class ProductController {
         return ResponseEntity.ok().body(productService.getProductById(id));
     }
 
-  /* //PUT
+   //PUT
     @PutMapping("/{id}")
     public ResponseEntity<ProductOutputDTO> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductInputDTO productInputDTO){
         return ResponseEntity.ok().body(productService.updateProduct(productInputDTO, id));
-    }*/
+    }
 
 
     //DELETE

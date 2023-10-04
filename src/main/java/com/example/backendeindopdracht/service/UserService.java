@@ -10,6 +10,9 @@ import com.example.backendeindopdracht.repository.RoleRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -23,12 +26,75 @@ public class UserService {
     //POST
     public UserOutputDTO addUser (UserInputDTO userInputDTO){
         User user = transferInputDtoUserToUser(userInputDTO);
-        userRepository.save(user);
+        Long roleId = userInputDTO.getRoleid();
+        if (roleId == null){
+            throw new IllegalArgumentException("Role ID is required");
+        }
 
+        Optional<Role> optionalRole = roleRepository.findById(roleId);
+        if (optionalRole.isEmpty()){
+            throw new RecordNotFoundException("No role found with id: " + userInputDTO.getRoleid());
+        } else {
+
+            user.setRole(optionalRole.get());
+            userRepository.save(user);
+
+            return transferUserToDTO(user);
+
+        }
+    }
+
+    //GET ALL
+    public List<UserOutputDTO> getAllUsers(){
+
+        Iterable<User> users = userRepository.findAll();
+        List<UserOutputDTO> userOutputDTOList = new ArrayList<>();
+
+
+        for (User user : users){
+            userOutputDTOList.add(transferUserToDTO(user));
+        }
+        return userOutputDTOList;
+    }
+
+    //GET BY ID
+    public UserOutputDTO getUserById(Long id){
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isEmpty()){
+            throw new RecordNotFoundException("No user found with id: " + id);
+        }
+        User user = optionalUser.get();
         return transferUserToDTO(user);
     }
 
+
+
+    //PUT
+    public UserOutputDTO updateUser (UserInputDTO userInputDTO, Long id){
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isEmpty()){
+            throw new RecordNotFoundException("No user found with id " + id);
+        } else {
+            User updateUser = transferInputDtoUserToUser(userInputDTO);
+            updateUser.setId(id);
+            User updatedUser = userRepository.save(updateUser);
+
+            return transferUserToDTO(updatedUser);
+        }
+    }
+
+    //DELETE
+    public User deleteUser (Long id){
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isEmpty()){
+            throw new RecordNotFoundException("No user was found with id: " + id);
+        }
+        userRepository.deleteById(id);
+        return optionalUser.get();
+    }
+
     public User transferInputDtoUserToUser (UserInputDTO userInputDTO){
+
         User user = new User();
 
         user.setId(userInputDTO.getId());
@@ -51,6 +117,7 @@ public class UserService {
     }
 
     public UserOutputDTO transferUserToDTO(User user){
+
         UserOutputDTO userOutputDTO = new UserOutputDTO();
 
         userOutputDTO.setId(user.getId());
@@ -58,8 +125,14 @@ public class UserService {
         userOutputDTO.setLastName(user.getLastName());
         userOutputDTO.setPassword(user.getPassword());
         userOutputDTO.setEmail(user.getEmail());
-        userOutputDTO.setRoleId(user.getRole().getId());
-        userOutputDTO.setRole(user.getRole());
+        //userOutputDTO.setRoleId(user.getRole().getId());
+        if (user.getRole() != null) {
+            userOutputDTO.setRoleId(user.getRole().getId());
+        } else {
+            // Handle the case where the role is null (if applicable)
+            userOutputDTO.setRoleId(null);
+        }
+
 
         return userOutputDTO;
     }

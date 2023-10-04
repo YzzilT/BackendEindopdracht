@@ -2,9 +2,11 @@ package com.example.backendeindopdracht.service;
 
 
 import com.example.backendeindopdracht.DTO.inputDTO.InvoiceInputDTO;
+import com.example.backendeindopdracht.DTO.inputDTO.RoleInputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.InvoiceOutputDTO;
 import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
 import com.example.backendeindopdracht.model.Invoice;
+import com.example.backendeindopdracht.model.Role;
 import com.example.backendeindopdracht.repository.InvoiceRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,8 +27,9 @@ public class InvoiceService {
 
         Invoice invoice = transferInvoiceInputDtoToInvoice(invoiceInputDTO);
         invoiceRepository.save(invoice);
+        InvoiceOutputDTO invoiceOutputDTO = transferInvoiceToOutputDTO(invoice);
 
-        return transferInvoiceToOutputDTO(invoice);
+        return invoiceOutputDTO;
     }
 
     //GET ALL
@@ -44,22 +47,35 @@ public class InvoiceService {
     public  InvoiceOutputDTO getInvoiceById(Long id){
         Optional<Invoice> optionalInvoice = invoiceRepository.findById(id);
         if (optionalInvoice.isEmpty()){
-            throw new RecordNotFoundException("No product found with id: " + id);
+            throw new RecordNotFoundException("No invoice found with id: " + id);
         }
         Invoice invoice = optionalInvoice.get();
         return transferInvoiceToOutputDTO(invoice);
     }
 
     //PUT
+    public InvoiceOutputDTO updateInvoice (InvoiceInputDTO invoiceInputDTO, Long id){
+        Optional<Invoice> optionalInvoice = invoiceRepository.findById(id);
+        if (optionalInvoice.isEmpty()){
+            throw new RecordNotFoundException("No invoice found with id " + id);
+        } else {
+            Invoice updateInvoice = transferInvoiceInputDtoToInvoice(invoiceInputDTO);
+            updateInvoice.setInvoiceNumber(id);
+            Invoice updatedInvoice = invoiceRepository.save(updateInvoice);
+
+            return transferInvoiceToOutputDTO(updatedInvoice);
+        }
+    }
 
 
     //DELETE
-    public void deleteInvoice(Long id){
+    public Invoice deleteInvoice(Long id){
         Optional<Invoice> optionalInvoice = invoiceRepository.findById(id);
         if (optionalInvoice.isEmpty()){
             throw new RecordNotFoundException("No invoice found with id: " + id);
         }
         invoiceRepository.deleteById(id);
+        return optionalInvoice.get();
     }
 
 
