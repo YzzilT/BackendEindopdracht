@@ -136,4 +136,34 @@ class RoleServiceTest {
         //assert
         verify(roleRepository, times(1)).findById(2L);
     }
+
+    @Test
+    void shouldDeleteExistingRole() {
+
+        //deleting an existing role
+        Long roleId = 1L;
+        Role role = new Role();
+        role.setId(roleId);
+
+        when(roleRepository.findById(roleId)).thenReturn(Optional.of(role));
+        roleService.deleteRole(roleId);
+
+        verify(roleRepository).deleteById(roleId);
+
+    }
+
+    @Test
+    void testDeleteNonExistentRole(){
+
+        //arrange
+        Long nonExistingRoleId = 2L;
+
+        when(roleRepository.findById(nonExistingRoleId)).thenReturn(Optional.empty());
+
+        //act and assert
+        assertThrows(RecordNotFoundException.class, () -> {
+        roleService.deleteRole(nonExistingRoleId);});
+
+
+    }
 }

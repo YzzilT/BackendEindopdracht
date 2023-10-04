@@ -25,11 +25,13 @@ public class OrderController {
     private final UserRepository userRepository;
 
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<Order> addOrder (@RequestBody Order order){
+
 
         var user = userRepository.findById(order.getUserid()).get();
         order.setUser(user);
+
         order = orderRepository.save(order);
         return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }

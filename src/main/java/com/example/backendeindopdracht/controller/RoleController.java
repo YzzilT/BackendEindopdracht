@@ -38,16 +38,18 @@ public class RoleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(addedRole);
     }
 
-   /* @PutMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<RoleOutputDTO> updateRole (@PathVariable Long id, @Valid @RequestBody RoleInputDTO roleInputDTO){
-        roleInputDTO = roleRepository.save(role);
-        return ResponseEntity.status(HttpStatus.OK).body(role);
-    }*/
+        return ResponseEntity.ok().body(roleService.updateRole(roleInputDTO, id));
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Role> deleteRole(@PathVariable long id){
-        roleRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
+
+        var user = roleService.deleteRole(id);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+//        roleRepository.deleteById(id);
+//        return ResponseEntity.noContent().build();
     }
 
 }

@@ -1,11 +1,10 @@
 package com.example.backendeindopdracht.service;
 
 import com.example.backendeindopdracht.DTO.inputDTO.RoleInputDTO;
-import com.example.backendeindopdracht.DTO.outputDTO.OrderOutputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.RoleOutputDTO;
 import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
-import com.example.backendeindopdracht.model.Product;
 import com.example.backendeindopdracht.model.Role;
+import com.example.backendeindopdracht.model.User;
 import com.example.backendeindopdracht.repository.RoleRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -51,13 +50,28 @@ public class RoleService {
 
     }
 
+    //PUT
+    public RoleOutputDTO updateRole (RoleInputDTO roleInputDTO, Long id){
+        Optional<Role> optionalRole = roleRepository.findById(id);
+        if (optionalRole.isEmpty()){
+            throw new RecordNotFoundException("No user found with id " + id);
+        } else {
+            Role updateRole = transferInputDtoRoleToRole(roleInputDTO);
+            updateRole.setId(id);
+            Role updatedRole = roleRepository.save(updateRole);
+
+            return transferRoleToDTO(updatedRole);
+        }
+    }
+
     //DELETE
-    public void deleteRole(Long id){
+    public Role deleteRole(Long id){
         Optional<Role> optionalRole = roleRepository.findById(id);
         if (optionalRole.isEmpty()){
             throw new RecordNotFoundException("No role found with id: " + id);
         }
         roleRepository.deleteById(id);
+        return optionalRole.get();
     }
 
 
@@ -80,5 +94,7 @@ public class RoleService {
 
         return roleOutputDTO;
     }
+
+
 
 }

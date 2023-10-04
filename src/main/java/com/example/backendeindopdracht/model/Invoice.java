@@ -21,13 +21,15 @@ public class Invoice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long invoiceNumber;
     @OneToOne(mappedBy = "invoice")
     @JsonIgnore
     private Order order;
     private String customerName;
     private String invoiceDate;
+   // private List<Product> products;
     private BigDecimal totalAmount;
+    private String email;
     private long orderid;
 
 }

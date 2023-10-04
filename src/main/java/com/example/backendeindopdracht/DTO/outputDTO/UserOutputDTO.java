@@ -20,4 +20,5 @@ public class UserOutputDTO {
     private String email;
     private Long roleId;
 
+
 }

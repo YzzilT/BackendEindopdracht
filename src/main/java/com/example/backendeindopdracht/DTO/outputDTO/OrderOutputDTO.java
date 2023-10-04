@@ -23,5 +23,7 @@ public class OrderOutputDTO {
     private List<OrderLine> orderLines;
     private String customerName;
     private BigDecimal totalAmount;
+    private User user;
     private Long userid;
+    private Long orderLineId;
 }

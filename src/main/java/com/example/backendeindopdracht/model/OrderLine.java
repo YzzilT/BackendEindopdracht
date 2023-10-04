@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Entity
 @Setter
 @Getter
@@ -17,23 +19,23 @@ public class OrderLine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String productName;
     private int quantity;
-    private double unitPrice;
+    private BigDecimal totalAmount;
+
 
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
-    private Long orderid;
+
 
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
-    private Long productid;
+
 
 
 }

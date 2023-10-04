@@ -2,14 +2,15 @@ package com.example.backendeindopdracht.controller;
 
 import com.example.backendeindopdracht.model.User;
 import com.example.backendeindopdracht.repository.UserRepository;
-import com.example.backendeindopdracht.service.UserService;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,9 +20,9 @@ import java.io.IOException;
 import java.security.*;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -32,7 +33,7 @@ public class LoginController {
     private final UserRepository userRepository;
 
     @PostMapping("login")
-    public ResponseEntity<String> login (HttpServletRequest request) throws IOException, NoSuchAlgorithmException {
+    public ResponseEntity<String> login (HttpServletRequest request) throws IOException {
         String requestBody = convertInputStreamToString(request.getInputStream());
 
         JsonObject jsonObject = new JsonParser().parse(requestBody).getAsJsonObject();
@@ -50,28 +51,10 @@ public class LoginController {
         if(user2 == null){
             return ResponseEntity.status(404).body("not found");
         }
-        //todo privatekey aanmaken
-        //todo jwt veld toevoegen op user
 
-//        KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance("RSA");
-//        keyGenerator.initialize(1024);
-//
-//        KeyPair kp = keyGenerator.genKeyPair();
-//        PublicKey publicKey = (PublicKey) kp.getPublic();
-//        PrivateKey privateKey = (PrivateKey) kp.getPrivate();
-//        var jwttoken = generateJwtToken(privateKey,user2.getEmail(),user2.getRole().getRoleName());
-
-        var jwttoken = UUID.randomUUID().toString();
+        String jwttoken = generateJwtToken();
         user2.setJwt(jwttoken);
         userRepository.save(user2);
-
-
-
-        //username password komt binnen
-        //bijbehorende user vinden
-        //jwt genereren en opslaan op de user
-        //jwt returnen
-
         return ResponseEntity.ok(jwttoken);
     }
 
@@ -87,14 +70,28 @@ public class LoginController {
     }
 
 //    https://wstutorial.com/misc/jwt-java-public-key-rsa.html
-    public String generateJwtToken(PrivateKey privateKey,String username,String role) {
-        String token = Jwts.builder()
-                .setSubject(username)
-                .setExpiration(Date.from(Instant.now().plus(8, ChronoUnit.HOURS)))
+//    public String generateJwtToken(PrivateKey privateKey,String username,String role) {
+//        String token = Jwts.builder()
+//                .setSubject(username)
+//                .setExpiration(Date.from(Instant.now().plus(8, ChronoUnit.HOURS)))
+//                .setIssuer("lizzy")
+//                .claim("groups", new String[] { role })
+//                .signWith(SignatureAlgorithm.RS256, privateKey).compact();
+//        return token;
+//    }
+
+    //    https://www.javainuse.com/spring/boot-jwt
+    public String generateJwtToken() {
+
+        Map<String, Object> claims = new HashMap<>();
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject("asd")
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 60 * 60 * 10 * 1000))
                 .setIssuer("lizzy")
-                .claim("groups", new String[] { role })
-                .signWith(SignatureAlgorithm.RS256, privateKey).compact();
-        return token;
+                .signWith(SignatureAlgorithm.HS512, "secret")
+                .compact();
     }
 
 }

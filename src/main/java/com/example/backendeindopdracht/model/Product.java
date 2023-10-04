@@ -28,6 +28,7 @@ public class Product {
     private String description;
     //@NotNull(message = "Product type must be selected")
     @Enumerated(EnumType.STRING)
+    @Column(unique = true)
     private ProductType productType;
     //TODO message doesn't work, fix later
 

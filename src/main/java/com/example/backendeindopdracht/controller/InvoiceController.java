@@ -2,11 +2,14 @@ package com.example.backendeindopdracht.controller;
 
 
 import com.example.backendeindopdracht.DTO.inputDTO.InvoiceInputDTO;
+import com.example.backendeindopdracht.DTO.inputDTO.RoleInputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.InvoiceOutputDTO;
+import com.example.backendeindopdracht.DTO.outputDTO.RoleOutputDTO;
 import com.example.backendeindopdracht.model.Invoice;
 import com.example.backendeindopdracht.repository.InvoiceRepository;
 import com.example.backendeindopdracht.repository.OrderRepository;
 import com.example.backendeindopdracht.service.InvoiceService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +28,9 @@ public class InvoiceController {
 
     //POST
     @PostMapping()
-    public ResponseEntity<Invoice> addInvoice (@RequestBody Invoice invoice){
-        var order = orderRepository.findById(invoice.getOrderid()).get();
-        invoice.setOrder(order);
-        invoice = invoiceRepository.save(invoice);
-        return ResponseEntity.status(HttpStatus.CREATED).body(invoice);
+    public ResponseEntity<InvoiceOutputDTO> addInvoice (@RequestBody InvoiceInputDTO invoiceInputDTO){
+        InvoiceOutputDTO addedInvoice = invoiceService.addInvoice(invoiceInputDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(addedInvoice);
     }
 
     @PutMapping()
@@ -53,6 +54,10 @@ public class InvoiceController {
     }
 
     //PUT
+    @PutMapping("/{id}")
+    public ResponseEntity<InvoiceOutputDTO> updateInvoice (@PathVariable Long id, @Valid @RequestBody InvoiceInputDTO invoiceInputDTO){
+        return ResponseEntity.ok().body(invoiceService.updateInvoice(invoiceInputDTO, id));
+    }
 
 
     //DELETE
