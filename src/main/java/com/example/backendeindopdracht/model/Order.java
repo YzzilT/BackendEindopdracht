@@ -23,12 +23,14 @@ public class Order {
     @OneToOne
     private Invoice invoice;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private List<OrderLine> orderLines;
+    private List<OrderLine> orderLineIds;
     private String customerName;
     private BigDecimal totalAmount;
     @ManyToOne
     @JsonIgnore
     private User user;
+
+
 
 
 

@@ -20,10 +20,9 @@ public class OrderOutputDTO {
 
     private Long id;
     private Invoice invoice;
-    private List<OrderLine> orderLines;
+    private List<OrderLine> orderLineIds;
     private String customerName;
     private BigDecimal totalAmount;
     private User user;
-    private Long userid;
-    private Long orderLineId;
+
 }

@@ -26,7 +26,7 @@ public class OrderLine {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "order_id")
+    @JoinColumn()
     private Order order;
 
 
