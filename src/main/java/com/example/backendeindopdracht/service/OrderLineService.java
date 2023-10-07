@@ -7,12 +7,10 @@ import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
 import com.example.backendeindopdracht.model.OrderLine;
 import com.example.backendeindopdracht.model.Product;
 import com.example.backendeindopdracht.repository.OrderLineRepository;
-import com.example.backendeindopdracht.repository.OrderRepository;
 import com.example.backendeindopdracht.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,94 +21,28 @@ public class OrderLineService {
 
     private final OrderLineRepository orderLineRepository;
     private final ProductRepository productRepository;
-    private final OrderRepository orderRepository;
 
-    public List<Long> extractIdsFromOrderLines(List<OrderLine> orderLines) {
-        List<Long> orderLineIds = new ArrayList<>();
 
-        for (OrderLine orderLine : orderLines) {
-            Long orderLineId = orderLine.getId();
-            orderLineIds.add(orderLineId);
+    //POST
+    public OrderLineOutputDTO addOrderLine (OrderlineInputDTO orderlineInputDTO){
+        OrderLine orderLine = transferInputDtoToOrderLine(orderlineInputDTO);
+        Long productId = orderlineInputDTO.getProductid();
+        if (productId == null){
+            throw new IllegalArgumentException("Product ID is required");
         }
 
-        return orderLineIds;
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+        if (optionalProduct.isEmpty()){
+            throw new RecordNotFoundException("No product found with id: " + orderlineInputDTO.getProductid());
+        } else {
 
+            orderLine.setProduct(optionalProduct.get());
+            orderLineRepository.save(orderLine);
+
+            return transferOrderLineToDTO(orderLine);
+
+        }
     }
-
-
-    //POST
-//    public OrderLineOutputDTO addOrderLine (Long productId, int quantity){
-//
-//        Optional<Product> optionalProduct = productRepository.findById(productId);
-//        if (optionalProduct.isEmpty()){
-//            throw new RecordNotFoundException("No product found with id: " + productId);
-//        }
-//
-//        Product product = optionalProduct.get();
-//        OrderLine orderLine = new OrderLine();
-//
-//        orderLine.setProduct(product);
-//        orderLine.setQuantity(quantity);
-//
-//        BigDecimal unitPrice = BigDecimal.valueOf(product.getPrice());
-//        BigDecimal totalAmount = unitPrice.multiply(BigDecimal.valueOf(quantity));
-//
-//        orderLine.setTotalAmount(totalAmount);
-//
-//        orderLine = orderLineRepository.save(orderLine);
-//
-//
-//        OrderLineOutputDTO orderLineOutputDTO = new OrderLineOutputDTO();
-//        orderLineOutputDTO.setId(orderLine.getId());
-//        orderLineOutputDTO.setQuantity(orderLine.getQuantity());
-//        orderLineOutputDTO.setTotalAmount(orderLine.getTotalAmount());
-//
-//        return orderLineOutputDTO;
-//
-//        }
-
-
-    //POST
-//    public OrderLineOutputDTO addProductToOrderLine(Long productId, int quantity) {
-//
-//        Optional<OrderLine> existingOrderLine = orderLineRepository.findByProduct(productId);
-//
-//        if (existingOrderLine.isPresent()) {
-//            OrderLine orderLine = existingOrderLine.get();
-//            int newQuantity = orderLine.getQuantity() + quantity;
-//            orderLine.setQuantity(newQuantity);
-//            BigDecimal unitPrice = BigDecimal.valueOf(orderLine.getProduct().getPrice());
-//            BigDecimal totalAmount = unitPrice.multiply(BigDecimal.valueOf(newQuantity));
-//            orderLine.setTotalAmount(totalAmount);
-//            orderLineRepository.save(orderLine);
-//
-//            return transferOrderLineToDTO(orderLine);
-//        } else {
-//
-//            Optional<Product> optionalProduct = productRepository.findById(productId);
-//            if (optionalProduct.isEmpty()) {
-//                throw new RecordNotFoundException("No product found with id: " + productId);
-//            }
-//            Product product = optionalProduct.get();
-//            OrderLine orderLine = new OrderLine();
-//
-//            orderLine.setProduct(product);
-//            orderLine.setQuantity(quantity);
-//
-//            BigDecimal unitPrice = BigDecimal.valueOf(product.getPrice());
-//            BigDecimal totalAmount = unitPrice.multiply(BigDecimal.valueOf(quantity));
-//
-//            orderLine.setTotalAmount(totalAmount);
-//
-//            orderLine = orderLineRepository.save(orderLine);
-//
-//            return transferOrderLineToDTO(orderLine);
-//
-//        }
-//
-//    }
-
-
 
     //GET ALL
     public List<OrderLineOutputDTO> getAllOrderLines(){
@@ -167,15 +99,24 @@ public class OrderLineService {
         OrderLine orderLine = new OrderLine();
 
         orderLine.setId(orderlineInputDTO.getId());
-        orderLine.setQuantity(orderlineInputDTO.getQuantity());
-        orderLine.setProduct(productRepository.findById(orderlineInputDTO.getProductId()).orElse(null));
-        orderLine.setOrder(orderRepository.findById(orderlineInputDTO.getOrderId()).orElse(null));
 
+        orderLine.setQuantity(orderlineInputDTO.getQuantity());
+        orderLine.setUnitPrice(orderlineInputDTO.getUnitPrice());
+        //hoe order??
+
+        orderLine.setProductid(orderlineInputDTO.getProductid());
+        Optional<Product> optionalProduct = productRepository.findById(orderLine.getProductid());
+
+        if (optionalProduct.isEmpty()){
+            throw new RecordNotFoundException("no product found with id: " + orderLine.getProductid());
+
+        }
+        else {
+            orderLine.setProduct(optionalProduct.get());
+        }
         return orderLine;
 
-        // TODO: 10/4/2023 how to add bigdecimal, order and product?
-
-
+        // TODO: 9/30/2023  productId nog toevoegen
 
 
     }
@@ -185,14 +126,18 @@ public class OrderLineService {
         OrderLineOutputDTO orderLineOutputDTO = new OrderLineOutputDTO();
 
         orderLineOutputDTO.setId(orderLine.getId());
+        orderLineOutputDTO.setProductName(orderLine.getProductName());
         orderLineOutputDTO.setQuantity(orderLine.getQuantity());
-        orderLineOutputDTO.setTotalAmount(orderLine.getTotalAmount());
-        orderLineOutputDTO.setOrder(orderLine.getOrder());
-        orderLineOutputDTO.setProduct(orderLine.getProduct());
-
+        orderLineOutputDTO.setUnitPrice(orderLine.getUnitPrice());
+        //order??
+        if (orderLine.getProduct() != null){
+            orderLineOutputDTO.setProductid(orderLine.getProduct().getId());
+        } else {
+            orderLineOutputDTO.setProductid(null);
+        }
         return orderLineOutputDTO;
     }
 
-    // TODO: 10/4/2023 how to add bigdecimal, order and product?
+    // TODO: 9/30/2023 orderId toevoegen
 
 }

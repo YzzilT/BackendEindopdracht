@@ -30,8 +30,9 @@ public class FileController {
         uploadFile.setFileName("filename");
         uploadFile.setDocFile(file.getBytes());
 
-        var x = fileRepository.save(uploadFile);
-        return ResponseEntity.ok("File uploaded, the id is:" +  x.getId());
+        fileRepository.save(uploadFile);
+
+        return ResponseEntity.ok("File uploaded");
 
     }
 

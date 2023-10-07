@@ -33,17 +33,20 @@ public class OrderLineController {
         return ResponseEntity.ok().body(orderLineService.getOrderLineById(id));
     }
 
+    //POST
     @PostMapping()
     public ResponseEntity<OrderLineOutputDTO> addOrderLine (@RequestBody OrderlineInputDTO orderlineInputDTO){
+        OrderLineOutputDTO addedOrderLine = orderLineService.addOrderLine(orderlineInputDTO);
 
-        var orderLine = new OrderLine();
-        orderLine.setProduct(productRepository.findById(orderlineInputDTO.getProductId()).get());
-        orderLine.setOrder(orderRepository.findById(orderlineInputDTO.getOrderId()).get());
-        orderLine = orderLineRepository.save(orderLine);
+        //userrepo.find(jwt)
+//        if(user.role.name != "backendmedewerker"){
+//            throw NotauthorizedException();
+//        }
 
-        var out = orderLineService.transferOrderLineToDTO(orderLine);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(out);
+//        orderLine.setProduct(productRepository.findById(orderLine.getProductid()).get());
+//        orderLine.setOrder(orderRepository.findById(orderLine.getOrderid()).get());
+//        orderLine = orderLineRepository.save(orderLine);
+        return ResponseEntity.status(HttpStatus.CREATED).body(addedOrderLine);
     }
 
     @PutMapping()

@@ -1,13 +1,10 @@
 package com.example.backendeindopdracht.DTO.outputDTO;
 
 import com.example.backendeindopdracht.model.Order;
-import com.example.backendeindopdracht.model.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.math.BigDecimal;
 
 @Setter
 @Getter
@@ -16,11 +13,14 @@ import java.math.BigDecimal;
 public class OrderLineOutputDTO {
 
     private Long id;
+    private String productName;
     private int quantity;
-    private BigDecimal totalAmount;
+    private double unitPrice;
     private Order order;
-    private Product product;
+    private Long orderid;
+    private Long productid;
 
 
-
+    public OrderLineOutputDTO(Long orderId, int quantity, double unitPrice, String productName) {
+    }
 }

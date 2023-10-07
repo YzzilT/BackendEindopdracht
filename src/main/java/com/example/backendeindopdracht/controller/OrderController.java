@@ -26,13 +26,25 @@ public class OrderController {
 
 
     @PostMapping
-    public ResponseEntity<OrderOutputDTO> addOrder (@RequestBody OrderInputDTO orderInputDTO){
+    public ResponseEntity<Order> addOrder (@RequestBody Order order){
 
-       OrderOutputDTO orderOutputDTO = orderService.addOrder(orderInputDTO);
 
-       return ResponseEntity.status(HttpStatus.CREATED).body(orderOutputDTO);
+        var user = userRepository.findById(order.getUserid()).get();
+        order.setUser(user);
+
+        order = orderRepository.save(order);
+        return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
 
+
+//    @PostMapping("/addOrderLine/{orderid}/{product}")
+//    public ResponseEntity<OrderLine> addOrder (@RequestBody OrderLine orderline,@PathVariable int orderid){
+//        Order order = orderRepository.findById((long) orderid).get();
+//        orderline.setOrder(order);
+//        OrderLine orderlineout = orderLineRepository.save(orderline);
+//        orderlineout.setOrder(null);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(orderlineout);
+//    }
 
 
     //GET ALL
@@ -62,7 +74,11 @@ public class OrderController {
     }
 
 
-
+   /* public void calculateStock() {
+        Order o = null;
+        o.quantity = 0;
+        o.setQuantity(0);
+    }*/
 
 
 
