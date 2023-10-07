@@ -1,11 +1,8 @@
 package com.example.backendeindopdracht.service;
 
-import com.example.backendeindopdracht.DTO.inputDTO.ProductInputDTO;
 import com.example.backendeindopdracht.DTO.inputDTO.UserInputDTO;
-import com.example.backendeindopdracht.DTO.outputDTO.ProductOutputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.UserOutputDTO;
 import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
-import com.example.backendeindopdracht.model.Product;
 import com.example.backendeindopdracht.model.User;
 import com.example.backendeindopdracht.model.Role;
 import com.example.backendeindopdracht.repository.UserRepository;
@@ -27,15 +24,15 @@ public class UserService {
 
 
     //POST
-    public UserOutputDTO addUser(UserInputDTO userInputDTO) {
+    public UserOutputDTO addUser (UserInputDTO userInputDTO){
         User user = transferInputDtoUserToUser(userInputDTO);
         Long roleId = userInputDTO.getRoleid();
-        if (roleId == null) {
+        if (roleId == null){
             throw new IllegalArgumentException("Role ID is required");
         }
 
         Optional<Role> optionalRole = roleRepository.findById(roleId);
-        if (optionalRole.isEmpty()) {
+        if (optionalRole.isEmpty()){
             throw new RecordNotFoundException("No role found with id: " + userInputDTO.getRoleid());
         } else {
 
@@ -46,20 +43,6 @@ public class UserService {
 
         }
     }
-
-    //POST
-//    public ProductOutputDTO addProductToUser(ProductInputDTO productInputDTO, Long id) {
-//
-//        Optional<User> optionalUser = userRepository.findById(id);
-//        if (optionalUser.isEmpty()) {
-//            throw new RecordNotFoundException("No user found with id: " + id);
-//        }
-//
-//
-//
-//
-//    }
-
 
     //GET ALL
     public List<UserOutputDTO> getAllUsers(){

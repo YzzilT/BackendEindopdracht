@@ -7,7 +7,10 @@ import com.example.backendeindopdracht.DTO.outputDTO.OrderLineOutputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.OrderOutputDTO;
 import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
 import com.example.backendeindopdracht.model.*;
-import com.example.backendeindopdracht.repository.*;
+import com.example.backendeindopdracht.repository.OrderLineRepository;
+import com.example.backendeindopdracht.repository.OrderRepository;
+import com.example.backendeindopdracht.repository.ProductRepository;
+import com.example.backendeindopdracht.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +25,6 @@ import java.util.stream.StreamSupport;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final InvoiceRepository invoiceRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final OrderLineRepository orderLineRepository;
@@ -31,64 +33,45 @@ public class OrderService {
 
 
     //POST
-    public OrderOutputDTO addOrder (OrderInputDTO orderInputDTO) {
+    public OrderOutputDTO addOrder (OrderInputDTO orderInputDTO){
         Order order = transferOrderInputDtoToOrder(orderInputDTO);
-        order.setInvoice(invoiceRepository.findById(orderInputDTO.getInvoiceId()).get());
-        order.setUser(userRepository.findById(orderInputDTO.getUserid()).get());
+       List <Long> orderLineIds = orderInputDTO.getOrderLineIds();
 
-//        List<OrderLine> orderLineIds = orderInputDTO.getOrderLineIds();
-//
-//        List<Long> extractedIds = extractIdsFromOrderLines(orderLineIds);
-//
-//        if (orderLineIds == null || orderLineIds.isEmpty()) {
-//            throw new IllegalArgumentException("orderlines are required");
-//        }
-//
-//
-//
-//        for (Long orderLineId : extractedIds) {
-//            addOrderLineToOrder(order, orderLineId);
-//        }
-
-        orderRepository.save(order);
-
-        return transferOrderToOutputDTO(order);
-
-    }
-
-    //POST
-    public OrderOutputDTO addOrderLineToOrder(Order order, Long orderline_id){
-
-        Optional<OrderLine> optionalOrderLine = orderLineRepository.findById(orderline_id);
-        if (optionalOrderLine.isEmpty()){
-            throw new RecordNotFoundException("No orderline found with id: " + orderline_id);
+        if (orderLineIds == null || orderLineIds.isEmpty()){
+            throw new IllegalArgumentException("orderline ID is required");
         }
 
-        OrderLine orderLine = optionalOrderLine.get();
-        //orderline toevoegen aan order
-        order.getOrderLineIds().add(orderLine);
-        //order opslaan
-        orderRepository.save(order);
+        List<OrderLine> optionalOrderLine = StreamSupport
+                .stream(orderLineRepository.findAllById(orderLineIds).spliterator(), false)
+                .collect(Collectors.toList());
 
-        return transferOrderToOutputDTO(order);
-    }
+//        List<OrderLine> optionalOrderLine = orderLineRepository.findAllById(orderLineId);
 
-    public List<Long> extractIdsFromOrderLines(List<OrderLine> orderLines) {
-        List<Long> orderLineIds = new ArrayList<>();
+        if (optionalOrderLine.size() != optionalOrderLine.size()){
+            throw new RecordNotFoundException("No orderlines found with id: " + orderInputDTO.getOrderLineIds());
+        } else {
+            order.setOrderLines(optionalOrderLine);
+            orderRepository.save(order);
 
-        for (OrderLine orderLine : orderLines) {
-            Long orderLineId = orderLine.getId();
-            orderLineIds.add(orderLineId);
-        }
-        for (Long id : orderLineIds) {
-            System.out.println("OrderLine ID: " + id);
+            return transferOrderToOutputDTO(order);
         }
 
-        return orderLineIds;
+
+
+
+
+
+//        Order order = transferOrderInputDtoToOrder(orderInputDTO);
+//        orderRepository.save(order);
+//        OrderOutputDTO orderOutputDTO = transferOrderToOutputDTO(order);
+//
+//        return orderOutputDTO;
+//        order = orderRepository.save(order);
+//        return transferOrderToOutputDTO(order);
+
+
 
     }
-
-
 
     //GET ALL
     public List<OrderOutputDTO> getAllOrders(){
@@ -111,7 +94,6 @@ public class OrderService {
         return transferOrderToOutputDTO(order);
     }
 
-
     //PUT
     public OrderOutputDTO updateOrder (OrderInputDTO orderInputDTO, Long id){
         Optional<Order> optionalOrder = orderRepository.findById(id);
@@ -120,7 +102,7 @@ public class OrderService {
         } else {
             Order updateOrder = transferOrderInputDtoToOrder(orderInputDTO);
             updateOrder.setId(id);
-            Order updatedOrder = orderRepository.save(updateOrder);
+            Order updatedRole = orderRepository.save(updateOrder);
 
             return transferOrderToOutputDTO(updateOrder);
         }
@@ -137,17 +119,60 @@ public class OrderService {
         return optionalOrder.get();
     }
 
+    /*//Add product to order
+    public OrderOutputDTO assignProductToOrder (Long id, Long orderid){
+        Optional<Order> optionalOrder = orderRepository.findById(id);
+        Optional<Product> optionalProduct = productRepository.findById(orderid);
+        if (optionalOrder.isEmpty()){
+            throw new RecordNotFoundException("No order found with id: " + id);
+        }
+        if (optionalProduct.isEmpty()){
+            throw new RecordNotFoundException("no product found with id: " + id);
+        }
+
+        Order order = optionalOrder.get();
+        Product product = optionalProduct.get();
+        List<Product> productList = order.getProducts();
+        productList.add(product);
+        order.setProducts(productList);
+        orderRepository.save(order);
+        return transferOrderToOutputDTO(order);
+    }
+*/
+    public OrderLineOutputDTO addOrderLine(Long orderId, OrderlineInputDTO orderLineInputDto){
+        Order order = orderRepository.findById(orderId).orElseThrow(()-> new RecordNotFoundException("No order found with id: " + orderId));
+
+        OrderLine orderLine = new OrderLine();
+        orderLine.setQuantity(orderLineInputDto.getQuantity());
+        orderLine.setUnitPrice(orderLineInputDto.getUnitPrice());
+        orderLine.setProductName(orderLineInputDto.getProductName());
+
+        order.getOrderLines().add(orderLine);
+
+        orderRepository.save(order);
+
+        return new OrderLineOutputDTO(orderLine.getId(), orderLine.getQuantity(), orderLine.getUnitPrice(), orderLine.getProductName());
+    }
+
+   /* public void addProductToOrder(Order order, Product product){
+        order.addProduct(product);
+        product.setOrder(order);
+        orderRepository.save(order);
+    }*/
+
+
+
 
     public Order transferOrderInputDtoToOrder(OrderInputDTO orderInputDTO){
         Order order = new Order();
 
         order.setId(orderInputDTO.getId());
-        order.setInvoice(invoiceRepository.findById(orderInputDTO.getInvoiceId()).get());
+        order.setInvoice(orderInputDTO.getInvoice());
+        order.setOrderLines(orderInputDTO.getOrderLines());
         order.setCustomerName(orderInputDTO.getCustomerName());
         order.setTotalAmount(orderInputDTO.getTotalAmount());
-        order.setOrderLineIds(orderInputDTO.getOrderLineIds());
-        // TODO: 10/5/2023 how to set the user and orderlinelist?
-
+        order.setUserid(orderInputDTO.getUserId());
+        order.setOrderLineId(orderInputDTO.getOrderLineId());
         return order;
     }
 
@@ -157,10 +182,11 @@ public class OrderService {
 
         orderOutputDTO.setId(order.getId());
         orderOutputDTO.setInvoice(order.getInvoice());
+        orderOutputDTO.setOrderLines(order.getOrderLines());
         orderOutputDTO.setCustomerName(order.getCustomerName());
         orderOutputDTO.setTotalAmount(order.getTotalAmount());
-        orderOutputDTO.setOrderLineIds(order.getOrderLineIds());
-        // TODO: 10/5/2023 how to set the user?
+        orderOutputDTO.setUserid(order.getUserid());
+        orderOutputDTO.setOrderLineId(order.getOrderLineId());
 
         return orderOutputDTO;
 

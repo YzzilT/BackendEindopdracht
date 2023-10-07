@@ -18,13 +18,12 @@ import java.util.List;
 public class OrderInputDTO {
 
     private Long id;
-    private long invoiceId;
-    private List <OrderLine> orderLineIds;
+    private Invoice invoice;
     private String customerName;
     private BigDecimal totalAmount;
-    private long userid;
-
-
+    //private User user;
+    private Long userId;
+    private List <Long> orderLineIds;
 
 
 }

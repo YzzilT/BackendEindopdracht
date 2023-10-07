@@ -29,7 +29,6 @@ public class Repair {
     private String problemDescription;
     private long userid;
     private long productid;
-    private int fileId;
 
 
 }
