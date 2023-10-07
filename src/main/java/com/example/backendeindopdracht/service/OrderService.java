@@ -34,6 +34,7 @@ public class OrderService {
     public OrderOutputDTO addOrder (OrderInputDTO orderInputDTO) {
         Order order = transferOrderInputDtoToOrder(orderInputDTO);
         order.setInvoice(invoiceRepository.findById(orderInputDTO.getInvoiceId()).get());
+        order.setUser(userRepository.findById(orderInputDTO.getUserid()).get());
 
 //        List<OrderLine> orderLineIds = orderInputDTO.getOrderLineIds();
 //

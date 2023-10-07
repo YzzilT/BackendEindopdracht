@@ -22,7 +22,7 @@ public class OrderInputDTO {
     private List <OrderLine> orderLineIds;
     private String customerName;
     private BigDecimal totalAmount;
-    private User user;
+    private long userid;
 
 
 
