@@ -125,12 +125,11 @@ public class UserService {
         userOutputDTO.setLastName(user.getLastName());
         userOutputDTO.setPassword(user.getPassword());
         userOutputDTO.setEmail(user.getEmail());
-        //userOutputDTO.setRoleId(user.getRole().getId());
+//        userOutputDTO.setRoleId(user.getRoleid());
         if (user.getRole() != null) {
-            userOutputDTO.setRoleId(user.getRole().getId());
+            userOutputDTO.setRoleId(user.getRoleid());
         } else {
-            // Handle the case where the role is null (if applicable)
-            userOutputDTO.setRoleId(null);
+            throw new RecordNotFoundException("User role is null");
         }
 
 

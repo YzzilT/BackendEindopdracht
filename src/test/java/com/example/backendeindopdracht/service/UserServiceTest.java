@@ -34,7 +34,8 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+//        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
@@ -70,6 +71,33 @@ class UserServiceTest {
 
         User savedUser = userCaptor.getValue();
         assertEquals("Lizzy", savedUser.getFirstName());
+    }
+
+    @Test
+    void shouldNotReturnUserWhenRoleIsNull(){
+        UserInputDTO userInputDTO = new UserInputDTO();
+        userInputDTO.setRoleid(null);
+
+        when(roleRepository.findById(null)).thenReturn(Optional.empty());
+
+        RecordNotFoundException exception = assertThrows(RecordNotFoundException.class, () -> {
+            userService.addUser(userInputDTO);
+        });
+
+        assertEquals("Role ID is required", exception.getMessage());
+    }
+
+    @Test
+    void shouldNotReturnUserWhenRoleNotFound(){
+        Long roleId = 1L;
+        UserInputDTO userInputDTO = new UserInputDTO();
+        userInputDTO.setRoleid(roleId);
+
+        when(roleRepository.findById(roleId)).thenReturn(Optional.empty());
+
+        assertThrows(RecordNotFoundException.class, () -> {
+            userService.addUser(userInputDTO);
+        });
     }
 
     @Test
@@ -121,7 +149,7 @@ class UserServiceTest {
         assertEquals("Telford", userOutputDTO1.getLastName());
         assertEquals("lizzytelford", userOutputDTO1.getPassword());
         assertEquals("lizzytelford@gmail.com", userOutputDTO1.getEmail());
-        //rolename
+
 
 
         UserOutputDTO userOutputDTO2 = userOutputDTOList.get(1);
@@ -130,7 +158,7 @@ class UserServiceTest {
         assertEquals("Kat",  userOutputDTO2.getLastName());
         assertEquals("winstonkat", userOutputDTO2.getPassword());
         assertEquals("winstonkat@gmail.com",  userOutputDTO2.getEmail());
-        //hoe Rolename krijgen?
+
 
     }
 
@@ -178,7 +206,7 @@ class UserServiceTest {
     }
 
     @Test
-    void shouldDeleteUserById(){
+    void shouldDeleteUserWhenUserFound(){
         Long userId = 1L;
 
         User user = new User();
@@ -191,6 +219,7 @@ class UserServiceTest {
         assertEquals(userId, user1.getId());
 
     }
+
 
     @Test
     void shouldThrowExceptionWhenDeletingNonExistentUser(){
@@ -287,6 +316,58 @@ class UserServiceTest {
         assertEquals(2L, user.getRole().getId());
         assertEquals("user", user.getRole().getRoleName());
 
+
+    }
+
+    @Test
+    void shouldThrowRecordNotFoundExceptionWhenRoleNotFound(){
+        UserInputDTO userInputDTO = new UserInputDTO();
+        userInputDTO.setId(1L);
+        userInputDTO.setRoleid(2L);
+
+        when(roleRepository.findById(2L)).thenReturn(Optional.empty());
+
+        assertThrows(RecordNotFoundException.class, () -> userService.transferInputDtoUserToUser(userInputDTO));
+    }
+
+    @Test
+    public void shouldTransferUserDtoWithRole(){
+        Role role = new Role();
+        role.setId(1L);
+
+        User user = new User();
+        user.setId(1L);
+        user.setFirstName("Jane");
+        user.setLastName("Doe");
+        user.setPassword("password");
+        user.setEmail("janedoe@hotmail.com");
+        user.setRole(role);
+
+
+        UserOutputDTO userOutputDTO = userService.transferUserToDTO(user);
+
+        assertEquals(1L, userOutputDTO.getId());
+        assertEquals("Jane", userOutputDTO.getFirstName());
+        assertEquals("Doe", userOutputDTO.getLastName());
+        assertEquals("password", userOutputDTO.getPassword());
+        assertEquals("janedoe@hotmail.com", userOutputDTO.getEmail());
+        assertEquals(1L, userOutputDTO.getRoleId());
+    }
+
+
+    @Test
+    public void shouldTransferUserDtoWithoutRole(){
+        User user = new User();
+        user.setId(2L);
+        user.setFirstName("Jane");
+        user.setLastName("Doe");
+        user.setPassword("password123");
+        user.setEmail("janedoe@gmail.com");
+        user.setRole(null);
+
+        assertThrows(RecordNotFoundException.class, () -> {
+            userService.transferUserToDTO(user);
+        });
 
     }
 
