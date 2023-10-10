@@ -3,13 +3,16 @@ import static org.mockito.Mockito.*;
 
 import com.example.backendeindopdracht.DTO.inputDTO.RoleInputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.RoleOutputDTO;
+import com.example.backendeindopdracht.controller.RoleController;
 import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
 import com.example.backendeindopdracht.model.Role;
 import com.example.backendeindopdracht.repository.RoleRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,13 +25,21 @@ class RoleServiceTest {
 
     @Mock
     private RoleRepository roleRepository;
-    @Mock
+   @InjectMocks
    private RoleService roleService;
 
+   @InjectMocks
+   private RoleController roleController;
+
+    @Captor
+    private ArgumentCaptor<Role> roleCaptor;
+
+
     @BeforeEach
-    public void setUp(){
-        roleService = new RoleService(roleRepository);
+    void setUp() {
+        MockitoAnnotations.initMocks(this);
     }
+
 
     @Test
     void ShouldAddRoleName() {
@@ -138,17 +149,65 @@ class RoleServiceTest {
     }
 
     @Test
+    void shouldUpdateRole(){
+
+        Role existingRole = new Role();
+        existingRole.setId(1L);
+
+        Mockito.when(roleRepository.findById(1L)).thenReturn(Optional.of(existingRole));
+
+        RoleInputDTO roleInputDTO = new RoleInputDTO();
+        roleInputDTO.setRoleName("Updated Role");
+
+        ResponseEntity<?> responseEntity = roleService.updateRole(roleInputDTO, 1L);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    }
+
+//    Long roleId = 1L;
+//    RoleInputDTO roleInputDTO = new RoleInputDTO();
+//    Role exisingRole = new Role();
+//    exisingRole.setId(roleId);
+//
+//    when(roleRepository.findById(roleId)).thenReturn(Optional.of(exisingRole));
+//
+//    ResponseEntity<?> responseEntity = roleController.updateRole(roleId, roleInputDTO);
+//
+//    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+
+    @Test
+    void shouldThrowRecordNotFoundExceptionWhenRoleNotFound(){
+        RoleInputDTO roleInputDTO = new RoleInputDTO();
+        roleInputDTO.setRoleName("Updated Role");
+
+        ResponseEntity<?> responseEntity = roleService.updateRole(roleInputDTO, 2L);
+
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+        assertEquals("Role with id: 2 not found.", responseEntity.getBody());
+    }
+//        Long roleId = 1L;
+//
+//        when(roleRepository.findById(roleId)).thenReturn(Optional.empty());
+//
+//        assertThrows(RecordNotFoundException.class, () -> roleService.updateRole(new RoleInputDTO(), roleId));
+
+
+
+
+    @Test
     void shouldDeleteExistingRole() {
 
-        //deleting an existing role
-        Long roleId = 1L;
-        Role role = new Role();
-        role.setId(roleId);
+       Role existingRole = new Role();
+       existingRole.setId(1L);
 
-        when(roleRepository.findById(roleId)).thenReturn(Optional.of(role));
-        roleService.deleteRole(roleId);
+        when(roleRepository.findById(1L)).thenReturn(Optional.of(existingRole));
 
-        verify(roleRepository).deleteById(roleId);
+        Role deletedRole = roleService.deleteRole(1L);
+
+        verify(roleRepository).deleteById(1L);
+
+        assertEquals(existingRole, deletedRole);
 
     }
 
@@ -164,6 +223,37 @@ class RoleServiceTest {
         assertThrows(RecordNotFoundException.class, () -> {
         roleService.deleteRole(nonExistingRoleId);});
 
+    }
+
+    @Test
+    void shouldTransferInputDtoToRole(){
+        RoleInputDTO roleInputDTO = new RoleInputDTO();
+        roleInputDTO.setId(1L);
+        roleInputDTO.setRoleName("Test role");
+
+        Role role = new Role();
+        role.setId(1L);
+        role.setRoleName("Test role");
+
+        when(roleRepository.findById(1L)).thenReturn(Optional.of(role));
+
+
+        Role resultRole = roleService.transferInputDtoRoleToRole(roleInputDTO);
+
+        assertEquals(1L, resultRole.getId());
+        assertEquals("Test role", resultRole.getRoleName());
+    }
+
+    @Test
+    void shouldTransferRoleToOutputDto(){
+        Role role = new Role();
+        role.setId(1L);
+        role.setRoleName("Test role");
+
+        RoleOutputDTO roleOutputDTO = roleService.transferRoleToDTO(role);
+
+        assertEquals(1L, roleOutputDTO.getId());
+        assertEquals("Test role", roleOutputDTO.getRoleName());
 
     }
 }
