@@ -7,6 +7,8 @@ import com.example.backendeindopdracht.model.Role;
 import com.example.backendeindopdracht.model.User;
 import com.example.backendeindopdracht.repository.RoleRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -51,18 +53,31 @@ public class RoleService {
     }
 
     //PUT
-    public RoleOutputDTO updateRole (RoleInputDTO roleInputDTO, Long id){
+    public ResponseEntity<?> updateRole(RoleInputDTO roleInputDTO, Long id) {
         Optional<Role> optionalRole = roleRepository.findById(id);
-        if (optionalRole.isEmpty()){
-            throw new RecordNotFoundException("No user found with id " + id);
+
+        if (optionalRole.isEmpty()) {
+            String errorMessage = "Role with id: " + id + " not found.";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
         } else {
             Role updateRole = transferInputDtoRoleToRole(roleInputDTO);
             updateRole.setId(id);
             Role updatedRole = roleRepository.save(updateRole);
-
-            return transferRoleToDTO(updatedRole);
+            return ResponseEntity.ok(transferRoleToDTO(updatedRole));
         }
     }
+//    public RoleOutputDTO updateRole (RoleInputDTO roleInputDTO, Long id){
+//        Optional<Role> optionalRole = roleRepository.findById(id);
+//        if (optionalRole.isEmpty()){
+//            throw new RecordNotFoundException("No user found with id " + id);
+//        } else {
+//            Role updateRole = transferInputDtoRoleToRole(roleInputDTO);
+//            updateRole.setId(id);
+//            Role updatedRole = roleRepository.save(updateRole);
+//
+//            return transferRoleToDTO(updatedRole);
+//        }
+//    }
 
     //DELETE
     public Role deleteRole(Long id){
@@ -70,8 +85,11 @@ public class RoleService {
         if (optionalRole.isEmpty()){
             throw new RecordNotFoundException("No role found with id: " + id);
         }
-        roleRepository.deleteById(id);
-        return optionalRole.get();
+
+        Role roleToDelete = optionalRole.get();
+        roleRepository.delete(roleToDelete);
+
+        return roleToDelete;
     }
 
 
