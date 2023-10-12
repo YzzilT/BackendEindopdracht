@@ -58,12 +58,16 @@ public class RoleController {
 //    }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Role> deleteRole(@PathVariable long id){
-
-        var user = roleService.deleteRole(id);
-        return ResponseEntity.status(HttpStatus.OK).body(user);
+    public ResponseEntity<?> deleteRole(@PathVariable Long id) {
+        roleService.deleteRole(id);
+        return ResponseEntity.noContent().build();
+    }
+//    public ResponseEntity<Role> deleteRole(@PathVariable long id){
+//
+//        var user = roleService.deleteRole(id);
+//        return ResponseEntity.status(HttpStatus.OK).body(user);
 //        roleRepository.deleteById(id);
 //        return ResponseEntity.noContent().build();
-    }
+
 
 }

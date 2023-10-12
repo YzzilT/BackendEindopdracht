@@ -85,8 +85,11 @@ public class RoleService {
         if (optionalRole.isEmpty()){
             throw new RecordNotFoundException("No role found with id: " + id);
         }
-        roleRepository.deleteById(id);
-        return optionalRole.get();
+
+        Role roleToDelete = optionalRole.get();
+        roleRepository.delete(roleToDelete);
+
+        return roleToDelete;
     }
 
 

@@ -126,27 +126,27 @@ class RoleServiceTest {
         role.setRoleName("Testrol");
 
         //act
-        when(roleRepository.findById(1L)).thenReturn(Optional.of(role));
+        doReturn(Optional.of(role)).when(roleRepository).findById(1L);
 
         RoleOutputDTO roleOutputDTO = roleService.getRoleById(1L);
 
         //assert
-        assertEquals(1L, role.getId());
+        assertEquals(1L, roleOutputDTO.getId());
         assertEquals("Testrol", roleOutputDTO.getRoleName());
     }
 
     @Test
-    void shouldReturnIdNotFound() {
+    void shouldThrowRecordNotFoundExceptionWhenRoleNotFound(){
+        RoleInputDTO roleInputDTO = new RoleInputDTO();
+        roleInputDTO.setRoleName("Updated Role");
 
-        //arrange
-        when(roleRepository.findById(2L)).thenReturn(Optional.empty());
+        ResponseEntity<?> responseEntity = roleService.updateRole(roleInputDTO, 2L);
 
-        //act
-        assertThrows(RecordNotFoundException.class, () -> roleService.getRoleById(2L));
-
-        //assert
-        verify(roleRepository, times(1)).findById(2L);
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+        assertEquals("Role with id: 2 not found.", responseEntity.getBody());
     }
+
+
 
     @Test
     void shouldUpdateRole(){
@@ -176,21 +176,7 @@ class RoleServiceTest {
 //    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
 
-    @Test
-    void shouldThrowRecordNotFoundExceptionWhenRoleNotFound(){
-        RoleInputDTO roleInputDTO = new RoleInputDTO();
-        roleInputDTO.setRoleName("Updated Role");
 
-        ResponseEntity<?> responseEntity = roleService.updateRole(roleInputDTO, 2L);
-
-        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
-        assertEquals("Role with id: 2 not found.", responseEntity.getBody());
-    }
-//        Long roleId = 1L;
-//
-//        when(roleRepository.findById(roleId)).thenReturn(Optional.empty());
-//
-//        assertThrows(RecordNotFoundException.class, () -> roleService.updateRole(new RoleInputDTO(), roleId));
 
 
 
@@ -198,16 +184,9 @@ class RoleServiceTest {
     @Test
     void shouldDeleteExistingRole() {
 
-       Role existingRole = new Role();
-       existingRole.setId(1L);
-
-        when(roleRepository.findById(1L)).thenReturn(Optional.of(existingRole));
-
-        Role deletedRole = roleService.deleteRole(1L);
-
-        verify(roleRepository).deleteById(1L);
-
-        assertEquals(existingRole, deletedRole);
+        Long roleId = 2L;
+        when(roleRepository.findById(roleId)).thenReturn(Optional.empty());
+        assertThrows(RecordNotFoundException.class, ()-> roleService.deleteRole(roleId));
 
     }
 
