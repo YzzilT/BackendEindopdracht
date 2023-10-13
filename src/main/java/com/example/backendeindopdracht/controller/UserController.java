@@ -3,9 +3,6 @@ package com.example.backendeindopdracht.controller;
 import com.example.backendeindopdracht.DTO.inputDTO.UserInputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.UserOutputDTO;
 import com.example.backendeindopdracht.model.User;
-import com.example.backendeindopdracht.repository.OrderRepository;
-import com.example.backendeindopdracht.repository.RoleRepository;
-import com.example.backendeindopdracht.repository.UserRepository;
 import com.example.backendeindopdracht.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -26,6 +23,13 @@ public class UserController {
     private final UserService userService;
 
 
+    @PostMapping("/add")
+    public ResponseEntity<UserOutputDTO> addUser (@RequestBody UserInputDTO userInputDTO){
+        UserOutputDTO addedUser = userService.addUser(userInputDTO);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(addedUser);
+    }
+
     @GetMapping()
     public ResponseEntity<List<UserOutputDTO>> getAllUsers (){
         return ResponseEntity.ok().body(userService.getAllUsers());
@@ -36,14 +40,6 @@ public class UserController {
         return ResponseEntity.ok().body(userService.getUserById(id));
     }
 
-
-    @PostMapping("/add")
-
-    public ResponseEntity<UserOutputDTO> addUser (@RequestBody UserInputDTO userInputDTO){
-        UserOutputDTO addedUser = userService.addUser(userInputDTO);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(addedUser);
-    }
 
     @PutMapping("/{id}")
     public ResponseEntity<UserOutputDTO> updateUser (@PathVariable Long id, @Valid @RequestBody UserInputDTO userInputDTO){

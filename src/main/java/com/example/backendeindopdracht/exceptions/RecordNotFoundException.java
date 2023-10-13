@@ -1,6 +1,9 @@
 package com.example.backendeindopdracht.exceptions;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class RecordNotFoundException extends RuntimeException{
@@ -11,5 +14,10 @@ public class RecordNotFoundException extends RuntimeException{
 
     public RecordNotFoundException(String message) {
         super(message);
+    }
+
+    @ExceptionHandler(RecordNotFoundException.class)
+    public ResponseEntity<String> handleRecordNotFoundException(RecordNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 }

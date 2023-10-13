@@ -1,8 +1,5 @@
 package com.example.backendeindopdracht.controller;
 
-import com.example.backendeindopdracht.DTO.inputDTO.RepairInputDTO;
-import com.example.backendeindopdracht.DTO.outputDTO.RepairOutputDTO;
-import com.example.backendeindopdracht.model.OrderLine;
 import com.example.backendeindopdracht.model.Repair;
 import com.example.backendeindopdracht.repository.ProductRepository;
 import com.example.backendeindopdracht.repository.RepairRepository;

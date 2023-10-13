@@ -23,16 +23,6 @@ public class OrderLineController {
     private final OrderRepository orderRepository;
     private final OrderLineService orderLineService;
 
-    @GetMapping()
-    public ResponseEntity<Iterable<OrderLineOutputDTO>> getAllOrderLines(){
-        return ResponseEntity.ok().body(orderLineService.getAllOrderLines());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<OrderLineOutputDTO> getOrderLineById (@PathVariable long id){
-        return ResponseEntity.ok().body(orderLineService.getOrderLineById(id));
-    }
-
     @PostMapping()
     public ResponseEntity<OrderLineOutputDTO> addOrderLine (@RequestBody OrderlineInputDTO orderlineInputDTO){
 
@@ -46,19 +36,27 @@ public class OrderLineController {
         return ResponseEntity.status(HttpStatus.CREATED).body(out);
     }
 
+    @GetMapping()
+    public ResponseEntity<Iterable<OrderLineOutputDTO>> getAllOrderLines(){
+        return ResponseEntity.ok().body(orderLineService.getAllOrderLines());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderLineOutputDTO> getOrderLineById (@PathVariable long id){
+        return ResponseEntity.ok().body(orderLineService.getOrderLineById(id));
+    }
+
+
     @PutMapping()
     public ResponseEntity<OrderLineOutputDTO> updateOrderLine (@PathVariable Long id, @Valid @RequestBody OrderlineInputDTO orderlineInputDTO){
         return ResponseEntity.ok().body(orderLineService.updateOrderLine(orderlineInputDTO, id));
-//        orderLine = orderLineRepository.save(orderLine);
-//        return ResponseEntity.status(HttpStatus.OK).body(orderLine);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<OrderLine> deleteOrderLine(@PathVariable long id){
         var orderLine = orderLineService.deleteOrderLine(id);
-        return ResponseEntity.status(HttpStatus.OK).body(orderLine);
-//        orderLineRepository.deleteById(id);
-//        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(orderLine);
+
     }
 
 }

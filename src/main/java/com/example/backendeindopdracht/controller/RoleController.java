@@ -3,7 +3,6 @@ package com.example.backendeindopdracht.controller;
 import com.example.backendeindopdracht.DTO.inputDTO.RoleInputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.RoleOutputDTO;
 import com.example.backendeindopdracht.model.Role;
-import com.example.backendeindopdracht.repository.RoleRepository;
 import com.example.backendeindopdracht.service.RoleService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -18,8 +17,16 @@ import java.util.List;
 @RequestMapping("/roles")
 public class RoleController {
 
-    private final RoleRepository roleRepository;
+
     private final RoleService roleService;
+
+    //POST
+    @PostMapping()
+    public ResponseEntity<RoleOutputDTO> addRole (@RequestBody RoleInputDTO roleInputDTO){
+        RoleOutputDTO addedRole = roleService.addRole(roleInputDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(addedRole);
+    }
+
     @GetMapping()
     public ResponseEntity<List<RoleOutputDTO>> getAllRoles(){
         return ResponseEntity.ok().body(roleService.getAllRoles());
@@ -31,12 +38,7 @@ public class RoleController {
         return ResponseEntity.ok().body(roleService.getRoleById(id));
     }
 
-    //POST
-    @PostMapping()
-    public ResponseEntity<RoleOutputDTO> addRole (@RequestBody RoleInputDTO roleInputDTO){
-        RoleOutputDTO addedRole = roleService.addRole(roleInputDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(addedRole);
-    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<RoleOutputDTO> updateRole (@PathVariable Long id, @Valid @RequestBody RoleInputDTO roleInputDTO){
@@ -48,8 +50,7 @@ public class RoleController {
 
         var user = roleService.deleteRole(id);
         return ResponseEntity.status(HttpStatus.OK).body(user);
-//        roleRepository.deleteById(id);
-//        return ResponseEntity.noContent().build();
+
     }
 
 }

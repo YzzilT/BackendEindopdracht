@@ -4,7 +4,6 @@ import com.example.backendeindopdracht.DTO.inputDTO.RoleInputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.RoleOutputDTO;
 import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
 import com.example.backendeindopdracht.model.Role;
-import com.example.backendeindopdracht.model.User;
 import com.example.backendeindopdracht.repository.RoleRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
