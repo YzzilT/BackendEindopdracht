@@ -52,31 +52,18 @@ public class RoleService {
     }
 
     //PUT
-    public ResponseEntity<?> updateRole(RoleInputDTO roleInputDTO, Long id) {
+    public RoleOutputDTO updateRole (RoleInputDTO roleInputDTO, Long id){
         Optional<Role> optionalRole = roleRepository.findById(id);
-
-        if (optionalRole.isEmpty()) {
-            String errorMessage = "Role with id: " + id + " not found.";
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
+        if (optionalRole.isEmpty()){
+            throw new RecordNotFoundException("No user found with id " + id);
         } else {
             Role updateRole = transferInputDtoRoleToRole(roleInputDTO);
             updateRole.setId(id);
             Role updatedRole = roleRepository.save(updateRole);
-            return ResponseEntity.ok(transferRoleToDTO(updatedRole));
+
+            return transferRoleToDTO(updatedRole);
         }
     }
-//    public RoleOutputDTO updateRole (RoleInputDTO roleInputDTO, Long id){
-//        Optional<Role> optionalRole = roleRepository.findById(id);
-//        if (optionalRole.isEmpty()){
-//            throw new RecordNotFoundException("No user found with id " + id);
-//        } else {
-//            Role updateRole = transferInputDtoRoleToRole(roleInputDTO);
-//            updateRole.setId(id);
-//            Role updatedRole = roleRepository.save(updateRole);
-//
-//            return transferRoleToDTO(updatedRole);
-//        }
-//    }
 
     //DELETE
     public Role deleteRole(Long id){

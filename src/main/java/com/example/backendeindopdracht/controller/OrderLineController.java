@@ -47,7 +47,7 @@ public class OrderLineController {
     }
 
 
-    @PutMapping()
+    @PutMapping("/id")
     public ResponseEntity<OrderLineOutputDTO> updateOrderLine (@PathVariable Long id, @Valid @RequestBody OrderlineInputDTO orderlineInputDTO){
         return ResponseEntity.ok().body(orderLineService.updateOrderLine(orderlineInputDTO, id));
     }
