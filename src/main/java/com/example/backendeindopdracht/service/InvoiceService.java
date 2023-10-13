@@ -2,11 +2,9 @@ package com.example.backendeindopdracht.service;
 
 
 import com.example.backendeindopdracht.DTO.inputDTO.InvoiceInputDTO;
-import com.example.backendeindopdracht.DTO.inputDTO.RoleInputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.InvoiceOutputDTO;
 import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
 import com.example.backendeindopdracht.model.Invoice;
-import com.example.backendeindopdracht.model.Role;
 import com.example.backendeindopdracht.repository.InvoiceRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

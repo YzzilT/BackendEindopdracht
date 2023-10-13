@@ -2,9 +2,7 @@ package com.example.backendeindopdracht.controller;
 
 
 import com.example.backendeindopdracht.DTO.inputDTO.InvoiceInputDTO;
-import com.example.backendeindopdracht.DTO.inputDTO.RoleInputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.InvoiceOutputDTO;
-import com.example.backendeindopdracht.DTO.outputDTO.RoleOutputDTO;
 import com.example.backendeindopdracht.model.Invoice;
 import com.example.backendeindopdracht.repository.InvoiceRepository;
 import com.example.backendeindopdracht.repository.OrderRepository;
@@ -33,14 +31,6 @@ public class InvoiceController {
         return ResponseEntity.status(HttpStatus.CREATED).body(addedInvoice);
     }
 
-    @PutMapping()
-    public ResponseEntity<Invoice> updateInvoice (@RequestBody Invoice invoice){
-        var order = orderRepository.findById(invoice.getOrderid()).get();
-        invoice.setOrder(order);
-        invoice = invoiceRepository.save(invoice);
-        return ResponseEntity.status(HttpStatus.CREATED).body(invoice);
-    }
-
     //GET ALL
     @GetMapping
     public ResponseEntity<List<InvoiceOutputDTO>> getAllInvoices(){
@@ -52,6 +42,15 @@ public class InvoiceController {
     public ResponseEntity<InvoiceOutputDTO> getInvoiceById(@PathVariable Long id){
         return ResponseEntity.ok().body(invoiceService.getInvoiceById(id));
     }
+
+    @PutMapping()
+    public ResponseEntity<Invoice> updateInvoice (@RequestBody Invoice invoice){
+        var order = orderRepository.findById(invoice.getOrderid()).get();
+        invoice.setOrder(order);
+        invoice = invoiceRepository.save(invoice);
+        return ResponseEntity.status(HttpStatus.CREATED).body(invoice);
+    }
+
 
     //PUT
     @PutMapping("/{id}")

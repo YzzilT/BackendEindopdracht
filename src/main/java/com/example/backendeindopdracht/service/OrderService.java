@@ -2,8 +2,6 @@ package com.example.backendeindopdracht.service;
 
 
 import com.example.backendeindopdracht.DTO.inputDTO.OrderInputDTO;
-import com.example.backendeindopdracht.DTO.inputDTO.OrderlineInputDTO;
-import com.example.backendeindopdracht.DTO.outputDTO.OrderLineOutputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.OrderOutputDTO;
 import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
 import com.example.backendeindopdracht.model.*;
@@ -14,8 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @AllArgsConstructor
 @Service
@@ -23,71 +19,25 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final InvoiceRepository invoiceRepository;
-    private final ProductRepository productRepository;
     private final UserRepository userRepository;
-    private final OrderLineRepository orderLineRepository;
+
 
 
 
 
     //POST
     public OrderOutputDTO addOrder (OrderInputDTO orderInputDTO) {
+
         Order order = transferOrderInputDtoToOrder(orderInputDTO);
+
         order.setInvoice(invoiceRepository.findById(orderInputDTO.getInvoiceId()).get());
         order.setUser(userRepository.findById(orderInputDTO.getUserid()).get());
 
-//        List<OrderLine> orderLineIds = orderInputDTO.getOrderLineIds();
-//
-//        List<Long> extractedIds = extractIdsFromOrderLines(orderLineIds);
-//
-//        if (orderLineIds == null || orderLineIds.isEmpty()) {
-//            throw new IllegalArgumentException("orderlines are required");
-//        }
-//
-//
-//
-//        for (Long orderLineId : extractedIds) {
-//            addOrderLineToOrder(order, orderLineId);
-//        }
-
         orderRepository.save(order);
 
         return transferOrderToOutputDTO(order);
 
     }
-
-    //POST
-    public OrderOutputDTO addOrderLineToOrder(Order order, Long orderline_id){
-
-        Optional<OrderLine> optionalOrderLine = orderLineRepository.findById(orderline_id);
-        if (optionalOrderLine.isEmpty()){
-            throw new RecordNotFoundException("No orderline found with id: " + orderline_id);
-        }
-
-        OrderLine orderLine = optionalOrderLine.get();
-        //orderline toevoegen aan order
-        order.getOrderLineIds().add(orderLine);
-        //order opslaan
-        orderRepository.save(order);
-
-        return transferOrderToOutputDTO(order);
-    }
-
-    public List<Long> extractIdsFromOrderLines(List<OrderLine> orderLines) {
-        List<Long> orderLineIds = new ArrayList<>();
-
-        for (OrderLine orderLine : orderLines) {
-            Long orderLineId = orderLine.getId();
-            orderLineIds.add(orderLineId);
-        }
-        for (Long id : orderLineIds) {
-            System.out.println("OrderLine ID: " + id);
-        }
-
-        return orderLineIds;
-
-    }
-
 
 
     //GET ALL
@@ -100,6 +50,7 @@ public class OrderService {
         }
         return orderOutputDTOList;
     }
+
 
     //GET BY ID
     public OrderOutputDTO getOrderById(Long id){

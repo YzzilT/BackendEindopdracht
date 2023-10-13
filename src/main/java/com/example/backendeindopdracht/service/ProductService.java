@@ -2,21 +2,12 @@ package com.example.backendeindopdracht.service;
 
 
 import com.example.backendeindopdracht.DTO.inputDTO.ProductInputDTO;
-import com.example.backendeindopdracht.DTO.outputDTO.OrderLineOutputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.ProductOutputDTO;
 import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
-import com.example.backendeindopdracht.model.Order;
-import com.example.backendeindopdracht.model.OrderLine;
 import com.example.backendeindopdracht.model.Product;
-import com.example.backendeindopdracht.model.ProductType;
-import com.example.backendeindopdracht.repository.OrderLineRepository;
-import com.example.backendeindopdracht.repository.OrderRepository;
 import com.example.backendeindopdracht.repository.ProductRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,60 +19,19 @@ import java.util.Optional;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final OrderLineService orderLineService;
-    private final OrderLineRepository orderLineRepository;
 
 
-    //POST
-//    public ProductOutputDTO createProduct (ProductInputDTO productInputDTO){
-//
-//        Product product = transferInputDtoProductToProduct(productInputDTO);
-//
-//        productRepository.save(product);
-//        Long productId = product.getId();
-//
-//        OrderLineOutputDTO orderLineOutputDTO = orderLineService.addProductToOrderLine(productId, 1);
-//
-//        product.getOrderLines().add(orderLineOutputDTO);
-//        return transferProductToDTO(product);
-//
-//    }
 
+
+//POST
     public ProductOutputDTO createProduct (ProductInputDTO productInputDTO) {
 
         Product product = transferInputDtoProductToProduct(productInputDTO);
         productRepository.save(product);
 
-//        OrderLine orderLine;
-//
-//
-//        Optional<OrderLine> existingOrderLine = orderLineRepository.findByProduct(product);
-//
-//        if (existingOrderLine.isPresent()) {
-//            orderLine = existingOrderLine.get();
-//            int newQuantity = orderLine.getQuantity() + +1;
-//            orderLine.setQuantity(newQuantity);
-//            BigDecimal unitPrice = BigDecimal.valueOf(orderLine.getProduct().getPrice());
-//            BigDecimal totalAmount = unitPrice.multiply(BigDecimal.valueOf(newQuantity));
-//            orderLine.setTotalAmount(totalAmount);
-//            orderLineRepository.save(orderLine);
-//
-//        } else {
-//
-//            orderLine = new OrderLine();
-//            orderLine.setProduct(product);
-//            orderLine.setQuantity(1);
-//            BigDecimal unitPrice = BigDecimal.valueOf(product.getPrice());
-//            BigDecimal totalAmount = unitPrice.multiply(BigDecimal.valueOf(1));
-//            orderLine.setTotalAmount(totalAmount);
-//            orderLineRepository.save(orderLine);
-//
-//        }
-//        product.getOrderLines().add(orderLine);
         return transferProductToDTO(product);
 
     }
-
 
 
     //GET ALL
@@ -104,7 +54,6 @@ public class ProductService {
         Product product = optionalProduct.get();
         return transferProductToDTO(product);
     }
-
 
 
 

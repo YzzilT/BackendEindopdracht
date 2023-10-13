@@ -4,9 +4,7 @@ package com.example.backendeindopdracht.controller;
 import com.example.backendeindopdracht.DTO.inputDTO.OrderInputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.OrderOutputDTO;
 import com.example.backendeindopdracht.model.Order;
-import com.example.backendeindopdracht.repository.OrderLineRepository;
 import com.example.backendeindopdracht.repository.OrderRepository;
-import com.example.backendeindopdracht.repository.UserRepository;
 import com.example.backendeindopdracht.service.OrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,9 +18,8 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
-    private final OrderLineRepository orderLineRepository;
     private final OrderRepository orderRepository;
-    private final UserRepository userRepository;
+
 
 
     @PostMapping
@@ -32,7 +29,6 @@ public class OrderController {
 
        return ResponseEntity.status(HttpStatus.CREATED).body(orderOutputDTO);
     }
-
 
 
     //GET ALL
@@ -60,10 +56,5 @@ public class OrderController {
         orderService.deleteOrder(id);
         return ResponseEntity.noContent().build();
     }
-
-
-
-
-
 
 }

@@ -1,16 +1,15 @@
 package com.example.backendeindopdracht.service;
 
-import com.example.backendeindopdracht.DTO.inputDTO.ProductInputDTO;
+
 import com.example.backendeindopdracht.DTO.inputDTO.UserInputDTO;
-import com.example.backendeindopdracht.DTO.outputDTO.ProductOutputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.UserOutputDTO;
 import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
-import com.example.backendeindopdracht.model.Product;
 import com.example.backendeindopdracht.model.User;
 import com.example.backendeindopdracht.model.Role;
 import com.example.backendeindopdracht.repository.UserRepository;
 import com.example.backendeindopdracht.repository.RoleRepository;
 import lombok.AllArgsConstructor;
+import org.hibernate.tool.schema.spi.ExceptionHandler;
 import org.springframework.stereotype.Service;
 
 
@@ -64,12 +63,11 @@ public class UserService {
     public UserOutputDTO getUserById(Long id){
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isEmpty()){
-            throw new RecordNotFoundException("No user found with id: " + id);
+            throw new RecordNotFoundException ("No user found with id: " + id);
         }
         User user = optionalUser.get();
         return transferUserToDTO(user);
     }
-
 
 
     //PUT
@@ -128,7 +126,7 @@ public class UserService {
         userOutputDTO.setLastName(user.getLastName());
         userOutputDTO.setPassword(user.getPassword());
         userOutputDTO.setEmail(user.getEmail());
-//        userOutputDTO.setRoleId(user.getRoleid());
+
         if (user.getRole() != null) {
             userOutputDTO.setRoleId(user.getRoleid());
         } else {
