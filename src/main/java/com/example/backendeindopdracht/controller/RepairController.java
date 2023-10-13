@@ -33,10 +33,7 @@ public class RepairController {
         return  ResponseEntity.status(HttpStatus.CREATED).body(repair);
     }
 
-    @PutMapping()
-    public ResponseEntity<Repair> updateRepair(@RequestBody Repair repair){
-        return addRepair(repair);
-    }
+
 
     @GetMapping()
     public ResponseEntity<Iterable<Repair>> getAll(){
@@ -46,5 +43,10 @@ public class RepairController {
     @GetMapping("/{id}")
     public ResponseEntity<Repair> get (@PathVariable long id){
         return ResponseEntity.status(HttpStatus.OK).body(repairRepository.findById(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Unable to find resource")));
+    }
+
+    @PutMapping()
+    public ResponseEntity<Repair> updateRepair(@RequestBody Repair repair){
+        return addRepair(repair);
     }
 }

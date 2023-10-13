@@ -35,10 +35,6 @@ class RoleServiceTest {
     private ArgumentCaptor<Role> roleCaptor;
 
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.initMocks(this);
-    }
 
 
     @Test
