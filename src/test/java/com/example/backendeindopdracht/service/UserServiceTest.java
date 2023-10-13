@@ -32,11 +32,6 @@ class UserServiceTest {
     @Captor
     private ArgumentCaptor<User> userCaptor;
 
-    @BeforeEach
-    void setUp() {
-//        MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void shouldAddUser(){
