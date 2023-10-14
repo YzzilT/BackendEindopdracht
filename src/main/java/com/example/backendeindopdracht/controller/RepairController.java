@@ -1,5 +1,7 @@
 package com.example.backendeindopdracht.controller;
 
+import com.example.backendeindopdracht.DTO.inputDTO.RepairInputDTO;
+import com.example.backendeindopdracht.DTO.outputDTO.RepairOutputDTO;
 import com.example.backendeindopdracht.model.Repair;
 import com.example.backendeindopdracht.repository.ProductRepository;
 import com.example.backendeindopdracht.repository.RepairRepository;
@@ -23,14 +25,13 @@ public class RepairController {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
 
+
+
     //POST
     @PostMapping("/add")
-    public ResponseEntity<Repair> addRepair (@RequestBody Repair repair){
-        repair.setUser(userRepository.findById(repair.getUserid()).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Unable to find resource")));
-        repair.setProduct(productRepository.findById(repair.getProductid()).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Unable to find resource")));
-
-        repair = repairRepository.save(repair);
-        return  ResponseEntity.status(HttpStatus.CREATED).body(repair);
+    public ResponseEntity<RepairOutputDTO> createRepair(@RequestBody RepairInputDTO repairInputDTO) {
+        RepairOutputDTO addedRepair = repairService.addRepair(repairInputDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(addedRepair);
     }
 
 
@@ -45,8 +46,11 @@ public class RepairController {
         return ResponseEntity.status(HttpStatus.OK).body(repairRepository.findById(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Unable to find resource")));
     }
 
-    @PutMapping()
-    public ResponseEntity<Repair> updateRepair(@RequestBody Repair repair){
-        return addRepair(repair);
+
+    @PutMapping("/{id}")
+    public ResponseEntity<RepairOutputDTO> updateRepair(@PathVariable Long id, @RequestBody RepairInputDTO repairInputDTO) {
+        RepairOutputDTO updatedRepair = repairService.updateRepair(repairInputDTO, id);
+        return ResponseEntity.ok(updatedRepair);
     }
+
 }

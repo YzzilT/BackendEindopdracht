@@ -6,6 +6,7 @@ import com.example.backendeindopdracht.DTO.outputDTO.InvoiceOutputDTO;
 import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
 import com.example.backendeindopdracht.model.Invoice;
 import com.example.backendeindopdracht.repository.InvoiceRepository;
+import com.example.backendeindopdracht.repository.OrderRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +19,14 @@ import java.util.Optional;
 public class InvoiceService {
 
     private final InvoiceRepository invoiceRepository;
+    private final OrderRepository orderRepository;
 
 
     //POST
     public InvoiceOutputDTO addInvoice (InvoiceInputDTO invoiceInputDTO){
 
         Invoice invoice = transferInvoiceInputDtoToInvoice(invoiceInputDTO);
+        invoice.setOrder(orderRepository.findById(invoiceInputDTO.getOrderId()).orElse(null));
         invoiceRepository.save(invoice);
         InvoiceOutputDTO invoiceOutputDTO = transferInvoiceToOutputDTO(invoice);
 
@@ -59,6 +62,8 @@ public class InvoiceService {
         } else {
             Invoice updateInvoice = transferInvoiceInputDtoToInvoice(invoiceInputDTO);
             updateInvoice.setInvoiceNumber(id);
+            var order = orderRepository.findById(invoiceInputDTO.getOrderId()).get();
+            updateInvoice.setOrder(order);
             Invoice updatedInvoice = invoiceRepository.save(updateInvoice);
 
             return transferInvoiceToOutputDTO(updatedInvoice);

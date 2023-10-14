@@ -8,10 +8,13 @@ import com.example.backendeindopdracht.model.*;
 import com.example.backendeindopdracht.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @AllArgsConstructor
 @Service
@@ -30,8 +33,8 @@ public class OrderService {
 
         Order order = transferOrderInputDtoToOrder(orderInputDTO);
 
-        order.setInvoice(invoiceRepository.findById(orderInputDTO.getInvoiceId()).get());
-        order.setUser(userRepository.findById(orderInputDTO.getUserid()).get());
+//        order.setInvoice(invoiceRepository.findById(orderInputDTO.getInvoiceId()).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Unable to find invoice")));
+        order.setUser(userRepository.findById(orderInputDTO.getUserid()).orElse(null));
 
         orderRepository.save(order);
 
@@ -73,7 +76,7 @@ public class OrderService {
             updateOrder.setId(id);
             Order updatedOrder = orderRepository.save(updateOrder);
 
-            return transferOrderToOutputDTO(updateOrder);
+            return transferOrderToOutputDTO(updatedOrder);
         }
     }
 

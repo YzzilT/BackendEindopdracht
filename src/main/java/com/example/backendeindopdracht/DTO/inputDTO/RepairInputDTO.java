@@ -15,4 +15,5 @@ public class RepairInputDTO {
     private String customerName;
     private String productName;
     private String problemDescription;
+    private byte[] picture;
 }

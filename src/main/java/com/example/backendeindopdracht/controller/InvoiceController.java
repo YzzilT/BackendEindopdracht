@@ -43,15 +43,6 @@ public class InvoiceController {
         return ResponseEntity.ok().body(invoiceService.getInvoiceById(id));
     }
 
-    @PutMapping()
-    public ResponseEntity<Invoice> updateInvoice (@RequestBody Invoice invoice){
-        var order = orderRepository.findById(invoice.getOrderid()).get();
-        invoice.setOrder(order);
-        invoice = invoiceRepository.save(invoice);
-        return ResponseEntity.status(HttpStatus.CREATED).body(invoice);
-    }
-
-
     //PUT
     @PutMapping("/{id}")
     public ResponseEntity<InvoiceOutputDTO> updateInvoice (@PathVariable Long id, @Valid @RequestBody InvoiceInputDTO invoiceInputDTO){

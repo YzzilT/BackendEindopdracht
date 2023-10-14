@@ -1,9 +1,12 @@
 package com.example.backendeindopdracht.service;
 
 
+import com.example.backendeindopdracht.DTO.inputDTO.OrderInputDTO;
 import com.example.backendeindopdracht.DTO.inputDTO.OrderlineInputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.OrderLineOutputDTO;
+import com.example.backendeindopdracht.DTO.outputDTO.OrderOutputDTO;
 import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
+import com.example.backendeindopdracht.model.Order;
 import com.example.backendeindopdracht.model.OrderLine;
 import com.example.backendeindopdracht.model.Product;
 import com.example.backendeindopdracht.repository.OrderLineRepository;
@@ -26,8 +29,17 @@ public class OrderLineService {
     private final OrderRepository orderRepository;
 
 
-// TODO: 10/12/2023   //POST addOrderline
 
+    public OrderLineOutputDTO addOrderLine (OrderlineInputDTO inputdto) {
+
+        var orderLine = transferInputDtoToOrderLine(inputdto);
+        orderLine.setProduct(productRepository.findById(inputdto.getProductId()).get());
+        orderLine.setOrder(orderRepository.findById(inputdto.getOrderId()).get());
+        orderLine = orderLineRepository.save(orderLine);
+
+        return transferOrderLineToDTO(orderLine);
+
+    }
 
 
     //GET ALL
