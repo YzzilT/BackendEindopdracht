@@ -18,20 +18,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/orderlines")
 public class OrderLineController {
 
-    private final OrderLineRepository orderLineRepository;
-    private final ProductRepository productRepository;
-    private final OrderRepository orderRepository;
+
     private final OrderLineService orderLineService;
 
     @PostMapping()
     public ResponseEntity<OrderLineOutputDTO> addOrderLine (@RequestBody OrderlineInputDTO orderlineInputDTO){
 
-        var orderLine = new OrderLine();
-        orderLine.setProduct(productRepository.findById(orderlineInputDTO.getProductId()).get());
-        orderLine.setOrder(orderRepository.findById(orderlineInputDTO.getOrderId()).get());
-        orderLine = orderLineRepository.save(orderLine);
-
-        var out = orderLineService.transferOrderLineToDTO(orderLine);
+        var out =orderLineService.addOrderLine(orderlineInputDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(out);
     }

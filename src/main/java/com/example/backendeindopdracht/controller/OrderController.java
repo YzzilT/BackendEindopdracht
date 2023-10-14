@@ -18,7 +18,6 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
-    private final OrderRepository orderRepository;
 
 
 
@@ -45,9 +44,9 @@ public class OrderController {
 
     //PUT
     @PutMapping()
-    public ResponseEntity<Order> updateOrder (@RequestBody Order order){
-        order = orderRepository.save(order);
-        return ResponseEntity.status(HttpStatus.OK).body(order);
+    public ResponseEntity<OrderOutputDTO> updateOrder (@RequestBody OrderInputDTO order){
+        var output = orderService.updateOrder(order,order.getId());
+        return ResponseEntity.status(HttpStatus.OK).body(output);
     }
 
     //DELETE

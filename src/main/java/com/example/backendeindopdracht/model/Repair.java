@@ -26,10 +26,13 @@ public class Repair {
     @JoinColumn(name = "product_id")
     @ManyToOne
     private Product product;
+    @Column(columnDefinition = "TEXT")
     private String problemDescription;
     private long userid;
     private long productid;
     private int fileId;
+    @Lob
+    private byte[] picture;
 
 
 }
