@@ -22,9 +22,8 @@ public class ProductService {
 
 
 
-
-//POST
-    public ProductOutputDTO createProduct (ProductInputDTO productInputDTO) {
+    //POST
+    public ProductOutputDTO createProduct(ProductInputDTO productInputDTO) {
 
         Product product = transferInputDtoProductToProduct(productInputDTO);
         productRepository.save(product);
@@ -35,20 +34,20 @@ public class ProductService {
 
 
     //GET ALL
-    public List<ProductOutputDTO> getAllProducts(){
+    public List<ProductOutputDTO> getAllProducts() {
         Iterable<Product> products = productRepository.findAll();
         List<ProductOutputDTO> productOutputDTOList = new ArrayList<>();
 
-        for (Product product : products){
+        for (Product product : products) {
             productOutputDTOList.add(transferProductToDTO(product));
         }
         return productOutputDTOList;
     }
 
     //GET BY ID
-    public ProductOutputDTO getProductById( Long id){
+    public ProductOutputDTO getProductById(Long id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
-        if (optionalProduct.isEmpty()){
+        if (optionalProduct.isEmpty()) {
             throw new RecordNotFoundException("No product found with id: " + id);
         }
         Product product = optionalProduct.get();
@@ -56,11 +55,10 @@ public class ProductService {
     }
 
 
-
-   //PUT
-    public ProductOutputDTO updateProduct(ProductInputDTO productInputDTO, Long id){
+    //PUT
+    public ProductOutputDTO updateProduct(ProductInputDTO productInputDTO, Long id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
-        if (optionalProduct.isEmpty()){
+        if (optionalProduct.isEmpty()) {
             throw new RecordNotFoundException("No product found with id: " + id);
         } else {
             Product updateProduct = transferInputDtoProductToProduct(productInputDTO);
@@ -74,13 +72,49 @@ public class ProductService {
 
 
     //DELETE
-    public void deleteProduct(Long id){
+    public void deleteProduct(Long id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
-        if (optionalProduct.isEmpty()){
+        if (optionalProduct.isEmpty()) {
             throw new RecordNotFoundException("No product found with id: " + id);
         }
         productRepository.deleteById(id);
     }
+
+
+    //UPDATE STOCK
+    public void updateStockWhenBuyingProduct(long productid,int amount) throws Exception {
+
+        var product = productRepository.findById(productid).orElse(null);
+        if(product == null){
+            throw new Exception("not found");
+        }
+        if(product.getCurrentStock() < amount){
+            throw new Exception("not enough in stock");
+        }
+
+        product.setCurrentStock(product.getCurrentStock() - amount);
+    }
+
+
+    public List <ProductOutputDTO> findProductsThatNeedRestocking(){
+
+        var allProducts = getAllProducts();
+        var restockProducts = new ArrayList<ProductOutputDTO>();
+
+
+        for (var product : allProducts){
+            if (product.getCurrentStock() < product.getOriginalStock()){
+                restockProducts.add(product);
+            }
+        }
+        return restockProducts;
+    }
+
+
+
+
+
+
 
 
 
@@ -94,7 +128,8 @@ public class ProductService {
         product.setCurrentStock(productInputDTO.getCurrentStock());
         product.setDescription(productInputDTO.getDescription());
         product.setProductType(productInputDTO.getProductType());
-        // TODO: 10/4/2023 how to add order and list orderlines?
+
+        // TODO: 10/4/2023 orderlines and order?
 
 
         return product;
@@ -111,7 +146,7 @@ public class ProductService {
         productOutputDTO.setCurrentStock(product.getCurrentStock());
         productOutputDTO.setDescription(product.getDescription());
         productOutputDTO.setProductType(product.getProductType());
-        // TODO: 10/4/2023 how to add order list orderlines?
+        // TODO: 10/17/2023   orderlines and order??
 
         return productOutputDTO;
     }

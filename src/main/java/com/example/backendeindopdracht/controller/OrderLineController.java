@@ -22,7 +22,7 @@ public class OrderLineController {
     private final OrderLineService orderLineService;
 
     @PostMapping()
-    public ResponseEntity<OrderLineOutputDTO> addOrderLine (@RequestBody OrderlineInputDTO orderlineInputDTO){
+    public ResponseEntity<OrderLineOutputDTO> addOrderLine (@RequestBody OrderlineInputDTO orderlineInputDTO) throws Exception {
 
         var out =orderLineService.addOrderLine(orderlineInputDTO);
 

@@ -19,10 +19,12 @@ import java.util.List;
 public class OrderOutputDTO {
 
     private Long id;
-    private Invoice invoice;
+    private long invoiceId;
+//    private Invoice invoice;
     private List<OrderLine> orderLineIds;
     private String customerName;
     private BigDecimal totalAmount;
     private User user;
+    private long userid;
 
 }
