@@ -4,6 +4,7 @@ package com.example.backendeindopdracht.controller;
 import com.example.backendeindopdracht.DTO.inputDTO.OrderlineInputDTO;
 import com.example.backendeindopdracht.DTO.inputDTO.ProductInputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.ProductOutputDTO;
+import com.example.backendeindopdracht.model.OrderLine;
 import com.example.backendeindopdracht.model.Product;
 import com.example.backendeindopdracht.service.OrderLineService;
 import com.example.backendeindopdracht.service.ProductService;
@@ -38,41 +39,16 @@ public class ProductController {
         return new ResponseEntity<>("not valid due to validation error: " + e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-//    public ResponseEntity<String> koopProduct(long productid, long orderid) throws Exception {
-//        var orderline = new OrderlineInputDTO();
-//        orderline.setProductId(productid);
-//        orderline.setOrderId(orderid);
-//        orderLineService.addOrderLine(orderline);
-//        var product = productService.getProductById(productid);
-//        if(product.getCurrentStock() <= 0){
-//            throw new Exception("product is out of stock");
-//        }
-//        product.setCurrentStock(product.getCurrentStock() - 1);
-//        productService.updateProduct(product);
-//
-//        return null;
-//    }
-
-    public ResponseEntity<List<ProductOutputDTO>> ScanForProductsThatNeedRestocking(){
-        var allproducts = productService.getAllProducts();
-        var res = new ArrayList<ProductOutputDTO>();
-        for (var product : allproducts) {
-            if(product.getCurrentStock() < product.getOriginalStock()){
-                res.add(product);
-            }
-        }
-        return ResponseEntity.ok().body(res);
+    public ResponseEntity<String> updateStockWhenBuyingProduct (long productid, int amount) throws Exception {
+        productService.updateStockWhenBuyingProduct(productid,amount);
+        return ResponseEntity.ok("");
     }
 
-    public ResponseEntity<String> mergeOrderlines(){
-        return null;
+    @GetMapping("/restock")
+    public ResponseEntity<List<ProductOutputDTO>> findProductsThatNeedRestocking(){
+        List<ProductOutputDTO> restockProducts = productService.findProductsThatNeedRestocking();
+        return ResponseEntity.ok().body(restockProducts);
     }
-
-    public ResponseEntity<String> calculateTotalAmount(long btw){
-        return null;
-    }
-
-
 
     //GET ALL
     @GetMapping

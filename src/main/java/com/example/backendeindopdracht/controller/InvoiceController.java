@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @AllArgsConstructor
@@ -21,8 +22,7 @@ import java.util.List;
 public class InvoiceController {
 
     private final InvoiceService invoiceService;
-    private final InvoiceRepository invoiceRepository;
-    private final OrderRepository orderRepository;
+
 
     //POST
     @PostMapping()
@@ -55,5 +55,12 @@ public class InvoiceController {
     public ResponseEntity<Invoice> deleteInvoice (@PathVariable Long id){
         invoiceService.deleteInvoice(id);
         return ResponseEntity.noContent().build();
+    }
+
+    //calculateTotalAmountWithVAT
+    @GetMapping("/totalAmount")
+    public ResponseEntity<BigDecimal> calculateTotalAmountWithVAT(@RequestBody InvoiceInputDTO invoiceInputDTO){
+        BigDecimal totalAmountIncludingVAT = invoiceService.calculateTotalAmountWithVAT(invoiceInputDTO);
+        return ResponseEntity.ok(totalAmountIncludingVAT);
     }
 }

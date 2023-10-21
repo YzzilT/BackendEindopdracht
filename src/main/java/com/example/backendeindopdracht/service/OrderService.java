@@ -10,11 +10,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+
 
 @AllArgsConstructor
 @Service
@@ -33,8 +35,13 @@ public class OrderService {
 
         Order order = transferOrderInputDtoToOrder(orderInputDTO);
 
+        Invoice invoice = invoiceRepository.findById(orderInputDTO.getInvoiceId()).orElse(null);
+        order.setInvoice(invoice);
+
 //        order.setInvoice(invoiceRepository.findById(orderInputDTO.getInvoiceId()).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Unable to find invoice")));
-        order.setUser(userRepository.findById(orderInputDTO.getUserid()).orElse(null));
+//        order.setUser(userRepository.findById(orderInputDTO.getUserid()).orElse(null));
+        User user = userRepository.findById(orderInputDTO.getUserid()).orElseThrow(() -> new RecordNotFoundException("User not found with ID: " + orderInputDTO.getUserid()));
+        order.setUser(user);
 
         orderRepository.save(order);
 
@@ -96,11 +103,15 @@ public class OrderService {
         Order order = new Order();
 
         order.setId(orderInputDTO.getId());
-        order.setInvoice(invoiceRepository.findById(orderInputDTO.getInvoiceId()).get());
+//        order.setInvoice(invoiceRepository.findById(orderInputDTO.getInvoiceId()).get());
+        Invoice invoice = invoiceRepository.findById(orderInputDTO.getInvoiceId()).orElse(null);
+        order.setInvoice(invoice);
         order.setCustomerName(orderInputDTO.getCustomerName());
         order.setTotalAmount(orderInputDTO.getTotalAmount());
         order.setOrderLineIds(orderInputDTO.getOrderLineIds());
-        // TODO: 10/5/2023 how to set the user and orderlinelist?
+        order.setUser(userRepository.findById(orderInputDTO.getUserid()).orElse(null));
+
+        // TODO: 10/5/2023 how to set the user?
 
         return order;
     }
@@ -110,10 +121,12 @@ public class OrderService {
         OrderOutputDTO orderOutputDTO = new OrderOutputDTO();
 
         orderOutputDTO.setId(order.getId());
-        orderOutputDTO.setInvoice(order.getInvoice());
+        Invoice invoice = invoiceRepository.findById(orderOutputDTO.getInvoiceId()).orElse(null);
+//        orderOutputDTO.setInvoice(order.getInvoice());
         orderOutputDTO.setCustomerName(order.getCustomerName());
         orderOutputDTO.setTotalAmount(order.getTotalAmount());
         orderOutputDTO.setOrderLineIds(order.getOrderLineIds());
+        orderOutputDTO.setUser(order.getUser());
         // TODO: 10/5/2023 how to set the user?
 
         return orderOutputDTO;

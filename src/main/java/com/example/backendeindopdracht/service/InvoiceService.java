@@ -5,11 +5,14 @@ import com.example.backendeindopdracht.DTO.inputDTO.InvoiceInputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.InvoiceOutputDTO;
 import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
 import com.example.backendeindopdracht.model.Invoice;
+import com.example.backendeindopdracht.model.Product;
 import com.example.backendeindopdracht.repository.InvoiceRepository;
 import com.example.backendeindopdracht.repository.OrderRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -81,17 +84,33 @@ public class InvoiceService {
         return optionalInvoice.get();
     }
 
+    public BigDecimal calculateTotalAmountWithVAT(InvoiceInputDTO invoiceInputDTO){
+        BigDecimal VAT = new BigDecimal("0.21");
+        BigDecimal totalAmount = BigDecimal.ZERO;
 
+        for (Product product : invoiceInputDTO.getProducts()){
+            BigDecimal productPrice = BigDecimal.valueOf(product.getPrice());
+            totalAmount = totalAmount.add(productPrice);
+        }
 
+        BigDecimal vatAmount = totalAmount.multiply(VAT);
+        BigDecimal totalAmountIncludingVAT = totalAmount.add(vatAmount);
+
+        return totalAmountIncludingVAT.setScale(2, RoundingMode.HALF_UP);
+    }
 
 
     public Invoice transferInvoiceInputDtoToInvoice(InvoiceInputDTO invoiceInputDTO){
 
         Invoice invoice = new Invoice();
 
+        invoice.setInvoiceNumber(invoiceInputDTO.getInvoiceNumber());
         invoice.setCustomerName(invoiceInputDTO.getCustomerName());
         invoice.setInvoiceDate(invoiceInputDTO.getInvoiceDate());
         invoice.setTotalAmount(invoiceInputDTO.getTotalAmount());
+        invoice.setEmail(invoiceInputDTO.getEmail());
+        invoice.setOrderId(invoiceInputDTO.getOrderId());
+        invoice.setOrder(invoiceInputDTO.getOrder());
 
         return invoice;
     }
@@ -101,9 +120,14 @@ public class InvoiceService {
 
         InvoiceOutputDTO invoiceOutputDTO = new InvoiceOutputDTO();
 
-        invoice.setCustomerName(invoice.getCustomerName());
-        invoice.setInvoiceDate(invoice.getInvoiceDate());
-        invoice.setTotalAmount(invoice.getTotalAmount());
+        invoiceOutputDTO.setInvoiceNumber(invoice.getInvoiceNumber());
+        invoiceOutputDTO.setCustomerName(invoice.getCustomerName());
+        invoiceOutputDTO.setInvoiceDate(invoice.getInvoiceDate());
+        invoiceOutputDTO.setTotalAmount(invoice.getTotalAmount());
+        invoiceOutputDTO.setEmail(invoice.getEmail());
+        invoiceOutputDTO.setOrderId(invoice.getOrderId());
+        invoiceOutputDTO.setOrder(invoice.getOrder());
+
 
         return invoiceOutputDTO;
     }

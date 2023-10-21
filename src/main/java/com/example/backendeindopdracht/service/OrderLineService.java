@@ -1,21 +1,17 @@
 package com.example.backendeindopdracht.service;
 
 
-import com.example.backendeindopdracht.DTO.inputDTO.OrderInputDTO;
 import com.example.backendeindopdracht.DTO.inputDTO.OrderlineInputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.OrderLineOutputDTO;
-import com.example.backendeindopdracht.DTO.outputDTO.OrderOutputDTO;
 import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
 import com.example.backendeindopdracht.model.Order;
 import com.example.backendeindopdracht.model.OrderLine;
-import com.example.backendeindopdracht.model.Product;
 import com.example.backendeindopdracht.repository.OrderLineRepository;
 import com.example.backendeindopdracht.repository.OrderRepository;
 import com.example.backendeindopdracht.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,18 +23,50 @@ public class OrderLineService {
     private final OrderLineRepository orderLineRepository;
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
+    private final ProductService productService;
 
 
+    public OrderLineOutputDTO addOrderLine (OrderlineInputDTO orderlineInputDTO) throws Exception {
 
-    public OrderLineOutputDTO addOrderLine (OrderlineInputDTO inputdto) {
+        List<OrderLine> orderLineList = orderLineRepository.findByProduct_Id(orderlineInputDTO.getProductId());
 
-        var orderLine = transferInputDtoToOrderLine(inputdto);
-        orderLine.setProduct(productRepository.findById(inputdto.getProductId()).get());
-        orderLine.setOrder(orderRepository.findById(inputdto.getOrderId()).get());
+        for (OrderLine orderLine : orderLineList) {
+            if (orderLine.getOrder().getId().equals(orderlineInputDTO.getOrderId())) {
+                int mergedQuantity = orderLine.getQuantity() + orderlineInputDTO.getQuantity();
+                orderLine.setQuantity(mergedQuantity);
+                orderLineRepository.save(orderLine);
+                return transferOrderLineToDTO(orderLine);
+            }
+        }
+
+        return createNewOrderLine(orderlineInputDTO);
+    }
+
+    private OrderLineOutputDTO createNewOrderLine(OrderlineInputDTO orderlineInputDTO) throws Exception {
+        var orderLine = transferInputDtoToOrderLine(orderlineInputDTO);
+        Long orderId = orderlineInputDTO.getOrderId();
+
+        if (orderId == null) {
+            String errorMessage = "Order ID cannot be null.";
+            throw new RecordNotFoundException(errorMessage);
+        }
+
+        Optional<Order> optionalOrder = orderRepository.findById(orderId);
+
+        if (optionalOrder.isEmpty()) {
+            String errorMessage = "Order with ID " + orderlineInputDTO.getOrderId() + " doesn't exist.";
+            throw new RecordNotFoundException(errorMessage);
+        }
+
+        productService.updateStockWhenBuyingProduct(orderlineInputDTO.getProductId(),1);
+
+        Order order = optionalOrder.get();
+        orderLine.setOrder(order);
+        orderLine.setProduct(productRepository.findById(orderlineInputDTO.getProductId()).orElse(null));
         orderLine = orderLineRepository.save(orderLine);
 
-        return transferOrderLineToDTO(orderLine);
 
+        return transferOrderLineToDTO(orderLine);
     }
 
 
@@ -92,6 +120,8 @@ public class OrderLineService {
 
 
 
+
+
     public OrderLine transferInputDtoToOrderLine (OrderlineInputDTO orderlineInputDTO){
 
         OrderLine orderLine = new OrderLine();
@@ -105,10 +135,9 @@ public class OrderLineService {
 
         // TODO: 10/4/2023 how to add bigdecimal, order and product?
 
-
-
-
     }
+
+
 
     public OrderLineOutputDTO transferOrderLineToDTO (OrderLine orderLine){
 
