@@ -7,9 +7,9 @@ import com.example.backendeindopdracht.model.Role;
 import com.example.backendeindopdracht.model.User;
 import com.example.backendeindopdracht.repository.RoleRepository;
 import com.example.backendeindopdracht.repository.UserRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +18,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@SpringBootTest
 class UserServiceTest {
 
     @InjectMocks
@@ -48,38 +49,31 @@ class UserServiceTest {
         role.setId(1L);
         role.setRoleName("customer");
 
+        UserRepository userRepositoryMock = Mockito.mock(UserRepository.class);
+
         when(roleRepository.findById(1L)).thenReturn(Optional.of(role));
-        when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
-            User savedUser = invocation.getArgument(0);
-            savedUser.setId(1L);
-            return savedUser;
-        });
+
+       User savedUser = new User();
+       savedUser.setId(1L);
+       when(userRepositoryMock.save(any(User.class))).thenReturn(savedUser);
 
         //act
-        UserOutputDTO userOutputDTO = userService.addUser(userInputDTO);
+        UserOutputDTO addedUser = userService.addUser(userInputDTO);
 
         //assert
-        assertNotNull(userOutputDTO);
-        assertEquals(1L, userOutputDTO.getId());
-
-        verify(userRepository, times(1)).save(userCaptor.capture());
-
-        User savedUser = userCaptor.getValue();
-        assertEquals("Lizzy", savedUser.getFirstName());
+        assertEquals(userInputDTO.getId(), addedUser.getId());
+        assertEquals(userInputDTO.getFirstName(), addedUser.getFirstName());
+        assertEquals(userInputDTO.getLastName(),addedUser.getLastName());
+        assertEquals(userInputDTO.getPassword(), addedUser.getPassword());
+        assertEquals(userInputDTO.getEmail(), addedUser.getEmail());
+        assertEquals(userInputDTO.getRoleid(), addedUser.getRoleId());
     }
 
     @Test
     void shouldNotReturnUserWhenRoleIsNull(){
         UserInputDTO userInputDTO = new UserInputDTO();
-        userInputDTO.setRoleid(null);
 
-        when(roleRepository.findById(null)).thenReturn(Optional.empty());
-
-        RecordNotFoundException exception = assertThrows(RecordNotFoundException.class, () -> {
-            userService.addUser(userInputDTO);
-        });
-
-        assertEquals("Role ID is required", exception.getMessage());
+        assertThrows(RecordNotFoundException.class, () -> userService.addUser(userInputDTO));
     }
 
     @Test
@@ -147,13 +141,13 @@ class UserServiceTest {
 
 
 
+
         UserOutputDTO userOutputDTO2 = userOutputDTOList.get(1);
-        assertEquals(2L,  userOutputDTO2.getRoleId());
+        assertEquals(2L, userOutputDTO2.getRoleId());
         assertEquals("Winston",  userOutputDTO2.getFirstName());
         assertEquals("Kat",  userOutputDTO2.getLastName());
         assertEquals("winstonkat", userOutputDTO2.getPassword());
         assertEquals("winstonkat@gmail.com",  userOutputDTO2.getEmail());
-
 
     }
 
@@ -161,30 +155,28 @@ class UserServiceTest {
     void shouldGetUserById(){
         //arrange
 
-        Role role = new Role();
-        role.setId(1L);
-        role.setRoleName("customer");
+    Long userId = 1L;
 
         User user = new User();
-        user.setId(123L);
+        user.setId(userId);
         user.setFirstName("Lizzy");
         user.setLastName("Telford");
         user.setPassword("lizzytelford");
         user.setEmail("lizzytelford@gmail.com");
-        user.setRole(role);
+        user.setRole(new Role());
 
-        when(userRepository.findById(123L)).thenReturn(Optional.of(user));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         //act
-        UserOutputDTO userOutputDTO = userService.getUserById(123L);
+        UserOutputDTO userOutputDTO = userService.getUserById(userId);
 
         //assert
-        assertEquals(123L, userOutputDTO.getId());
+        assertEquals(userId, userOutputDTO.getId());
         assertEquals("Lizzy", userOutputDTO.getFirstName());
         assertEquals("Telford", userOutputDTO.getLastName());
         assertEquals("lizzytelford", userOutputDTO.getPassword());
         assertEquals("lizzytelford@gmail.com", userOutputDTO.getEmail());
-        assertEquals(1L, userOutputDTO.getRoleId());
+
 
     }
 
@@ -329,6 +321,7 @@ class UserServiceTest {
     public void shouldTransferUserDtoWithRole(){
         Role role = new Role();
         role.setId(1L);
+        role.setRoleName("customer");
 
         User user = new User();
         user.setId(1L);

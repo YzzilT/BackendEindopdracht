@@ -7,12 +7,9 @@ import com.example.backendeindopdracht.controller.RoleController;
 import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
 import com.example.backendeindopdracht.model.Role;
 import com.example.backendeindopdracht.repository.RoleRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
 import java.util.List;
@@ -132,14 +129,13 @@ class RoleServiceTest {
     }
 
     @Test
-    void shouldThrowRecordNotFoundExceptionWhenRoleNotFound(){
-        RoleInputDTO roleInputDTO = new RoleInputDTO();
-        roleInputDTO.setRoleName("Updated Role");
+    void shouldThrowRecordNotFoundExceptionWhenRoleNotFoundInGet(){
 
-        //ResponseEntity<?> responseEntity = roleService.updateRole(roleInputDTO, 2L);
+        when(roleRepository.findById(1L)).thenReturn(Optional.empty());
 
-//        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
-//        assertEquals("Role with id: 2 not found.", responseEntity.getBody());
+
+        assertThrows(RecordNotFoundException.class, () -> roleService.getRoleById(1L));
+
     }
 
 
@@ -147,32 +143,37 @@ class RoleServiceTest {
     @Test
     void shouldUpdateRole(){
 
+        RoleInputDTO roleInputDTO = new RoleInputDTO();
+        roleInputDTO.setRoleName("new role name");
+
         Role existingRole = new Role();
         existingRole.setId(1L);
+        existingRole.setRoleName("old role name");
 
-        Mockito.when(roleRepository.findById(1L)).thenReturn(Optional.of(existingRole));
+        Role updatedRole = new Role();
+        updatedRole.setId(1L);
+        updatedRole.setRoleName("new role name");
 
-        RoleInputDTO roleInputDTO = new RoleInputDTO();
-        roleInputDTO.setRoleName("Updated Role");
+        when(roleRepository.findById(1L)).thenReturn(Optional.of(existingRole));
+        when(roleRepository.save(any(Role.class))).thenReturn(updatedRole);
 
-//        ResponseEntity<?> responseEntity = roleService.updateRole(roleInputDTO, 1L);
+        RoleOutputDTO roleOutputDTO = roleService.updateRole(roleInputDTO, 1L);
 
-//        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(1L, roleOutputDTO.getId());
+        assertEquals("new role name", roleOutputDTO.getRoleName());
     }
 
-//    Long roleId = 1L;
-//    RoleInputDTO roleInputDTO = new RoleInputDTO();
-//    Role exisingRole = new Role();
-//    exisingRole.setId(roleId);
-//
-//    when(roleRepository.findById(roleId)).thenReturn(Optional.of(exisingRole));
-//
-//    ResponseEntity<?> responseEntity = roleController.updateRole(roleId, roleInputDTO);
-//
-//    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    @Test
+    void shouldThrowRecordNotFoundExceptionWhenRoleNotFoundInUpdate() {
+
+        RoleInputDTO roleInputDTO = new RoleInputDTO();
+        roleInputDTO.setRoleName("newRoleName");
+
+        when(roleRepository.findById(1L)).thenReturn(Optional.empty());
 
 
-
+        assertThrows(RecordNotFoundException.class, () -> roleService.updateRole(roleInputDTO, 1L));
+    }
 
 
 
@@ -181,13 +182,21 @@ class RoleServiceTest {
     void shouldDeleteExistingRole() {
 
         Long roleId = 2L;
-        when(roleRepository.findById(roleId)).thenReturn(Optional.empty());
-        assertThrows(RecordNotFoundException.class, ()-> roleService.deleteRole(roleId));
+        Role role = new Role();
+        role.setId(roleId);
+        role.setRoleName("testrol");
+        when(roleRepository.findById(roleId)).thenReturn(Optional.of(role));
+
+        Role deletedRole = roleService.deleteRole(roleId);
+
+        assertEquals(roleId, deletedRole.getId());
+        assertEquals("testrol", deletedRole.getRoleName());
+
 
     }
 
     @Test
-    void testDeleteNonExistentRole(){
+    void shouldThrowExceptionWhenDeletingNonExistentRole(){
 
         //arrange
         Long nonExistingRoleId = 2L;

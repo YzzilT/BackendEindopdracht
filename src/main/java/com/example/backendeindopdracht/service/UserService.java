@@ -1,6 +1,7 @@
 package com.example.backendeindopdracht.service;
 
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.example.backendeindopdracht.DTO.inputDTO.UserInputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.UserOutputDTO;
 import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
@@ -9,7 +10,6 @@ import com.example.backendeindopdracht.model.Role;
 import com.example.backendeindopdracht.repository.UserRepository;
 import com.example.backendeindopdracht.repository.RoleRepository;
 import lombok.AllArgsConstructor;
-import org.hibernate.tool.schema.spi.ExceptionHandler;
 import org.springframework.stereotype.Service;
 
 
@@ -29,21 +29,15 @@ public class UserService {
     public UserOutputDTO addUser(UserInputDTO userInputDTO) {
         User user = transferInputDtoUserToUser(userInputDTO);
         Long roleId = userInputDTO.getRoleid();
-        if (roleId == null) {
-            throw new IllegalArgumentException("Role ID is required");
-        }
+
 
         Optional<Role> optionalRole = roleRepository.findById(roleId);
-        if (optionalRole.isEmpty()) {
-            throw new RecordNotFoundException("No role found with id: " + userInputDTO.getRoleid());
-        } else {
+        user.setRole(optionalRole.get());
+        var hashedpw = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
+        user.setPassword(hashedpw);
+        userRepository.save(user);
+        return transferUserToDTO(user);
 
-            user.setRole(optionalRole.get());
-            userRepository.save(user);
-
-            return transferUserToDTO(user);
-
-        }
     }
 
     //GET ALL
@@ -128,7 +122,7 @@ public class UserService {
         userOutputDTO.setEmail(user.getEmail());
 
         if (user.getRole() != null) {
-            userOutputDTO.setRoleId(user.getRoleid());
+            userOutputDTO.setRoleId(user.getRole().getId());
         } else {
             throw new RecordNotFoundException("User role is null");
         }

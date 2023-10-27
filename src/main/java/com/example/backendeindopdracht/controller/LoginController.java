@@ -1,5 +1,6 @@
 package com.example.backendeindopdracht.controller;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.example.backendeindopdracht.model.User;
 import com.example.backendeindopdracht.repository.UserRepository;
 import com.google.gson.JsonObject;
@@ -38,7 +39,9 @@ public class LoginController {
 
         User user2 = null;
         for(var user : userRepository.findAll()){
-            if(user.getEmail().equals(email) && user.getPassword().equals(password)){
+            //todo moet nog testen of dit goed gaat, anders nog even documentatie lezen op https://github.com/patrickfav/bcrypt
+            BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), user.getPassword());
+            if(user.getEmail().equals(email) && result.verified){
                 user2 = user;
                 break;
             }
