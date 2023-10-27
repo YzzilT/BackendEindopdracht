@@ -1,7 +1,9 @@
 package com.example.backendeindopdracht.controller;
 
 import com.example.backendeindopdracht.DTO.inputDTO.RepairInputDTO;
+import com.example.backendeindopdracht.DTO.outputDTO.ProductOutputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.RepairOutputDTO;
+import com.example.backendeindopdracht.model.Product;
 import com.example.backendeindopdracht.model.Repair;
 import com.example.backendeindopdracht.repository.ProductRepository;
 import com.example.backendeindopdracht.repository.RepairRepository;
@@ -13,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.*;
 
 @AllArgsConstructor
@@ -22,8 +26,7 @@ public class RepairController {
 
     private final RepairService repairService;
     private final RepairRepository repairRepository;
-    private final UserRepository userRepository;
-    private final ProductRepository productRepository;
+
 
 
 
@@ -37,13 +40,13 @@ public class RepairController {
 
 
     @GetMapping()
-    public ResponseEntity<Iterable<Repair>> getAll(){
-        return ResponseEntity.status(HttpStatus.OK).body(repairRepository.findAll());
+    public ResponseEntity<List<RepairOutputDTO>> getAllRepairs(){
+        return ResponseEntity.ok().body(repairService.getAllRepairs());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Repair> get (@PathVariable long id){
-        return ResponseEntity.status(HttpStatus.OK).body(repairRepository.findById(id).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Unable to find resource")));
+    public ResponseEntity<RepairOutputDTO> getRepairById (@PathVariable long id){
+        return ResponseEntity.ok().body(repairService.getRepairById(id));
     }
 
 
@@ -51,6 +54,13 @@ public class RepairController {
     public ResponseEntity<RepairOutputDTO> updateRepair(@PathVariable Long id, @RequestBody RepairInputDTO repairInputDTO) {
         RepairOutputDTO updatedRepair = repairService.updateRepair(repairInputDTO, id);
         return ResponseEntity.ok(updatedRepair);
+    }
+
+    //DELETE
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Repair> deleteRepair (@PathVariable Long id){
+        repairService.deleteRepair(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

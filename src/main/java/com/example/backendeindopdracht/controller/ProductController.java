@@ -24,7 +24,7 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
-    private final OrderLineService orderLineService;
+
 
     //POST
     @PostMapping("/add")
