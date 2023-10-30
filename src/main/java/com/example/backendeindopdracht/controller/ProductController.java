@@ -14,9 +14,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 @AllArgsConstructor
 @RestController
@@ -33,11 +30,6 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(addedProduct);
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException e) {
-        return new ResponseEntity<>("not valid due to validation error: " + e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
 
     public ResponseEntity<String> updateStockWhenBuyingProduct (long productid, int amount) throws Exception {
         productService.updateStockWhenBuyingProduct(productid,amount);
@@ -75,7 +67,6 @@ public class ProductController {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
-
 
 }
 

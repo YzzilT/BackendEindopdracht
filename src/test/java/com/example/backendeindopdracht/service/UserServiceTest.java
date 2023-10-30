@@ -30,8 +30,7 @@ class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
-    @Captor
-    private ArgumentCaptor<User> userCaptor;
+
 
 
     @Test
@@ -182,12 +181,12 @@ class UserServiceTest {
 
     @Test
     void shouldThrowRecordNotFoundExceptionWhenUserNotFound(){
-        //arrange
+
         Long userId = 1L;
 
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-        //act and assert
+
         assertThrows(RecordNotFoundException.class, () -> userService.getUserById(userId));
 
     }
@@ -248,7 +247,7 @@ class UserServiceTest {
 
         when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
             User updatedUser = invocation.getArgument(0);
-            // Simulate the save operation by returning the updated user
+
             return updatedUser;
         });
 
@@ -358,9 +357,6 @@ class UserServiceTest {
         });
 
     }
-
-
-
 }
 
 

@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Setter
@@ -27,7 +25,6 @@ public class Invoice {
     private Order order;
     private String customerName;
     private String invoiceDate;
-   // private List<Product> products;
     private BigDecimal totalAmount;
     private String email;
     private long orderId;

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Optional;
 
 
 @Controller
@@ -26,7 +25,6 @@ public class FileController {
     @PostMapping("/single/upload")
     public ResponseEntity<String> singleFileUpload (@RequestParam ("file") MultipartFile file) throws IOException {
         File uploadFile = new File();
-        //file.getOriginalFilename(); -> evt oplossing om hard code file naam te vermijden
         uploadFile.setFileName("filename");
         uploadFile.setDocFile(file.getBytes());
 

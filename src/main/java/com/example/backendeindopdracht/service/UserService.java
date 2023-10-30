@@ -33,8 +33,8 @@ public class UserService {
 
         Optional<Role> optionalRole = roleRepository.findById(roleId);
         user.setRole(optionalRole.get());
-        var hashedpw = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
-        user.setPassword(hashedpw);
+        var hashedPassword = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
+        user.setPassword(hashedPassword);
         userRepository.save(user);
         return transferUserToDTO(user);
 

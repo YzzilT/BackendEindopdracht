@@ -54,7 +54,7 @@ public class OrderLineService {
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
 
         if (optionalOrder.isEmpty()) {
-            String errorMessage = "Order with ID " + orderlineInputDTO.getOrderId() + " doesn't exist.";
+            String errorMessage = "Order with ID " + orderlineInputDTO.getOrderId() + " does not exist.";
             throw new RecordNotFoundException(errorMessage);
         }
 
@@ -112,7 +112,7 @@ public class OrderLineService {
     public OrderLine deleteOrderLine (Long id){
         Optional<OrderLine> optionalOrderLine = orderLineRepository.findById(id);
         if (optionalOrderLine.isEmpty()){
-            throw new RecordNotFoundException("No orderline was found with id: " + id);
+            throw new RecordNotFoundException("No orderline found with id: " + id);
         }
         orderLineRepository.deleteById(id);
         return optionalOrderLine.get();
@@ -128,13 +128,11 @@ public class OrderLineService {
 
         orderLine.setId(orderlineInputDTO.getId());
         orderLine.setQuantity(orderlineInputDTO.getQuantity());
+        orderLine.setTotalAmount(orderlineInputDTO.getTotalAmount());
         orderLine.setProduct(productRepository.findById(orderlineInputDTO.getProductId()).orElse(null));
         orderLine.setOrder(orderRepository.findById(orderlineInputDTO.getOrderId()).orElse(null));
 
         return orderLine;
-
-        // TODO: 10/4/2023 how to add bigdecimal, order and product?
-
     }
 
 
@@ -151,7 +149,4 @@ public class OrderLineService {
 
         return orderLineOutputDTO;
     }
-
-    // TODO: 10/4/2023 how to add bigdecimal, order and product?
-
 }

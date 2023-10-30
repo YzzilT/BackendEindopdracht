@@ -3,14 +3,12 @@ import static org.mockito.Mockito.*;
 
 import com.example.backendeindopdracht.DTO.inputDTO.RoleInputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.RoleOutputDTO;
-import com.example.backendeindopdracht.controller.RoleController;
 import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
 import com.example.backendeindopdracht.model.Role;
 import com.example.backendeindopdracht.repository.RoleRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -24,15 +22,6 @@ class RoleServiceTest {
     private RoleRepository roleRepository;
    @InjectMocks
    private RoleService roleService;
-
-   @InjectMocks
-   private RoleController roleController;
-
-    @Captor
-    private ArgumentCaptor<Role> roleCaptor;
-
-
-
 
     @Test
     void ShouldAddRoleName() {
@@ -198,12 +187,12 @@ class RoleServiceTest {
     @Test
     void shouldThrowExceptionWhenDeletingNonExistentRole(){
 
-        //arrange
+
         Long nonExistingRoleId = 2L;
 
         when(roleRepository.findById(nonExistingRoleId)).thenReturn(Optional.empty());
 
-        //act and assert
+
         assertThrows(RecordNotFoundException.class, () -> {
         roleService.deleteRole(nonExistingRoleId);});
 

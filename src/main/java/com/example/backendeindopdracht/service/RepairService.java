@@ -5,6 +5,7 @@ import com.example.backendeindopdracht.DTO.outputDTO.RepairOutputDTO;
 import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
 import com.example.backendeindopdracht.model.Product;
 import com.example.backendeindopdracht.model.Repair;
+import com.example.backendeindopdracht.model.User;
 import com.example.backendeindopdracht.repository.ProductRepository;
 import com.example.backendeindopdracht.repository.RepairRepository;
 import com.example.backendeindopdracht.repository.UserRepository;
@@ -12,6 +13,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,8 +33,8 @@ public class RepairService {
     //POST
     public RepairOutputDTO addRepair (RepairInputDTO repairInputDTO){
         Repair repair = transferInputDtoRepairToRepair(repairInputDTO);
-        repair.setUser(userRepository.findById(repair.getUserid()).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Unable to find user")));
-        repair.setProduct(productRepository.findById(repair.getProductid()).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Unable to find product")));
+        repair.setUser(userRepository.findById(repair.getUser().getId()).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Unable to find user")));
+        repair.setProduct(productRepository.findById(repair.getProduct().getId()).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Unable to find product")));
         repairRepository.save(repair);
         return transferRepairToDTO(repair);
     }
@@ -82,6 +86,23 @@ public class RepairService {
         productRepository.deleteById(id);
     }
 
+    public List<RepairOutputDTO> getRepairsSubmittedOverAWeekAgo() {
+        LocalDate oneWeekAgo = LocalDate.now().minusWeeks(1);
+
+        Iterable<Repair> repairs = repairRepository.findAll();
+        List<RepairOutputDTO> repairOutputDTOList = new ArrayList<>();
+
+        for (Repair repair : repairs) {
+            LocalDate submissionDate = repair.getSubmissionDate();
+
+            if (submissionDate.isAfter(oneWeekAgo)) {
+                repairOutputDTOList.add(transferRepairToDTO(repair));
+            }
+        }
+
+        return repairOutputDTOList;
+    }
+
 
 
 
@@ -91,6 +112,16 @@ public class RepairService {
         repair.setRepairNumber(repairInputDTO.getRepairNumber());
         repair.setProblemDescription(repairInputDTO.getProblemDescription());
         repair.setPicture(repairInputDTO.getPicture());
+        repair.setSubmissionDate(repairInputDTO.getSubmissionDate());
+        if (repairInputDTO.getUserId() != null) {
+            User user = userRepository.findById(repairInputDTO.getUserId()).orElse(null);
+            repair.setUser(user);
+        }
+        if (repairInputDTO.getProductId() != null) {
+            Product product = productRepository.findById(repairInputDTO.getProductId()).orElse(null);
+            repair.setProduct(product);
+        }
+
 
         return repair;
     }
@@ -101,6 +132,14 @@ public class RepairService {
         repairOutputDTO.setRepairNumber(repair.getRepairNumber());
         repairOutputDTO.setProblemDescription(repair.getProblemDescription());
         repairOutputDTO.setPicture(repair.getPicture());
+        if (repair.getUser() != null) {
+            repairOutputDTO.setUserId(repair.getUser().getId());
+        }
+
+        if (repair.getProduct() != null) {
+            repairOutputDTO.setProductId(repair.getProduct().getId());
+        }
+        repairOutputDTO.setSubmissionDate(repair.getSubmissionDate());
 
         return repairOutputDTO;
     }

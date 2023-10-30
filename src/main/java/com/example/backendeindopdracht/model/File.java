@@ -3,7 +3,7 @@ package com.example.backendeindopdracht.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
+
 
 
 @Entity
@@ -21,6 +21,6 @@ public class File {
 
         @Lob
         private byte[] docFile;
-    }
+}
 
 
