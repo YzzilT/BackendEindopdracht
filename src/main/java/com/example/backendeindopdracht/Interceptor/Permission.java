@@ -1,5 +1,4 @@
-package com.example.backendeindopdracht.Interceptor;//package com.example.backendeindopdracht.Interceptor;
-//
+package com.example.backendeindopdracht.Interceptor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

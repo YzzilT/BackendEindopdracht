@@ -1,7 +1,7 @@
 package com.example.backendeindopdracht.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,11 +26,9 @@ public class Product {
     private int originalStock;
     private int currentStock;
     private String description;
-    //@NotNull(message = "Product type must be selected")
     @Enumerated(EnumType.STRING)
     @Column(unique = true)
     private ProductType productType;
-    //TODO message doesn't work, fix later
 
 
     @ManyToOne(cascade = CascadeType.PERSIST)
@@ -39,8 +37,6 @@ public class Product {
 
     @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
     private List<OrderLine> orderLines = new ArrayList<>();
-
-
 
 }
 

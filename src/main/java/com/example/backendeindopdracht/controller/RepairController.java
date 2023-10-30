@@ -1,23 +1,17 @@
 package com.example.backendeindopdracht.controller;
 
 import com.example.backendeindopdracht.DTO.inputDTO.RepairInputDTO;
-import com.example.backendeindopdracht.DTO.outputDTO.ProductOutputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.RepairOutputDTO;
-import com.example.backendeindopdracht.model.Product;
 import com.example.backendeindopdracht.model.Repair;
-import com.example.backendeindopdracht.repository.ProductRepository;
 import com.example.backendeindopdracht.repository.RepairRepository;
-import com.example.backendeindopdracht.repository.UserRepository;
 import com.example.backendeindopdracht.service.RepairService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.*;
+
 
 @AllArgsConstructor
 @RestController
@@ -25,8 +19,6 @@ import static org.springframework.http.HttpStatus.*;
 public class RepairController {
 
     private final RepairService repairService;
-    private final RepairRepository repairRepository;
-
 
 
 
@@ -36,7 +28,6 @@ public class RepairController {
         RepairOutputDTO addedRepair = repairService.addRepair(repairInputDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(addedRepair);
     }
-
 
 
     @GetMapping()
@@ -61,6 +52,12 @@ public class RepairController {
     public ResponseEntity<Repair> deleteRepair (@PathVariable Long id){
         repairService.deleteRepair(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/oldrepairs")
+    public ResponseEntity<List<RepairOutputDTO>> getRepairsOverAWeekAgo() {
+        List<RepairOutputDTO> repairs = repairService.getRepairsSubmittedOverAWeekAgo();
+        return ResponseEntity.ok(repairs);
     }
 
 }

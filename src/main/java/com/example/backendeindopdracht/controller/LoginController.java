@@ -39,7 +39,7 @@ public class LoginController {
 
         User user2 = null;
         for(var user : userRepository.findAll()){
-            //todo moet nog testen of dit goed gaat, anders nog even documentatie lezen op https://github.com/patrickfav/bcrypt
+            //https://github.com/patrickfav/bcrypt
             BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), user.getPassword());
             if(user.getEmail().equals(email) && result.verified){
                 user2 = user;
@@ -67,24 +67,13 @@ public class LoginController {
         return sb.toString();
     }
 
-//    https://wstutorial.com/misc/jwt-java-public-key-rsa.html
-//    public String generateJwtToken(PrivateKey privateKey,String username,String role) {
-//        String token = Jwts.builder()
-//                .setSubject(username)
-//                .setExpiration(Date.from(Instant.now().plus(8, ChronoUnit.HOURS)))
-//                .setIssuer("lizzy")
-//                .claim("groups", new String[] { role })
-//                .signWith(SignatureAlgorithm.RS256, privateKey).compact();
-//        return token;
-//    }
-
     //    https://www.javainuse.com/spring/boot-jwt
     public String generateJwtToken() {
 
         Map<String, Object> claims = new HashMap<>();
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject("asd")
+                .setSubject("subject")
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 60 * 60 * 10 * 1000))
                 .setIssuer("lizzy")

@@ -35,6 +35,7 @@ public class RoleService {
         for (Role role : roles){
             roleOutputDTOList.add(transferRoleToDTO(role));
         }
+
         return roleOutputDTOList;
     }
 
@@ -45,6 +46,7 @@ public class RoleService {
             throw new RecordNotFoundException("No role found with id: " + id);
         }
         Role role = optionalRole.get();
+
         return transferRoleToDTO(role);
 
     }
@@ -53,7 +55,7 @@ public class RoleService {
     public RoleOutputDTO updateRole (RoleInputDTO roleInputDTO, Long id){
         Optional<Role> optionalRole = roleRepository.findById(id);
         if (optionalRole.isEmpty()){
-            throw new RecordNotFoundException("No user found with id " + id);
+            throw new RecordNotFoundException("No role found with id " + id);
         } else {
             Role updateRole = transferInputDtoRoleToRole(roleInputDTO);
             updateRole.setId(id);
@@ -83,8 +85,6 @@ public class RoleService {
         role.setRoleName(roleInputDTO.getRoleName());
         role.setId(roleInputDTO.getId());
 
-
-
         return role;
     }
 
@@ -96,7 +96,4 @@ public class RoleService {
 
         return roleOutputDTO;
     }
-
-
-
 }

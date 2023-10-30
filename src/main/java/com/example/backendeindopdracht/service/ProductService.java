@@ -21,7 +21,6 @@ public class ProductService {
     private final ProductRepository productRepository;
 
 
-
     //POST
     public ProductOutputDTO createProduct(ProductInputDTO productInputDTO) {
 
@@ -43,6 +42,7 @@ public class ProductService {
         }
         return productOutputDTOList;
     }
+
 
     //GET BY ID
     public ProductOutputDTO getProductById(Long id) {
@@ -81,15 +81,16 @@ public class ProductService {
     }
 
 
+
     //UPDATE STOCK
     public void updateStockWhenBuyingProduct(long productid,int amount) throws Exception {
 
         var product = productRepository.findById(productid).orElse(null);
         if(product == null){
-            throw new Exception("not found");
+            throw new Exception("Product not found");
         }
         if(product.getCurrentStock() < amount){
-            throw new Exception("not enough in stock");
+            throw new Exception("Not enough in stock");
         }
 
         product.setCurrentStock(product.getCurrentStock() - amount);
@@ -112,12 +113,6 @@ public class ProductService {
 
 
 
-
-
-
-
-
-
     public Product transferInputDtoProductToProduct(ProductInputDTO productInputDTO){
         Product product = new Product();
 
@@ -128,8 +123,6 @@ public class ProductService {
         product.setCurrentStock(productInputDTO.getCurrentStock());
         product.setDescription(productInputDTO.getDescription());
         product.setProductType(productInputDTO.getProductType());
-
-        // TODO: 10/4/2023 orderlines and order?
 
 
         return product;
@@ -146,22 +139,9 @@ public class ProductService {
         productOutputDTO.setCurrentStock(product.getCurrentStock());
         productOutputDTO.setDescription(product.getDescription());
         productOutputDTO.setProductType(product.getProductType());
-        // TODO: 10/17/2023   orderlines and order??
+
 
         return productOutputDTO;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

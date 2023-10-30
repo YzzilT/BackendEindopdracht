@@ -7,6 +7,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
+import java.time.LocalDate;
+
+
 @Entity
 @Setter
 @Getter
@@ -28,11 +32,10 @@ public class Repair {
     private Product product;
     @Column(columnDefinition = "TEXT")
     private String problemDescription;
-    private long userid;
-    private long productid;
     private int fileId;
     @Lob
     private byte[] picture;
+    private LocalDate submissionDate;
 
 
 }

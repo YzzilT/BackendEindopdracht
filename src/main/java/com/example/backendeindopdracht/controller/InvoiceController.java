@@ -4,8 +4,6 @@ package com.example.backendeindopdracht.controller;
 import com.example.backendeindopdracht.DTO.inputDTO.InvoiceInputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.InvoiceOutputDTO;
 import com.example.backendeindopdracht.model.Invoice;
-import com.example.backendeindopdracht.repository.InvoiceRepository;
-import com.example.backendeindopdracht.repository.OrderRepository;
 import com.example.backendeindopdracht.service.InvoiceService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

@@ -1,8 +1,7 @@
 package com.example.backendeindopdracht.DTO.inputDTO;
 
-import com.example.backendeindopdracht.model.Invoice;
+
 import com.example.backendeindopdracht.model.OrderLine;
-import com.example.backendeindopdracht.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +17,6 @@ import java.util.List;
 public class OrderInputDTO {
 
     private Long id;
-//    private Invoice invoice;
     private long invoiceId;
     private List <OrderLine> orderLineIds;
     private String customerName;

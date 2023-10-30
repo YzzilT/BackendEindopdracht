@@ -1,7 +1,7 @@
 package com.example.backendeindopdracht.DTO.outputDTO;
 
 
-import com.example.backendeindopdracht.model.Order;
+
 import com.example.backendeindopdracht.model.OrderLine;
 import com.example.backendeindopdracht.model.ProductType;
 import lombok.AllArgsConstructor;
@@ -25,6 +25,5 @@ public class ProductOutputDTO {
     private int currentStock;
     private String description;
     private ProductType productType;
-//    private Order order;
     private List<OrderLine> orderLines = new ArrayList<>();
 }

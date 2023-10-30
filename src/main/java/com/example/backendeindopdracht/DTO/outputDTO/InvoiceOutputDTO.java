@@ -19,7 +19,6 @@ public class InvoiceOutputDTO {
     private Order order;
     private String customerName;
     private String invoiceDate;
-    //private List<Product> products;
     private BigDecimal totalAmount;
     private String email;
     private long orderId;

@@ -36,8 +36,6 @@ public class OrderLine {
     @JoinColumn(name = "product_id")
     private Product product;
 
-
-
 }
 
 

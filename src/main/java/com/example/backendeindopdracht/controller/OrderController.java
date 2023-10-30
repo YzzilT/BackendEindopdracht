@@ -4,7 +4,6 @@ package com.example.backendeindopdracht.controller;
 import com.example.backendeindopdracht.DTO.inputDTO.OrderInputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.OrderOutputDTO;
 import com.example.backendeindopdracht.model.Order;
-import com.example.backendeindopdracht.repository.OrderRepository;
 import com.example.backendeindopdracht.service.OrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

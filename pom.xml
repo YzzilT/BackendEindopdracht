@@ -10,8 +10,7 @@
 	</parent>
 	<groupId>com.example</groupId>
 	<artifactId>BackendEindopdracht</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>BackendEindopdracht</name>
+		<name>BackendEindopdracht</name>
 	<description>BackendEindopdracht</description>
 	<properties>
 		<java.version>17</java.version>
