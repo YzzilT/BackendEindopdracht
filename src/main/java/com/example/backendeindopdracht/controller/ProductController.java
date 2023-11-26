@@ -23,11 +23,12 @@ public class ProductController {
     private final ProductService productService;
 
 
-    //POST
-    @PostMapping("/add")
+
+    @PostMapping
     public ResponseEntity<ProductOutputDTO> createProduct(@RequestBody @Valid ProductInputDTO productInputDto){
         ProductOutputDTO addedProduct = productService.createProduct(productInputDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(addedProduct);
+
+        return ResponseEntity.status(HttpStatus.CREATED).header("Location", "/products/{id}" + addedProduct.getId()).body(addedProduct);
     }
 
 

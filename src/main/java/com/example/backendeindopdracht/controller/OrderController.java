@@ -25,7 +25,8 @@ public class OrderController {
 
        OrderOutputDTO orderOutputDTO = orderService.addOrder(orderInputDTO);
 
-       return ResponseEntity.status(HttpStatus.CREATED).body(orderOutputDTO);
+
+       return ResponseEntity.status(HttpStatus.CREATED).header("Location","/orders/" + orderOutputDTO.getId()).body(orderOutputDTO);
     }
 
 
@@ -42,9 +43,9 @@ public class OrderController {
     }
 
     //PUT
-    @PutMapping()
-    public ResponseEntity<OrderOutputDTO> updateOrder (@RequestBody OrderInputDTO order){
-        var output = orderService.updateOrder(order,order.getId());
+    @PutMapping("/{id}")
+    public ResponseEntity<OrderOutputDTO> updateOrder (@PathVariable Long id,@RequestBody OrderInputDTO order){
+        var output = orderService.updateOrder(order,id);
         return ResponseEntity.status(HttpStatus.OK).body(output);
     }
 

@@ -20,11 +20,12 @@ public class RoleController {
 
     private final RoleService roleService;
 
-    //POST
+
     @PostMapping()
     public ResponseEntity<RoleOutputDTO> addRole (@RequestBody RoleInputDTO roleInputDTO){
         RoleOutputDTO addedRole = roleService.addRole(roleInputDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(addedRole);
+
+        return ResponseEntity.status(HttpStatus.CREATED).header("Location", "/roles/{id}" + addedRole.getId()).body(addedRole);
     }
 
     @GetMapping()

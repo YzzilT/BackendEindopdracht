@@ -23,11 +23,12 @@ public class UserController {
     private final UserService userService;
 
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<UserOutputDTO> addUser (@RequestBody UserInputDTO userInputDTO){
         UserOutputDTO addedUser = userService.addUser(userInputDTO);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(addedUser);
+
+        return ResponseEntity.status(HttpStatus.CREATED).header("Location", "/users/{id}" + addedUser.getId()).body(addedUser);
     }
 
     @GetMapping()

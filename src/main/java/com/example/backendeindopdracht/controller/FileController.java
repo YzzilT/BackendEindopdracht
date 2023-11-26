@@ -29,6 +29,7 @@ public class FileController {
         uploadFile.setDocFile(file.getBytes());
 
         var x = fileRepository.save(uploadFile);
+        ResponseEntity.noContent().header("Location", "/download/" + x.getId()).build();
         return ResponseEntity.ok("File uploaded, the id is:" +  x.getId());
 
     }
