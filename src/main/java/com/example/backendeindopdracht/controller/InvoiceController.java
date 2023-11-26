@@ -22,11 +22,11 @@ public class InvoiceController {
     private final InvoiceService invoiceService;
 
 
-    //POST
+
     @PostMapping()
     public ResponseEntity<InvoiceOutputDTO> addInvoice (@RequestBody InvoiceInputDTO invoiceInputDTO){
         InvoiceOutputDTO addedInvoice = invoiceService.addInvoice(invoiceInputDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(addedInvoice);
+        return ResponseEntity.status(HttpStatus.CREATED).header("Location","/invoices/{id}" + addedInvoice.getInvoiceNumber()).body(addedInvoice);
     }
 
     //GET ALL

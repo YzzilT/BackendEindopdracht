@@ -22,11 +22,12 @@ public class RepairController {
 
 
 
-    //POST
-    @PostMapping("/add")
+
+    @PostMapping
     public ResponseEntity<RepairOutputDTO> createRepair(@RequestBody RepairInputDTO repairInputDTO) {
         RepairOutputDTO addedRepair = repairService.addRepair(repairInputDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(addedRepair);
+
+        return ResponseEntity.status(HttpStatus.CREATED).header("Location", "/repairs/{id}" + addedRepair.getRepairNumber()).body(addedRepair);
     }
 
 

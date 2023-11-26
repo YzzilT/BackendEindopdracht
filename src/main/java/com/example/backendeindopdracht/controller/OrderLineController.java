@@ -23,7 +23,7 @@ public class OrderLineController {
 
         var out =orderLineService.addOrderLine(orderlineInputDTO);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(out);
+        return ResponseEntity.status(HttpStatus.CREATED).header("Location", "/orderlines/{id}" + out.getId()).body(out);
     }
 
     @GetMapping()
@@ -37,7 +37,7 @@ public class OrderLineController {
     }
 
 
-    @PutMapping("/id")
+    @PutMapping("{/id}")
     public ResponseEntity<OrderLineOutputDTO> updateOrderLine (@PathVariable Long id, @Valid @RequestBody OrderlineInputDTO orderlineInputDTO){
         return ResponseEntity.ok().body(orderLineService.updateOrderLine(orderlineInputDTO, id));
     }
