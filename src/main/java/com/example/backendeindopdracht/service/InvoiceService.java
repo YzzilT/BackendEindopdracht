@@ -9,7 +9,9 @@ import com.example.backendeindopdracht.model.Product;
 import com.example.backendeindopdracht.repository.InvoiceRepository;
 import com.example.backendeindopdracht.repository.OrderRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -50,38 +52,29 @@ public class InvoiceService {
     //GET BY ID
     public  InvoiceOutputDTO getInvoiceById(Long id){
         Optional<Invoice> optionalInvoice = invoiceRepository.findById(id);
-        if (optionalInvoice.isEmpty()){
-            throw new RecordNotFoundException("No invoice found with id: " + id);
-        }
-        Invoice invoice = optionalInvoice.get();
+
+        Invoice invoice = optionalInvoice.orElseThrow();
         return transferInvoiceToOutputDTO(invoice);
     }
 
     //PUT
     public InvoiceOutputDTO updateInvoice (InvoiceInputDTO invoiceInputDTO, Long id){
-        Optional<Invoice> optionalInvoice = invoiceRepository.findById(id);
-        if (optionalInvoice.isEmpty()){
-            throw new RecordNotFoundException("No invoice found with id " + id);
-        } else {
-            Invoice updateInvoice = transferInvoiceInputDtoToInvoice(invoiceInputDTO);
-            updateInvoice.setInvoiceNumber(id);
-            var order = orderRepository.findById(invoiceInputDTO.getOrderId()).get();
-            updateInvoice.setOrder(order);
-            Invoice updatedInvoice = invoiceRepository.save(updateInvoice);
+        Invoice updateInvoice = transferInvoiceInputDtoToInvoice(invoiceInputDTO);
+        updateInvoice.setInvoiceNumber(id);
+        var order = orderRepository.findById(invoiceInputDTO.getOrderId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"order not found"));
+        updateInvoice.setOrder(order);
+        Invoice updatedInvoice = invoiceRepository.save(updateInvoice);
 
-            return transferInvoiceToOutputDTO(updatedInvoice);
-        }
+        return transferInvoiceToOutputDTO(updatedInvoice);
     }
 
 
     //DELETE
     public Invoice deleteInvoice(Long id){
         Optional<Invoice> optionalInvoice = invoiceRepository.findById(id);
-        if (optionalInvoice.isEmpty()){
-            throw new RecordNotFoundException("No invoice found with id: " + id);
-        }
+
         invoiceRepository.deleteById(id);
-        return optionalInvoice.get();
+        return optionalInvoice.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"invoice not found"));
     }
 
     public BigDecimal calculateTotalAmountWithVAT(InvoiceInputDTO invoiceInputDTO){

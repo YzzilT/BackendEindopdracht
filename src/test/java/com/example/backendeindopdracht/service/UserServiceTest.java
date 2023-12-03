@@ -34,7 +34,7 @@ class UserServiceTest {
 
 
     @Test
-    void shouldAddUser(){
+    void shouldAddUser() throws Exception {
         //arrange
         UserInputDTO userInputDTO = new UserInputDTO();
         userInputDTO.setId(1L);

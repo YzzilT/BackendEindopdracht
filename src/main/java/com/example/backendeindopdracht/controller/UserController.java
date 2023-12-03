@@ -24,7 +24,7 @@ public class UserController {
 
 
     @PostMapping
-    public ResponseEntity<UserOutputDTO> addUser (@RequestBody UserInputDTO userInputDTO){
+    public ResponseEntity<UserOutputDTO> addUser (@RequestBody UserInputDTO userInputDTO) throws Exception {
         UserOutputDTO addedUser = userService.addUser(userInputDTO);
 
 

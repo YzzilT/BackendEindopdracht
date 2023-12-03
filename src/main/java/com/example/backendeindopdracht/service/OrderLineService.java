@@ -10,7 +10,9 @@ import com.example.backendeindopdracht.repository.OrderLineRepository;
 import com.example.backendeindopdracht.repository.OrderRepository;
 import com.example.backendeindopdracht.repository.ProductRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +62,7 @@ public class OrderLineService {
 
         productService.updateStockWhenBuyingProduct(orderlineInputDTO.getProductId(),1);
 
-        Order order = optionalOrder.get();
+        Order order = optionalOrder.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"order not found"));
         orderLine.setOrder(order);
         orderLine.setProduct(productRepository.findById(orderlineInputDTO.getProductId()).orElse(null));
         orderLine = orderLineRepository.save(orderLine);
@@ -86,10 +88,8 @@ public class OrderLineService {
     //GET BY ID
     public OrderLineOutputDTO getOrderLineById(Long id){
         Optional<OrderLine> optionalOrderLine = orderLineRepository.findById(id);
-        if (optionalOrderLine.isEmpty()){
-            throw new RecordNotFoundException("No orderline found with id: " + id);
-        }
-        OrderLine orderLine = optionalOrderLine.get();
+
+        OrderLine orderLine = optionalOrderLine.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"order not found"));
         return transferOrderLineToDTO(orderLine);
     }
 
@@ -111,11 +111,9 @@ public class OrderLineService {
     //DELETE
     public OrderLine deleteOrderLine (Long id){
         Optional<OrderLine> optionalOrderLine = orderLineRepository.findById(id);
-        if (optionalOrderLine.isEmpty()){
-            throw new RecordNotFoundException("No orderline found with id: " + id);
-        }
+
         orderLineRepository.deleteById(id);
-        return optionalOrderLine.get();
+        return optionalOrderLine.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"order not found"));
     }
 
 

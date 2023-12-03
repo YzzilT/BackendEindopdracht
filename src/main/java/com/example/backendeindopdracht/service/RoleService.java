@@ -6,7 +6,9 @@ import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
 import com.example.backendeindopdracht.model.Role;
 import com.example.backendeindopdracht.repository.RoleRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,10 +44,8 @@ public class RoleService {
     //GET BY ID
     public RoleOutputDTO getRoleById (Long id){
         Optional<Role> optionalRole = roleRepository.findById(id);
-        if (optionalRole.isEmpty()){
-            throw new RecordNotFoundException("No role found with id: " + id);
-        }
-        Role role = optionalRole.get();
+
+        Role role = optionalRole.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"role not found"));
 
         return transferRoleToDTO(role);
 
@@ -68,11 +68,9 @@ public class RoleService {
     //DELETE
     public Role deleteRole(Long id){
         Optional<Role> optionalRole = roleRepository.findById(id);
-        if (optionalRole.isEmpty()){
-            throw new RecordNotFoundException("No role found with id: " + id);
-        }
 
-        Role roleToDelete = optionalRole.get();
+
+        Role roleToDelete = optionalRole.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"role not found"));
         roleRepository.delete(roleToDelete);
 
         return roleToDelete;
