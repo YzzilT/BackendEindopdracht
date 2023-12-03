@@ -7,8 +7,9 @@ import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
 import com.example.backendeindopdracht.model.*;
 import com.example.backendeindopdracht.repository.*;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.server.ResponseStatusException;
 
 
 import java.util.ArrayList;
@@ -63,10 +64,8 @@ public class OrderService {
     //GET BY ID
     public OrderOutputDTO getOrderById(Long id){
         Optional<Order> optionalOrder = orderRepository.findById(id);
-        if (optionalOrder.isEmpty()){
-            throw new RecordNotFoundException("No order found with id: " + id);
-        }
-        Order order = optionalOrder.get();
+
+        Order order = optionalOrder.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"order not found"));
         return transferOrderToOutputDTO(order);
     }
 
@@ -89,11 +88,9 @@ public class OrderService {
     //DELETE
     public Order deleteOrder(Long id){
         Optional<Order> optionalOrder = orderRepository.findById(id);
-        if (optionalOrder.isEmpty()){
-            throw new RecordNotFoundException("No order was found with id: " + id);
-        }
+
         orderRepository.deleteById(id);
-        return optionalOrder.get();
+        return optionalOrder.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"order not found"));
     }
 
 

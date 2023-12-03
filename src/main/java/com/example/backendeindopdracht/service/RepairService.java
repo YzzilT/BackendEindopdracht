@@ -10,6 +10,7 @@ import com.example.backendeindopdracht.repository.ProductRepository;
 import com.example.backendeindopdracht.repository.RepairRepository;
 import com.example.backendeindopdracht.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -53,10 +54,8 @@ public class RepairService {
     //GET BY ID
     public RepairOutputDTO getRepairById(Long id) {
         Optional<Repair> optionalRepair = repairRepository.findById(id);
-        if (optionalRepair.isEmpty()) {
-            throw new RecordNotFoundException("No repair found with id: " + id);
-        }
-        Repair repair = optionalRepair.get();
+
+        Repair repair = optionalRepair.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"repair not found"));
         return transferRepairToDTO(repair);
     }
 

@@ -10,7 +10,9 @@ import com.example.backendeindopdracht.model.Role;
 import com.example.backendeindopdracht.repository.UserRepository;
 import com.example.backendeindopdracht.repository.RoleRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 
 import java.util.ArrayList;
@@ -26,13 +28,14 @@ public class UserService {
 
 
     //POST
-    public UserOutputDTO addUser(UserInputDTO userInputDTO) {
+    public UserOutputDTO addUser(UserInputDTO userInputDTO) throws Exception {
         User user = transferInputDtoUserToUser(userInputDTO);
         Long roleId = userInputDTO.getRoleid();
 
 
         Optional<Role> optionalRole = roleRepository.findById(roleId);
-        user.setRole(optionalRole.get());
+//        https://www.baeldung.com/exception-handling-for-rest-with-spring
+        user.setRole(optionalRole.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"user not found")));
         var hashedPassword = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
         user.setPassword(hashedPassword);
         userRepository.save(user);
@@ -56,10 +59,8 @@ public class UserService {
     //GET BY ID
     public UserOutputDTO getUserById(Long id){
         Optional<User> optionalUser = userRepository.findById(id);
-        if (optionalUser.isEmpty()){
-            throw new RecordNotFoundException ("No user found with id: " + id);
-        }
-        User user = optionalUser.get();
+
+        User user = optionalUser.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"user not found"));
         return transferUserToDTO(user);
     }
 
@@ -81,11 +82,9 @@ public class UserService {
     //DELETE
     public User deleteUser (Long id){
         Optional<User> optionalUser = userRepository.findById(id);
-        if (optionalUser.isEmpty()){
-            throw new RecordNotFoundException("No user was found with id: " + id);
-        }
+
         userRepository.deleteById(id);
-        return optionalUser.get();
+        return optionalUser.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"user not found"));
     }
 
     public User transferInputDtoUserToUser (UserInputDTO userInputDTO){
@@ -101,12 +100,9 @@ public class UserService {
         user.setRoleid(userInputDTO.getRoleid());
         Optional<Role> optionalRole = roleRepository.findById(user.getRoleid());
 
-        if (optionalRole.isEmpty()) {
-            throw new RecordNotFoundException("No role found with id: " + user.getRoleid());
-        }
-        else {
-            user.setRole(optionalRole.get());
-        }
+
+            user.setRole(optionalRole.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"user not found")));
+
 
         return user;
     }

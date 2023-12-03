@@ -7,7 +7,10 @@ import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
 import com.example.backendeindopdracht.model.Product;
 import com.example.backendeindopdracht.repository.ProductRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -47,10 +50,8 @@ public class ProductService {
     //GET BY ID
     public ProductOutputDTO getProductById(Long id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
-        if (optionalProduct.isEmpty()) {
-            throw new RecordNotFoundException("No product found with id: " + id);
-        }
-        Product product = optionalProduct.get();
+
+        Product product = optionalProduct.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"product not found"));
         return transferProductToDTO(product);
     }
 
