@@ -18,8 +18,8 @@ public class OrderLineOutputDTO {
     private Long id;
     private int quantity;
     private BigDecimal totalAmount;
-    private Order order;
-    private Product product;
+    private Long orderid;
+    private Long productid;
 
 
 

@@ -27,7 +27,6 @@ public class Product {
     private int currentStock;
     private String description;
     @Enumerated(EnumType.STRING)
-    @Column(unique = true)
     private ProductType productType;
 
 

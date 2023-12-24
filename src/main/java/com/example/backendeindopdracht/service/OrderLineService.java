@@ -142,8 +142,8 @@ public class OrderLineService {
         orderLineOutputDTO.setId(orderLine.getId());
         orderLineOutputDTO.setQuantity(orderLine.getQuantity());
         orderLineOutputDTO.setTotalAmount(orderLine.getTotalAmount());
-        orderLineOutputDTO.setOrder(orderLine.getOrder());
-        orderLineOutputDTO.setProduct(orderLine.getProduct());
+        orderLineOutputDTO.setOrderid(orderLine.getOrder().getId());
+        orderLineOutputDTO.setProductid(orderLine.getProduct().getId());
 
         return orderLineOutputDTO;
     }

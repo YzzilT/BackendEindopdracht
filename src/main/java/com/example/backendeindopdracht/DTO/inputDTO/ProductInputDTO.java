@@ -30,6 +30,6 @@ public class ProductInputDTO {
     private String description;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private ProductType productType;
-    private Order order;
-    private List<OrderLine> orderLines = new ArrayList<>();
+    private int orderid;
+
 }

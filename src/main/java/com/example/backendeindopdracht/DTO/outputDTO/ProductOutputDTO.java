@@ -25,5 +25,4 @@ public class ProductOutputDTO {
     private int currentStock;
     private String description;
     private ProductType productType;
-    private List<OrderLine> orderLines = new ArrayList<>();
 }

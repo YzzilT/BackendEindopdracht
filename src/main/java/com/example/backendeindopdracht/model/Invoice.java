@@ -27,6 +27,5 @@ public class Invoice {
     private String invoiceDate;
     private BigDecimal totalAmount;
     private String email;
-    private long orderId;
 
 }

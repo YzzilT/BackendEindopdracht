@@ -67,11 +67,6 @@ public class RepairService {
 
         repair.setProblemDescription(repairInputDTO.getProblemDescription());
 
-        if (repairInputDTO.getPicture() != null){
-            repair.setPicture(repairInputDTO.getPicture());
-
-        }
-
         repairRepository.save(repair);
         return transferRepairToDTO(repair);
 
@@ -110,7 +105,6 @@ public class RepairService {
 
         repair.setRepairNumber(repairInputDTO.getRepairNumber());
         repair.setProblemDescription(repairInputDTO.getProblemDescription());
-        repair.setPicture(repairInputDTO.getPicture());
         repair.setSubmissionDate(repairInputDTO.getSubmissionDate());
         if (repairInputDTO.getUserId() != null) {
             User user = userRepository.findById(repairInputDTO.getUserId()).orElse(null);
@@ -130,7 +124,6 @@ public class RepairService {
 
         repairOutputDTO.setRepairNumber(repair.getRepairNumber());
         repairOutputDTO.setProblemDescription(repair.getProblemDescription());
-        repairOutputDTO.setPicture(repair.getPicture());
         if (repair.getUser() != null) {
             repairOutputDTO.setUserId(repair.getUser().getId());
         }

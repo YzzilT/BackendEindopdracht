@@ -26,7 +26,6 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
-    private Long roleid;
     private String jwt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,fetch = FetchType.LAZY)

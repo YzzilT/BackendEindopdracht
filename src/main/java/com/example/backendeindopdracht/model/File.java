@@ -1,25 +1,30 @@
 package com.example.backendeindopdracht.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
+import lombok.*;
 
 
 @Entity
 @Getter
 @Setter
-@Table(name = "files")
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Table(name = "images")
 
 public class File {
 
         @Id
-        @GeneratedValue
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
+        private long repairId;
+
         private String fileName;
+        private String type;
 
         @Lob
+        @Column(name= "docFile")
         private byte[] docFile;
 }
 

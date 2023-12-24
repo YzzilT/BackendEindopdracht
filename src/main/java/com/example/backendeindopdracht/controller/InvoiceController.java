@@ -6,6 +6,7 @@ import com.example.backendeindopdracht.DTO.outputDTO.InvoiceOutputDTO;
 import com.example.backendeindopdracht.model.Invoice;
 import com.example.backendeindopdracht.service.InvoiceService;
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,9 +57,10 @@ public class InvoiceController {
     }
 
     //calculateTotalAmountWithVAT
-    @GetMapping("/totalAmount")
-    public ResponseEntity<BigDecimal> calculateTotalAmountWithVAT(@RequestBody InvoiceInputDTO invoiceInputDTO){
-        BigDecimal totalAmountIncludingVAT = invoiceService.calculateTotalAmountWithVAT(invoiceInputDTO);
-        return ResponseEntity.ok(totalAmountIncludingVAT);
+    @GetMapping("/totalAmount/{orderid}")
+    public ResponseEntity<BigDecimal> calculateTotalAmount(@PathVariable int orderid){//orderid
+        //todo vervang dto met orderid en sprokkel zelf de orderlines bij mekaar en reken dan de kosten uit.
+        BigDecimal totalAmountIncluding = invoiceService.calculateTotalAmount(orderid);
+        return ResponseEntity.ok(totalAmountIncluding);
     }
 }

@@ -24,7 +24,6 @@ public class Order {
     private Invoice invoice;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<OrderLine> orderLineIds;
-    private String customerName;
     private BigDecimal totalAmount;
     @ManyToOne
     @JsonIgnore

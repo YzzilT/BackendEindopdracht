@@ -97,11 +97,8 @@ public class UserService {
         user.setPassword(userInputDTO.getPassword());
         user.setEmail(userInputDTO.getEmail());
 
-        user.setRoleid(userInputDTO.getRoleid());
-        Optional<Role> optionalRole = roleRepository.findById(user.getRoleid());
-
-
-            user.setRole(optionalRole.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"user not found")));
+        Optional<Role> optionalRole = roleRepository.findById(userInputDTO.getRoleid());
+        user.setRole(optionalRole.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"user not found")));
 
 
         return user;

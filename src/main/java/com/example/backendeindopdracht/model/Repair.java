@@ -32,9 +32,7 @@ public class Repair {
     private Product product;
     @Column(columnDefinition = "TEXT")
     private String problemDescription;
-    private int fileId;
-    @Lob
-    private byte[] picture;
+
     private LocalDate submissionDate;
 
 

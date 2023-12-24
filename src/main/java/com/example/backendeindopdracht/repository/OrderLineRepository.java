@@ -11,4 +11,6 @@ import java.util.List;
 
 public interface OrderLineRepository extends CrudRepository<OrderLine, Long> {
     List<OrderLine> findByProduct_Id(Long productId);
+
+    List<OrderLine> findByOrder_Id(Long productId);
 }

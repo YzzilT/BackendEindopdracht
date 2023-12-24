@@ -100,9 +100,6 @@ public class OrderService {
         order.setId(orderInputDTO.getId());
         Invoice invoice = invoiceRepository.findById(orderInputDTO.getInvoiceId()).orElse(null);
         order.setInvoice(invoice);
-        order.setCustomerName(orderInputDTO.getCustomerName());
-        order.setTotalAmount(orderInputDTO.getTotalAmount());
-        order.setOrderLineIds(orderInputDTO.getOrderLineIds());
         order.setUser(userRepository.findById(orderInputDTO.getUserid()).orElse(null));
 
 
@@ -116,10 +113,10 @@ public class OrderService {
 
         orderOutputDTO.setId(order.getId());
         invoiceRepository.findById(orderOutputDTO.getInvoiceId()).ifPresent(invoice -> orderOutputDTO.setInvoiceId(invoice.getInvoiceNumber()));
-        orderOutputDTO.setCustomerName(order.getCustomerName());
+//        orderOutputDTO.setCustomerName(order.getCustomerName());
         orderOutputDTO.setTotalAmount(order.getTotalAmount());
-        orderOutputDTO.setOrderLineIds(order.getOrderLineIds());
-        orderOutputDTO.setUser(order.getUser());
+//        orderOutputDTO.setOrderLineIds(order.getOrderLineIds());
+//        orderOutputDTO.setUser(order.getUser());
 
 
         return orderOutputDTO;

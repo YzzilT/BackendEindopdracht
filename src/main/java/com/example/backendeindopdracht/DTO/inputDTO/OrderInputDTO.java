@@ -18,9 +18,6 @@ public class OrderInputDTO {
 
     private Long id;
     private long invoiceId;
-    private List <OrderLine> orderLineIds;
-    private String customerName;
-    private BigDecimal totalAmount;
     private long userid;
 
 

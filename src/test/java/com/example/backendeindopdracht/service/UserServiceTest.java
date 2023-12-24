@@ -18,7 +18,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+//@SpringBootTest
 class UserServiceTest {
 
     @InjectMocks
@@ -239,7 +239,7 @@ class UserServiceTest {
         existingUser.setLastName("Telford");
         existingUser.setPassword("lizzytelford");
         existingUser.setEmail("lizzytelford@hotmail.com");
-        existingUser.setRoleid(1L);
+//        existingUser.setRoleid(1L);
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
 

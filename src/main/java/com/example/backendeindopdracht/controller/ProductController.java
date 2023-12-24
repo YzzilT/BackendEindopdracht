@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 @AllArgsConstructor
@@ -29,6 +30,12 @@ public class ProductController {
         ProductOutputDTO addedProduct = productService.createProduct(productInputDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).header("Location", "/products/{id}" + addedProduct.getId()).body(addedProduct);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    ResponseEntity<String> handleConstraintViolationException(MethodArgumentNotValidException e) {
+        return new ResponseEntity<>("not valid due to validation error: " + e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
 

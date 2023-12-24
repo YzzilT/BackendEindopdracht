@@ -3,10 +3,10 @@ package com.example.backendeindopdracht.service;
 
 import com.example.backendeindopdracht.DTO.inputDTO.InvoiceInputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.InvoiceOutputDTO;
-import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
 import com.example.backendeindopdracht.model.Invoice;
-import com.example.backendeindopdracht.model.Product;
+import com.example.backendeindopdracht.model.OrderLine;
 import com.example.backendeindopdracht.repository.InvoiceRepository;
+import com.example.backendeindopdracht.repository.OrderLineRepository;
 import com.example.backendeindopdracht.repository.OrderRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +24,8 @@ public class InvoiceService {
 
     private final InvoiceRepository invoiceRepository;
     private final OrderRepository orderRepository;
+
+    private final OrderLineRepository orderLineRepository;
 
 
     //POST
@@ -77,19 +78,29 @@ public class InvoiceService {
         return optionalInvoice.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"invoice not found"));
     }
 
-    public BigDecimal calculateTotalAmountWithVAT(InvoiceInputDTO invoiceInputDTO){
-        BigDecimal VAT = new BigDecimal("0.21");
-        BigDecimal totalAmount = BigDecimal.ZERO;
+    public BigDecimal calculateTotalAmount(long orderid){
 
-        for (Product product : invoiceInputDTO.getProducts()){
-            BigDecimal productPrice = BigDecimal.valueOf(product.getPrice());
-            totalAmount = totalAmount.add(productPrice);
+        List<OrderLine> orderlines = orderLineRepository.findByOrder_Id(orderid);
+
+        BigDecimal sum = new BigDecimal(0);
+        for (OrderLine orderline : orderlines) {
+            sum = sum.add(orderline.getTotalAmount());
         }
+        return sum;
 
-        BigDecimal vatAmount = totalAmount.multiply(VAT);
-        BigDecimal totalAmountIncludingVAT = totalAmount.add(vatAmount);
 
-        return totalAmountIncludingVAT.setScale(2, RoundingMode.HALF_UP);
+//        BigDecimal VAT = new BigDecimal("0.21");
+//        BigDecimal totalAmount = BigDecimal.ZERO;
+//
+//        for (Product product : invoiceInputDTO.getProducts()){
+//            BigDecimal productPrice = BigDecimal.valueOf(product.getPrice());
+//            totalAmount = totalAmount.add(productPrice);
+//        }
+//
+//        BigDecimal vatAmount = totalAmount.multiply(VAT);
+//        BigDecimal totalAmountIncludingVAT = totalAmount.add(vatAmount);
+//
+//        return totalAmountIncludingVAT.setScale(2, RoundingMode.HALF_UP);
     }
 
 
@@ -102,8 +113,9 @@ public class InvoiceService {
         invoice.setInvoiceDate(invoiceInputDTO.getInvoiceDate());
         invoice.setTotalAmount(invoiceInputDTO.getTotalAmount());
         invoice.setEmail(invoiceInputDTO.getEmail());
-        invoice.setOrderId(invoiceInputDTO.getOrderId());
-        invoice.setOrder(invoiceInputDTO.getOrder());
+        invoice.setOrder(orderRepository.findById(invoiceInputDTO.getOrderId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"order not found")));
+//        invoice.setOrderId(invoiceInputDTO.getOrderId());
+
 
         return invoice;
     }
@@ -118,8 +130,8 @@ public class InvoiceService {
         invoiceOutputDTO.setInvoiceDate(invoice.getInvoiceDate());
         invoiceOutputDTO.setTotalAmount(invoice.getTotalAmount());
         invoiceOutputDTO.setEmail(invoice.getEmail());
-        invoiceOutputDTO.setOrderId(invoice.getOrderId());
-        invoiceOutputDTO.setOrder(invoice.getOrder());
+//        invoiceOutputDTO.setOrderId(invoice.getOrderId());
+
 
 
         return invoiceOutputDTO;
