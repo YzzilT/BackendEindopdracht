@@ -113,11 +113,7 @@ public class OrderService {
 
         orderOutputDTO.setId(order.getId());
         invoiceRepository.findById(orderOutputDTO.getInvoiceId()).ifPresent(invoice -> orderOutputDTO.setInvoiceId(invoice.getInvoiceNumber()));
-//        orderOutputDTO.setCustomerName(order.getCustomerName());
         orderOutputDTO.setTotalAmount(order.getTotalAmount());
-//        orderOutputDTO.setOrderLineIds(order.getOrderLineIds());
-//        orderOutputDTO.setUser(order.getUser());
-
 
         return orderOutputDTO;
     }

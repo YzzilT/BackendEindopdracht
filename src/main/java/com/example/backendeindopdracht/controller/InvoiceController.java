@@ -56,10 +56,8 @@ public class InvoiceController {
         return ResponseEntity.noContent().build();
     }
 
-    //calculateTotalAmountWithVAT
     @GetMapping("/totalAmount/{orderid}")
-    public ResponseEntity<BigDecimal> calculateTotalAmount(@PathVariable int orderid){//orderid
-        //todo vervang dto met orderid en sprokkel zelf de orderlines bij mekaar en reken dan de kosten uit.
+    public ResponseEntity<BigDecimal> calculateTotalAmount(@PathVariable int orderid){
         BigDecimal totalAmountIncluding = invoiceService.calculateTotalAmount(orderid);
         return ResponseEntity.ok(totalAmountIncluding);
     }

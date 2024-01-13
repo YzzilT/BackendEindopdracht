@@ -87,26 +87,13 @@ public class InvoiceService {
             sum = sum.add(orderline.getTotalAmount());
         }
         return sum;
-
-
-//        BigDecimal VAT = new BigDecimal("0.21");
-//        BigDecimal totalAmount = BigDecimal.ZERO;
-//
-//        for (Product product : invoiceInputDTO.getProducts()){
-//            BigDecimal productPrice = BigDecimal.valueOf(product.getPrice());
-//            totalAmount = totalAmount.add(productPrice);
-//        }
-//
-//        BigDecimal vatAmount = totalAmount.multiply(VAT);
-//        BigDecimal totalAmountIncludingVAT = totalAmount.add(vatAmount);
-//
-//        return totalAmountIncludingVAT.setScale(2, RoundingMode.HALF_UP);
     }
 
 
     public Invoice transferInvoiceInputDtoToInvoice(InvoiceInputDTO invoiceInputDTO){
 
         Invoice invoice = new Invoice();
+
 
         invoice.setInvoiceNumber(invoiceInputDTO.getInvoiceNumber());
         invoice.setCustomerName(invoiceInputDTO.getCustomerName());
