@@ -1,8 +1,9 @@
-package com.example.backendeindopdracht.service;
+package com.example.backendeindopdracht.service.UnitTests;
 
 
 import com.example.backendeindopdracht.model.Product;
 import com.example.backendeindopdracht.repository.ProductRepository;
+import com.example.backendeindopdracht.service.ProductService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

@@ -1,4 +1,4 @@
-package com.example.backendeindopdracht.service;
+package com.example.backendeindopdracht.service.IntegrationTests;
 
 import com.example.backendeindopdracht.DTO.inputDTO.ProductInputDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;

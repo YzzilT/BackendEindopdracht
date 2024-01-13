@@ -1,6 +1,7 @@
-package com.example.backendeindopdracht.service;
+package com.example.backendeindopdracht.service.UnitTests;
 
 import com.example.backendeindopdracht.repository.RepairRepository;
+import com.example.backendeindopdracht.service.RepairService;
 import org.junit.jupiter.api.Test;
 
 

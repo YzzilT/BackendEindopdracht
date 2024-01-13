@@ -1,4 +1,4 @@
-package com.example.backendeindopdracht.service;
+package com.example.backendeindopdracht.service.UnitTests;
 
 import com.example.backendeindopdracht.DTO.inputDTO.UserInputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.UserOutputDTO;
@@ -7,6 +7,7 @@ import com.example.backendeindopdracht.model.Role;
 import com.example.backendeindopdracht.model.User;
 import com.example.backendeindopdracht.repository.RoleRepository;
 import com.example.backendeindopdracht.repository.UserRepository;
+import com.example.backendeindopdracht.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.boot.test.context.SpringBootTest;

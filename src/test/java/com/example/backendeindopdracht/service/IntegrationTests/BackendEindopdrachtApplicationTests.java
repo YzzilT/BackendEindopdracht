@@ -1,15 +1,21 @@
-package com.example.backendeindopdracht;
+package com.example.backendeindopdracht.service.IntegrationTests;
 
 
 import com.example.backendeindopdracht.controller.RoleController;
 import com.example.backendeindopdracht.controller.UserController;
+import org.h2.api.ErrorCode;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.client.HttpClientErrorException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -38,47 +44,70 @@ class BackendEindopdrachtApplicationTests {
 
 
 
-		assertThat(roleController).isNotNull();
+//		assertThat(roleController).isNotNull();
+		var userName = """
+  				{
+  				"username" : "John",
+  				"password" : "lizzytelford"
+  				}
+  				""";
+
+		var result = this.mockMvc.perform(post("/auth").content(userName).contentType(MediaType.APPLICATION_JSON)).andReturn();
+
+		var jwttoken = result.getResponse().getHeader("Authorization");
 
 
 		var jsonrole = """
 				{
-					 "roleName" : "Customer"
+					 "roleName" : "warehouse"
 				 }
 				""";
-		this.mockMvc.perform(post("/roles").content(jsonrole).contentType(MediaType.APPLICATION_JSON).header("Authorization", "test"));
+
+		this.mockMvc.perform(post("/roles").content(jsonrole).contentType(MediaType.APPLICATION_JSON).header("Authorization", jwttoken));
 
 
-		var user = """
-		{
-			"firstName" : "Lizzy",
-			"lastName" : "Telford",
-			"password" : "lizzytelford",
-			"email" : "lizzytelford@hotmail.com",
-			"roleid" : 1
-		}
-		""";
 
-		this.mockMvc.perform(post("/users").content(user).contentType(MediaType.APPLICATION_JSON).header("Authorization", "test"));
 
-		var getUser = """
-				{				{
-				        "id": 1,
-				        "firstName": "Lizzy",
-				        "lastName": "Telford",
-				        "password": "lizzytelford",
-				        "email": "lizzytelford@hotmail.com",
-				        "role": {
-				            "id": 1,
-				            "roleName": "Customer"
-				        },
-				        "roleid": 1,
-				        "jwt": "91b05f19-e1fe-4514-9012-18294eddba69",
-				        "orders": []
-				    }
-				}
-				""";
-		this.mockMvc.perform(get("/users").header("Authorization", "test")).andExpect(jsonPath("$[0].firstName", is("Lizzy")));
+//		result = this.mockMvc.perform(get("/products").content(jsonrole).contentType(MediaType.APPLICATION_JSON).header("Authorization", jwttoken)).andReturn();
+
+		this.mockMvc.perform(get("/products").header("Authorization", jwttoken)).andExpect(status().isUnauthorized());
+
+
+
+
+
+//
+//
+//		var user = """
+//		{
+//			"firstName" : "Lizzy",
+//			"lastName" : "Telford",
+//			"password" : "lizzytelford",
+//			"email" : "lizzytelford@hotmail.com",
+//			"roleid" : 1
+//		}
+//		""";
+//
+//		this.mockMvc.perform(post("/users").content(user).contentType(MediaType.APPLICATION_JSON).header("Authorization", "test"));
+//
+//		var getUser = """
+//				{				{
+//				        "id": 1,
+//				        "firstName": "Lizzy",
+//				        "lastName": "Telford",
+//				        "password": "lizzytelford",
+//				        "email": "lizzytelford@hotmail.com",
+//				        "role": {
+//				            "id": 1,
+//				            "roleName": "Customer"
+//				        },
+//				        "roleid": 1,
+//				        "jwt": "91b05f19-e1fe-4514-9012-18294eddba69",
+//				        "orders": []
+//				    }
+//				}
+//				""";
+//		this.mockMvc.perform(get("/users").header("Authorization", "test")).andExpect(jsonPath("$[0].firstName", is("Lizzy")));
 
 
 	}
@@ -131,3 +160,5 @@ class BackendEindopdrachtApplicationTests {
 	}
 
 }
+
+

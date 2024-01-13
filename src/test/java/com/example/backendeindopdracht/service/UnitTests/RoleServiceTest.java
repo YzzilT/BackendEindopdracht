@@ -1,4 +1,4 @@
-package com.example.backendeindopdracht.service;
+package com.example.backendeindopdracht.service.UnitTests;
 import static org.mockito.Mockito.*;
 
 import com.example.backendeindopdracht.DTO.inputDTO.RoleInputDTO;
@@ -6,6 +6,7 @@ import com.example.backendeindopdracht.DTO.outputDTO.RoleOutputDTO;
 import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
 import com.example.backendeindopdracht.model.Role;
 import com.example.backendeindopdracht.repository.RoleRepository;
+import com.example.backendeindopdracht.service.RoleService;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.boot.test.context.SpringBootTest;
