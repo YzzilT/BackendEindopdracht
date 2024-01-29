@@ -28,7 +28,7 @@ public class InvoiceService {
     private final OrderLineRepository orderLineRepository;
 
 
-    //POST
+
     public InvoiceOutputDTO addInvoice (InvoiceInputDTO invoiceInputDTO){
 
         Invoice invoice = transferInvoiceInputDtoToInvoice(invoiceInputDTO);
@@ -39,7 +39,7 @@ public class InvoiceService {
         return invoiceOutputDTO;
     }
 
-    //GET ALL
+
     public List<InvoiceOutputDTO> getAllInvoices(){
         Iterable<Invoice> invoices = invoiceRepository.findAll();
         List<InvoiceOutputDTO> invoiceOutputDTOList = new ArrayList<>();
@@ -50,7 +50,7 @@ public class InvoiceService {
         return invoiceOutputDTOList;
     }
 
-    //GET BY ID
+
     public  InvoiceOutputDTO getInvoiceById(Long id){
         Optional<Invoice> optionalInvoice = invoiceRepository.findById(id);
 
@@ -58,7 +58,7 @@ public class InvoiceService {
         return transferInvoiceToOutputDTO(invoice);
     }
 
-    //PUT
+
     public InvoiceOutputDTO updateInvoice (InvoiceInputDTO invoiceInputDTO, Long id){
         Invoice updateInvoice = transferInvoiceInputDtoToInvoice(invoiceInputDTO);
         updateInvoice.setInvoiceNumber(id);
@@ -70,7 +70,7 @@ public class InvoiceService {
     }
 
 
-    //DELETE
+
     public Invoice deleteInvoice(Long id){
         Optional<Invoice> optionalInvoice = invoiceRepository.findById(id);
 
@@ -86,6 +86,7 @@ public class InvoiceService {
         for (OrderLine orderline : orderlines) {
             sum = sum.add(orderline.getTotalAmount());
         }
+
         return sum;
     }
 
@@ -101,8 +102,6 @@ public class InvoiceService {
         invoice.setTotalAmount(invoiceInputDTO.getTotalAmount());
         invoice.setEmail(invoiceInputDTO.getEmail());
         invoice.setOrder(orderRepository.findById(invoiceInputDTO.getOrderId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"order not found")));
-//        invoice.setOrderId(invoiceInputDTO.getOrderId());
-
 
         return invoice;
     }
@@ -117,9 +116,6 @@ public class InvoiceService {
         invoiceOutputDTO.setInvoiceDate(invoice.getInvoiceDate());
         invoiceOutputDTO.setTotalAmount(invoice.getTotalAmount());
         invoiceOutputDTO.setEmail(invoice.getEmail());
-//        invoiceOutputDTO.setOrderId(invoice.getOrderId());
-
-
 
         return invoiceOutputDTO;
     }

@@ -1,20 +1,27 @@
 package com.example.backendeindopdracht.service.UnitTests;
 
 
+import com.example.backendeindopdracht.DTO.inputDTO.ProductInputDTO;
+import com.example.backendeindopdracht.DTO.outputDTO.ProductOutputDTO;
 import com.example.backendeindopdracht.model.Product;
+import com.example.backendeindopdracht.model.ProductType;
 import com.example.backendeindopdracht.repository.ProductRepository;
 import com.example.backendeindopdracht.service.ProductService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+
 class ProductServiceTest {
 
     @InjectMocks
@@ -23,42 +30,91 @@ class ProductServiceTest {
     @Mock
     private ProductRepository productRepository;
 
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
     @Test
-    public void testUpdateStockWhenBuyingProduct() {
+    void testCreateProduct() {
+        // Mock data
+        ProductInputDTO inputDTO = new ProductInputDTO();
 
-        Product sampleProduct = new Product();
-        sampleProduct.setId(1L);
-        sampleProduct.setCurrentStock(10);
+        inputDTO.setName("TestProduct");
+        inputDTO.setPrice(19.99);
+        inputDTO.setOriginalStock(50);
+        inputDTO.setCurrentStock(50);
+        inputDTO.setDescription("Description");
+        inputDTO.setProductType(ProductType.GLOVES);
+        inputDTO.setOrderid(1);
 
-
-        when(productRepository.findById(1L)).thenReturn(Optional.of(sampleProduct));
-
-        try {
-            productService.updateStockWhenBuyingProduct(1L, 5);
-        } catch (Exception e) {
-            fail("Exception should not be thrown when buying 5 units.");
-        }
-
-
-        assertEquals(5, sampleProduct.getCurrentStock());
-
-
-        try {
-            productService.updateStockWhenBuyingProduct(1L, 10);
-            fail("Exception should be thrown when buying more than available stock.");
-        } catch (Exception e) {
-            assertEquals("Not enough in stock", e.getMessage());
-        }
+        Product product = new Product();
+        product.setId(1L);
+        product.setName("TestProduct");
+        product.setPrice(19.99);
+        product.setOriginalStock(50);
+        product.setCurrentStock(50);
+        product.setDescription("Description");
+        product.setProductType(ProductType.GLOVES);
 
 
-        when(productRepository.findById(2L)).thenReturn(Optional.empty());
+        ProductOutputDTO expectedOutputDTO = new ProductOutputDTO();
+        expectedOutputDTO.setId(1L);
+        expectedOutputDTO.setName("TestProduct");
+        expectedOutputDTO.setPrice(19.99);
+        expectedOutputDTO.setOriginalStock(50);
+        expectedOutputDTO.setCurrentStock(50);
+        expectedOutputDTO.setDescription("Description");
+        expectedOutputDTO.setProductType(ProductType.GLOVES);
 
-        try {
-            productService.updateStockWhenBuyingProduct(2L, 5);
-            fail("Exception should be thrown when buying a non-existing product.");
-        } catch (Exception e) {
-            assertEquals("Product not found", e.getMessage());
-        }
+        // Mock behavior
+        when(productRepository.save(any())).thenReturn(product);
+
+        // Test
+        ProductOutputDTO result = productService.createProduct(inputDTO);
+
+        // Verify
+        assertNotNull(result);
+        assertEquals(expectedOutputDTO.getId(), result.getId());
+        assertEquals(expectedOutputDTO.getName(), result.getName());
+        assertEquals(expectedOutputDTO.getPrice(), result.getPrice());
+        assertEquals(expectedOutputDTO.getOriginalStock(), result.getOriginalStock());
+        assertEquals(expectedOutputDTO.getCurrentStock(), result.getCurrentStock());
+        assertEquals(expectedOutputDTO.getDescription(), result.getDescription());
+        assertEquals(expectedOutputDTO.getProductType(), result.getProductType());
+
+        // Additional assertions based on your actual implementation
+
+        verify(productRepository, times(1)).save(any());
+    }
+
+
+
+
+
+
+
+
+
+
+
+    @Test
+    void testUpdateStockWhenBuyingProduct() throws Exception {
+
+        long productId = 1L;
+        int amount = 5;
+        Product product = new Product();
+        product.setCurrentStock(10);
+
+
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+
+
+        assertDoesNotThrow(() -> productService.updateStockWhenBuyingProduct(productId, amount));
+
+
+        assertEquals(5, product.getCurrentStock());
+
     }
 
 

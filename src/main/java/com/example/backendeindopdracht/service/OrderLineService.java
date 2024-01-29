@@ -72,7 +72,7 @@ public class OrderLineService {
     }
 
 
-    //GET ALL
+
     public List<OrderLineOutputDTO> getAllOrderLines(){
 
         Iterable<OrderLine> orderLines = orderLineRepository.findAll();
@@ -85,7 +85,7 @@ public class OrderLineService {
         return orderLineOutputDTOList;
     }
 
-    //GET BY ID
+
     public OrderLineOutputDTO getOrderLineById(Long id){
         Optional<OrderLine> optionalOrderLine = orderLineRepository.findById(id);
 
@@ -94,7 +94,7 @@ public class OrderLineService {
     }
 
 
-    //PUT
+
     public OrderLineOutputDTO updateOrderLine (OrderlineInputDTO orderlineInputDTO, Long id){
         Optional<OrderLine> optionalOrderLine = orderLineRepository.findById(id);
         if (optionalOrderLine.isEmpty()){
@@ -108,15 +108,13 @@ public class OrderLineService {
         }
     }
 
-    //DELETE
+
     public OrderLine deleteOrderLine (Long id){
         Optional<OrderLine> optionalOrderLine = orderLineRepository.findById(id);
 
         orderLineRepository.deleteById(id);
         return optionalOrderLine.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"order not found"));
     }
-
-
 
 
 
@@ -132,7 +130,6 @@ public class OrderLineService {
 
         return orderLine;
     }
-
 
 
     public OrderLineOutputDTO transferOrderLineToDTO (OrderLine orderLine){

@@ -31,7 +31,7 @@ public class OrderService {
 
 
 
-    //POST
+
     public OrderOutputDTO addOrder (OrderInputDTO orderInputDTO) {
 
         Order order = transferOrderInputDtoToOrder(orderInputDTO);
@@ -49,7 +49,7 @@ public class OrderService {
     }
 
 
-    //GET ALL
+
     public List<OrderOutputDTO> getAllOrders(){
         Iterable<Order> orders = orderRepository.findAll();
         List<OrderOutputDTO> orderOutputDTOList = new ArrayList<>();
@@ -61,7 +61,7 @@ public class OrderService {
     }
 
 
-    //GET BY ID
+
     public OrderOutputDTO getOrderById(Long id){
         Optional<Order> optionalOrder = orderRepository.findById(id);
 
@@ -70,7 +70,7 @@ public class OrderService {
     }
 
 
-    //PUT
+
     public OrderOutputDTO updateOrder (OrderInputDTO orderInputDTO, Long id){
         Optional<Order> optionalOrder = orderRepository.findById(id);
         if (optionalOrder.isEmpty()){
@@ -85,7 +85,7 @@ public class OrderService {
     }
 
 
-    //DELETE
+
     public Order deleteOrder(Long id){
         Optional<Order> optionalOrder = orderRepository.findById(id);
 

@@ -1,6 +1,6 @@
 package com.example.backendeindopdracht.DTO.inputDTO;
 
-import com.example.backendeindopdracht.model.Order;
+
 import com.example.backendeindopdracht.model.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

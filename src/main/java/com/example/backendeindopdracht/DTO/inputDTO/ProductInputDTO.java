@@ -1,7 +1,6 @@
 package com.example.backendeindopdracht.DTO.inputDTO;
 
-import com.example.backendeindopdracht.model.Order;
-import com.example.backendeindopdracht.model.OrderLine;
+
 import com.example.backendeindopdracht.model.ProductType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Min;
@@ -11,8 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
+
 
 @Setter
 @Getter

@@ -1,5 +1,6 @@
 package com.example.backendeindopdracht.service.UnitTests;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.example.backendeindopdracht.DTO.inputDTO.UserInputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.UserOutputDTO;
 import com.example.backendeindopdracht.exceptions.RecordNotFoundException;
@@ -9,8 +10,10 @@ import com.example.backendeindopdracht.repository.RoleRepository;
 import com.example.backendeindopdracht.repository.UserRepository;
 import com.example.backendeindopdracht.service.UserService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +22,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-//@SpringBootTest
+
+@ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
     @InjectMocks
@@ -47,7 +51,7 @@ class UserServiceTest {
 
         Role role = new Role();
         role.setId(1L);
-        role.setRoleName("customer");
+        role.setRoleName("ROLE_frontdesk");
 
         UserRepository userRepositoryMock = Mockito.mock(UserRepository.class);
 
@@ -55,7 +59,7 @@ class UserServiceTest {
 
        User savedUser = new User();
        savedUser.setId(1L);
-       when(userRepositoryMock.save(any(User.class))).thenReturn(savedUser);
+
 
         //act
         UserOutputDTO addedUser = userService.addUser(userInputDTO);
@@ -64,7 +68,7 @@ class UserServiceTest {
         assertEquals(userInputDTO.getId(), addedUser.getId());
         assertEquals(userInputDTO.getFirstName(), addedUser.getFirstName());
         assertEquals(userInputDTO.getLastName(),addedUser.getLastName());
-        assertEquals(userInputDTO.getPassword(), addedUser.getPassword());
+        assertTrue(BCrypt.verifyer().verify(userInputDTO.getPassword().toCharArray(), addedUser.getPassword()).verified);
         assertEquals(userInputDTO.getEmail(), addedUser.getEmail());
         assertEquals(userInputDTO.getRoleid(), addedUser.getRoleId());
     }
@@ -95,7 +99,7 @@ class UserServiceTest {
 
         Role role1 = new Role();
         role1.setId(1L);
-        role1.setRoleName("customer");
+        role1.setRoleName("ROLE_frontdesk");
 
 
         User user1 = new User();
@@ -109,21 +113,20 @@ class UserServiceTest {
 
         Role role2 = new Role();
         role2.setId(2L);
-        role2.setRoleName("admin");
+        role2.setRoleName("ROLE_warehouse");
 
         User user2 = new User();
         user2.setId(2L);
-        user2.setFirstName("Winston");
-        user2.setLastName("Kat");
-        user2.setPassword("winstonkat");
-        user2.setEmail("winstonkat@gmail.com");
+        user2.setFirstName("John");
+        user2.setLastName("Doe");
+        user2.setPassword("lizzytelford");
+        user2.setEmail("johndoe@gmail.com");
         user2.setRole(role2);
 
 
         List<User> userList = new ArrayList<>();
         userList.add(user1);
         userList.add(user2);
-
         when(userRepository.findAll()).thenReturn(userList);
 
         //act
@@ -144,10 +147,10 @@ class UserServiceTest {
 
         UserOutputDTO userOutputDTO2 = userOutputDTOList.get(1);
         assertEquals(2L, userOutputDTO2.getRoleId());
-        assertEquals("Winston",  userOutputDTO2.getFirstName());
-        assertEquals("Kat",  userOutputDTO2.getLastName());
-        assertEquals("winstonkat", userOutputDTO2.getPassword());
-        assertEquals("winstonkat@gmail.com",  userOutputDTO2.getEmail());
+        assertEquals("John",  userOutputDTO2.getFirstName());
+        assertEquals("Doe",  userOutputDTO2.getLastName());
+        assertEquals("lizzytelford", userOutputDTO2.getPassword());
+        assertEquals("johndoe@gmail.com",  userOutputDTO2.getEmail());
 
     }
 
@@ -232,7 +235,7 @@ class UserServiceTest {
 
         Role role = new Role();
         role.setId(2L);
-        role.setRoleName("Admin");
+        role.setRoleName("ROLE_warehouse");
 
         User existingUser = new User();
         existingUser.setId(userId);
@@ -240,7 +243,7 @@ class UserServiceTest {
         existingUser.setLastName("Telford");
         existingUser.setPassword("lizzytelford");
         existingUser.setEmail("lizzytelford@hotmail.com");
-//        existingUser.setRoleid(1L);
+
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
 

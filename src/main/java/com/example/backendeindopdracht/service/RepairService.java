@@ -15,8 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +29,7 @@ public class RepairService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
 
-    //POST
+
     public RepairOutputDTO addRepair (RepairInputDTO repairInputDTO){
         Repair repair = transferInputDtoRepairToRepair(repairInputDTO);
         repair.setUser(userRepository.findById(repair.getUser().getId()).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Unable to find user")));
@@ -40,7 +38,7 @@ public class RepairService {
         return transferRepairToDTO(repair);
     }
 
-    //GET ALL
+
     public List<RepairOutputDTO> getAllRepairs() {
         Iterable<Repair> repairs = repairRepository.findAll();
         List<RepairOutputDTO> repairOutputDTOList = new ArrayList<>();
@@ -51,7 +49,7 @@ public class RepairService {
         return repairOutputDTOList;
     }
 
-    //GET BY ID
+
     public RepairOutputDTO getRepairById(Long id) {
         Optional<Repair> optionalRepair = repairRepository.findById(id);
 
@@ -60,7 +58,7 @@ public class RepairService {
     }
 
 
-    //PUT
+
     public RepairOutputDTO updateRepair(RepairInputDTO repairInputDTO, Long repairId){
         Repair repair = repairRepository.findById(repairId)
                 .orElseThrow(() -> new RecordNotFoundException("No repair found with id: " + repairId));

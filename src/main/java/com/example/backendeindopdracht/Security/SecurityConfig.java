@@ -37,63 +37,60 @@ public class SecurityConfig {
 
 
         http
-//                .httpBasic().disable()
+
                 .authorizeHttpRequests()
 
 
-                //hier alle urls en rollen neerzetten
-
                 //users
-//                .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                .requestMatchers(HttpMethod.POST, "/users").permitAll()
                 .requestMatchers(HttpMethod.GET, "/users").hasAnyRole("frontdesk", "warehouse")
-//                .requestMatchers(HttpMethod.GET, "/users").permitAll()
-                .requestMatchers(HttpMethod.GET, "/users{id}").hasAnyRole("frontdesk", "warehouse")
-                .requestMatchers(HttpMethod.PUT, "/users{id}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/users/{id}").hasAnyRole("frontdesk", "warehouse")
+                .requestMatchers(HttpMethod.PUT, "/users/{id}").permitAll()
                 .requestMatchers(HttpMethod.DELETE, "/users{id}").hasRole("frontdesk")
 
                 //roles
                 .requestMatchers(HttpMethod.POST, "/roles").permitAll()
                 .requestMatchers(HttpMethod.GET, "/roles").hasAnyRole("frontdesk", "warehouse")
-                .requestMatchers(HttpMethod.GET, "/roles{id}").hasAnyRole("frontdesk", "warehouse")
-                .requestMatchers(HttpMethod.PUT, "/roles{id}").hasRole("frontdesk")
+                .requestMatchers(HttpMethod.GET, "/roles/{id}").hasAnyRole("frontdesk", "warehouse")
+                .requestMatchers(HttpMethod.PUT, "/roles/{id}").hasRole("frontdesk")
                 .requestMatchers(HttpMethod.DELETE, "/roles{id}").hasRole("frontdesk")
 
                 //repairs
-                .requestMatchers(HttpMethod.POST, "/repairs").permitAll()
+                .requestMatchers(HttpMethod.POST, "/repairs").hasAnyRole("warehouse")
                 .requestMatchers(HttpMethod.GET, "/repairs").hasAnyRole("frontdesk", "warehouse")
-                .requestMatchers(HttpMethod.GET, "/repairs{id}").hasAnyRole("frontdesk", "warehouse")
-                .requestMatchers(HttpMethod.PUT, "/repairs{id}").hasRole("frontdesk")
-                .requestMatchers(HttpMethod.DELETE, "/repairs{id}").hasAnyRole("frontdesk", "warehouse")
+                .requestMatchers(HttpMethod.GET, "/repairs/{id}").hasAnyRole("frontdesk", "warehouse")
+                .requestMatchers(HttpMethod.PUT, "/repairs/{id}").hasRole("frontdesk")
+                .requestMatchers(HttpMethod.DELETE, "/repairs/{id}").hasAnyRole("frontdesk", "warehouse")
 
                 //products
                 .requestMatchers(HttpMethod.POST, "/products").permitAll()
                 .requestMatchers(HttpMethod.GET, "products/restock").hasRole("frontdesk")
                 .requestMatchers(HttpMethod.GET, "/products").hasRole("frontdesk")
-                .requestMatchers(HttpMethod.GET, "/products{id}").hasRole("frontdesk")
-                .requestMatchers(HttpMethod.PUT, "/products{id}").hasRole("frontdesk")
-                .requestMatchers(HttpMethod.DELETE, "/products{id}").hasRole("frontdesk")
+                .requestMatchers(HttpMethod.GET, "/products/{id}").hasRole("frontdesk")
+                .requestMatchers(HttpMethod.PUT, "/products/{id}").hasRole("frontdesk")
+                .requestMatchers(HttpMethod.DELETE, "/products/{id}").hasRole("frontdesk")
 
                 //orderlines
                 .requestMatchers(HttpMethod.POST, "/orderlines").permitAll()
                 .requestMatchers(HttpMethod.GET, "/orderlines").hasAnyRole("frontdesk", "warehouse")
-                .requestMatchers(HttpMethod.GET, "/orderlines{id}").hasAnyRole("frontdesk", "warehouse")
-                .requestMatchers(HttpMethod.PUT, "/orderlines{id}").hasAnyRole("frontdesk", "customer")
-                .requestMatchers(HttpMethod.DELETE, "/orderlines{id}").hasAnyRole("frontdesk", "customer")
+                .requestMatchers(HttpMethod.GET, "/orderlines/{id}").hasAnyRole("frontdesk", "warehouse")
+                .requestMatchers(HttpMethod.PUT, "/orderlines/{id}").hasAnyRole("frontdesk", "customer")
+                .requestMatchers(HttpMethod.DELETE, "/orderlines/{id}").hasAnyRole("frontdesk", "customer")
 
                 //orders
                 .requestMatchers(HttpMethod.POST, "/orders").hasAnyRole("frontdesk", "customer")
                 .requestMatchers(HttpMethod.GET, "/orders").hasAnyRole("frontdesk", "warehouse")
-                .requestMatchers(HttpMethod.GET, "/orders{id}").hasAnyRole("frontdesk", "warehouse")
-                .requestMatchers(HttpMethod.PUT, "/orders{id}").hasAnyRole("frontdesk", "warehouse")
-                .requestMatchers(HttpMethod.DELETE, "/orders{id}").hasAnyRole("frontdesk")
+                .requestMatchers(HttpMethod.GET, "/orders/{id}").hasAnyRole("frontdesk", "warehouse")
+                .requestMatchers(HttpMethod.PUT, "/orders/{id}").hasAnyRole("frontdesk", "warehouse")
+                .requestMatchers(HttpMethod.DELETE, "/orders/{id}").hasAnyRole("frontdesk")
 
                 //invoices
                 .requestMatchers(HttpMethod.POST, "/invoices").hasAnyRole("frontdesk", "customer")
                 .requestMatchers(HttpMethod.GET, "/invoices").hasRole("frontdesk")
-                .requestMatchers(HttpMethod.GET, "/invoices{id}").hasRole("frontdesk")
+                .requestMatchers(HttpMethod.GET, "/invoices/{id}").hasRole("frontdesk")
                 .requestMatchers(HttpMethod.GET, "/invoices/totalAmount/{orderid}").hasAnyRole("frontdesk", "customer")
-                .requestMatchers(HttpMethod.PUT, "/invoices{id}").hasAnyRole("frontdesk", "warehouse")
-                .requestMatchers(HttpMethod.DELETE, "/invoices{id}").hasAnyRole("frontdesk")
+                .requestMatchers(HttpMethod.PUT, "/invoices/{id}").hasAnyRole("frontdesk", "warehouse")
+                .requestMatchers(HttpMethod.DELETE, "/invoices/{id}").hasAnyRole("frontdesk")
 
                 //image
                 .requestMatchers(HttpMethod.POST, "/image").permitAll()
@@ -105,23 +102,12 @@ public class SecurityConfig {
 
                 .anyRequest().denyAll()
                 .and()
-                .addFilterBefore(new JwtRequestFilter(jwtService, userDetailsService(passwordEncoder())), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtRequestFilter(jwtService, userDetailsService()), UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 
-//        http
-//        .authorizeHttpRequests((requests) -> requests
-//                .requestMatchers("/hello").permitAll()
-//                .anyRequest().authenticated()
-//                .requestMatchers("/authenticated").authenticated()
-//                .requestMatchers("/authenticate").permitAll()
-//                .anyRequest().denyAll()
-//                .and()
-//                .sessionManagement()
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//        )
-//        .addFilterBefore(new JwtRequestFilter(jwtService, userDetailsService(passwordEncoder())), UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 
@@ -138,20 +124,8 @@ public class SecurityConfig {
 
 
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
+    public UserDetailsService userDetailsService() {
         return new MyUserDetailsService(this.userRepository);
     }
-//    @Bean
-//    public UserDetailsService userDetailsService (PasswordEncoder encoder) {
-//        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-//
-//        UserDetails u1 = User
-//                .withUsername("rizzy")
-//                .password(encoder.encode("telford"))
-//                .roles("USER")
-//                .build();
-//        manager.createUser(u1);
-//
-//        return manager;
-//    }
+
 }

@@ -3,7 +3,6 @@ package com.example.backendeindopdracht.controller;
 import com.example.backendeindopdracht.DTO.inputDTO.RepairInputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.RepairOutputDTO;
 import com.example.backendeindopdracht.model.Repair;
-import com.example.backendeindopdracht.repository.RepairRepository;
 import com.example.backendeindopdracht.service.RepairService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,8 +18,6 @@ import java.util.List;
 public class RepairController {
 
     private final RepairService repairService;
-
-
 
 
     @PostMapping
@@ -48,7 +45,7 @@ public class RepairController {
         return ResponseEntity.ok(updatedRepair);
     }
 
-    //DELETE
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Repair> deleteRepair (@PathVariable Long id){
         repairService.deleteRepair(id);

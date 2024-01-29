@@ -30,26 +30,26 @@ public class OrderController {
     }
 
 
-    //GET ALL
+
     @GetMapping
     public ResponseEntity<List<OrderOutputDTO>> getAllOrders(){
         return ResponseEntity.ok().body(orderService.getAllOrders());
     }
 
-    //GET BY ID
+
     @GetMapping("/{id}")
     public ResponseEntity<OrderOutputDTO> getOrderById (@PathVariable Long id){
         return ResponseEntity.ok().body(orderService.getOrderById(id));
     }
 
-    //PUT
+
     @PutMapping("/{id}")
     public ResponseEntity<OrderOutputDTO> updateOrder (@PathVariable Long id,@RequestBody OrderInputDTO order){
         var output = orderService.updateOrder(order,id);
         return ResponseEntity.status(HttpStatus.OK).body(output);
     }
 
-    //DELETE
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Order> deleteOrder (@PathVariable Long id){
         orderService.deleteOrder(id);

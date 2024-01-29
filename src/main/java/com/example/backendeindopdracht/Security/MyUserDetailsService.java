@@ -28,4 +28,4 @@ public class MyUserDetailsService implements UserDetailsService {
         }
     }
 }
-//hier wordt koppeling gelegd tussen springsecurity en role en user entiteiten die gemaakt zijn
+
