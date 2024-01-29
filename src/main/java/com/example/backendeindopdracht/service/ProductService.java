@@ -24,7 +24,7 @@ public class ProductService {
     private final ProductRepository productRepository;
 
 
-    //POST
+
     public ProductOutputDTO createProduct(ProductInputDTO productInputDTO) {
 
         Product product = transferInputDtoProductToProduct(productInputDTO);
@@ -35,7 +35,7 @@ public class ProductService {
     }
 
 
-    //GET ALL
+
     public List<ProductOutputDTO> getAllProducts() {
         Iterable<Product> products = productRepository.findAll();
         List<ProductOutputDTO> productOutputDTOList = new ArrayList<>();
@@ -47,7 +47,7 @@ public class ProductService {
     }
 
 
-    //GET BY ID
+
     public ProductOutputDTO getProductById(Long id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
 
@@ -56,7 +56,7 @@ public class ProductService {
     }
 
 
-    //PUT
+
     public ProductOutputDTO updateProduct(ProductInputDTO productInputDTO, Long id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isEmpty()) {
@@ -72,7 +72,7 @@ public class ProductService {
     }
 
 
-    //DELETE
+
     public void deleteProduct(Long id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isEmpty()) {
@@ -83,7 +83,7 @@ public class ProductService {
 
 
 
-    //UPDATE STOCK
+
     public void updateStockWhenBuyingProduct(long productid,int amount) throws Exception {
 
         var product = productRepository.findById(productid).orElse(null);

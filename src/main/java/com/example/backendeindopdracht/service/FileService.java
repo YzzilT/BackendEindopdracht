@@ -45,9 +45,5 @@ public byte[] downloadImage(String fileName){
     return images;
 
 
-
-
     }
-
-
 }

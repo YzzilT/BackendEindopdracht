@@ -1,14 +1,11 @@
 package com.example.backendeindopdracht.controller;
 
 
-import com.example.backendeindopdracht.DTO.inputDTO.OrderlineInputDTO;
+
 import com.example.backendeindopdracht.DTO.inputDTO.ProductInputDTO;
 import com.example.backendeindopdracht.DTO.outputDTO.ProductOutputDTO;
-import com.example.backendeindopdracht.model.OrderLine;
 import com.example.backendeindopdracht.model.Product;
-import com.example.backendeindopdracht.service.OrderLineService;
 import com.example.backendeindopdracht.service.ProductService;
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -50,26 +47,26 @@ public class ProductController {
         return ResponseEntity.ok().body(restockProducts);
     }
 
-    //GET ALL
+
     @GetMapping
     public ResponseEntity<List<ProductOutputDTO>> getAllProducts(){
         return ResponseEntity.ok().body(productService.getAllProducts());
     }
 
-    //GET BY ID
+
     @GetMapping("/{id}")
     public ResponseEntity<ProductOutputDTO> getProductById(@PathVariable Long id){
         return ResponseEntity.ok().body(productService.getProductById(id));
     }
 
-   //PUT
+
     @PutMapping("/{id}")
     public ResponseEntity<ProductOutputDTO> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductInputDTO productInputDTO){
         return ResponseEntity.ok().body(productService.updateProduct(productInputDTO, id));
     }
 
 
-    //DELETE
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Product> deleteProduct (@PathVariable Long id){
         productService.deleteProduct(id);

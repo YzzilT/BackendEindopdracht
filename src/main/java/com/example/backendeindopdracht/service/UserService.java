@@ -23,18 +23,17 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
+    public UserRepository userRepository;
     private final RoleRepository roleRepository;
 
 
-    //POST
+
     public UserOutputDTO addUser(UserInputDTO userInputDTO) throws Exception {
         User user = transferInputDtoUserToUser(userInputDTO);
         Long roleId = userInputDTO.getRoleid();
 
 
         Optional<Role> optionalRole = roleRepository.findById(roleId);
-//        https://www.baeldung.com/exception-handling-for-rest-with-spring
         user.setRole(optionalRole.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"user not found")));
         var hashedPassword = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
         user.setPassword(hashedPassword);
@@ -43,7 +42,7 @@ public class UserService {
 
     }
 
-    //GET ALL
+
     public List<UserOutputDTO> getAllUsers(){
 
         Iterable<User> users = userRepository.findAll();
@@ -56,7 +55,7 @@ public class UserService {
         return userOutputDTOList;
     }
 
-    //GET BY ID
+
     public UserOutputDTO getUserById(Long id){
         Optional<User> optionalUser = userRepository.findById(id);
 
@@ -65,7 +64,7 @@ public class UserService {
     }
 
 
-    //PUT
+
     public UserOutputDTO updateUser (UserInputDTO userInputDTO, Long id){
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isEmpty()){
@@ -79,7 +78,7 @@ public class UserService {
         }
     }
 
-    //DELETE
+
     public User deleteUser (Long id){
         Optional<User> optionalUser = userRepository.findById(id);
 

@@ -1,13 +1,14 @@
 INSERT INTO Roles (role_name)
-values('frontdesk'),
-      ('warehouse'),
-      ('customer');
+values('ROLE_frontdesk'),
+      ('ROLE_warehouse'),
+      ('ROLE_customer');
 
 -- password = lizzytelford
-INSERT INTO Users (first_name, last_name,password,email,role_id,jwt)
-VALUES ('Lizzy', 'Telford', '$2a$12$7Wz.Q0wZdkZsuds36eNhy.1JP/2svvi6FQhZSeSfWADveqLzXDjBe','lizzytelford@gmail.com',1,NULL),
-       ('John', 'Doe', '$2a$12$7Wz.Q0wZdkZsuds36eNhy.1JP/2svvi6FQhZSeSfWADveqLzXDjBe','johndoe@gmail.com',2,NULL),
-       ('Winston', 'Kat', '$2a$12$7Wz.Q0wZdkZsuds36eNhy.1JP/2svvi6FQhZSeSfWADveqLzXDjBe','winstonkat@gmail.com',3,NULL);
+INSERT INTO Users (first_name, last_name,password,email,role_id)
+VALUES ('Lizzy', 'Telford', '$2a$12$7Wz.Q0wZdkZsuds36eNhy.1JP/2svvi6FQhZSeSfWADveqLzXDjBe','lizzytelford@gmail.com',1),
+       ('John', 'Doe', '$2a$12$7Wz.Q0wZdkZsuds36eNhy.1JP/2svvi6FQhZSeSfWADveqLzXDjBe','johndoe@gmail.com',2),
+       ('Winston', 'Kat', '$2a$12$7Wz.Q0wZdkZsuds36eNhy.1JP/2svvi6FQhZSeSfWADveqLzXDjBe','winstonkat@gmail.com',3);
+
 
 INSERT INTO Invoices(customer_name, invoice_date, total_amount, email, invoice_number)
 VALUES('Lizzy Telford', '10/28/2023', 500, 'lizzytelford@gmail.com', 1);

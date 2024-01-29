@@ -20,7 +20,7 @@ public class RoleService {
 
     private final RoleRepository roleRepository;
 
-    //POST
+
     public RoleOutputDTO addRole (RoleInputDTO roleInputDTO){
         Role role = transferInputDtoRoleToRole(roleInputDTO);
         roleRepository.save(role);
@@ -29,7 +29,7 @@ public class RoleService {
         return roleOutputDTO;
     }
 
-    //GET ALL
+
     public List<RoleOutputDTO> getAllRoles(){
         Iterable<Role> roles = roleRepository.findAll();
         List<RoleOutputDTO> roleOutputDTOList = new ArrayList<>();
@@ -41,7 +41,7 @@ public class RoleService {
         return roleOutputDTOList;
     }
 
-    //GET BY ID
+
     public RoleOutputDTO getRoleById (Long id){
         Optional<Role> optionalRole = roleRepository.findById(id);
 
@@ -51,7 +51,7 @@ public class RoleService {
 
     }
 
-    //PUT
+
     public RoleOutputDTO updateRole (RoleInputDTO roleInputDTO, Long id){
         Optional<Role> optionalRole = roleRepository.findById(id);
         if (optionalRole.isEmpty()){
@@ -65,7 +65,7 @@ public class RoleService {
         }
     }
 
-    //DELETE
+
     public Role deleteRole(Long id){
         Optional<Role> optionalRole = roleRepository.findById(id);
 

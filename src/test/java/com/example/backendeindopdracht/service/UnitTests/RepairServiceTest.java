@@ -1,6 +1,7 @@
-package com.example.backendeindopdracht.service;
+package com.example.backendeindopdracht.service.UnitTests;
 
 import com.example.backendeindopdracht.repository.RepairRepository;
+import com.example.backendeindopdracht.service.RepairService;
 import org.junit.jupiter.api.Test;
 
 
@@ -16,7 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+
 class RepairServiceTest {
 
     @InjectMocks
