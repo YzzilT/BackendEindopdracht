@@ -11,14 +11,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+
 import static org.junit.jupiter.api.Assertions.*;
 
-//@SpringBootTest
+@MockBean
 @ExtendWith(MockitoExtension.class)
 class RoleServiceTest {
 
@@ -30,23 +33,18 @@ class RoleServiceTest {
     @Test
     void ShouldAddRoleName() {
 
-        //arrange
+
         RoleInputDTO roleInputDTO = new RoleInputDTO();
         roleInputDTO.setRoleName("Admin");
 
         Role role = new Role();
         role.setRoleName("Admin");
 
-        when(roleRepository.save(any(Role.class))).thenReturn(role);
+        Mockito.lenient().when(roleRepository.save(any(Role.class))).thenReturn(role);
 
 
-
-        //act
         RoleOutputDTO result = roleService.addRole(roleInputDTO);
 
-
-
-        //assert
         assertNotNull(result);
         assertEquals("Admin", result.getRoleName());
     }
@@ -54,23 +52,21 @@ class RoleServiceTest {
     @Test
     void ShouldAddRoleId() {
 
-        //arrange
+
         RoleInputDTO roleInputDTO = new RoleInputDTO();
         roleInputDTO.setId(987L);
 
         Role role = new Role();
         role.setId(987L);
 
-        when(roleRepository.save(any(Role.class))).thenReturn(role);
+
+        Mockito.lenient().when(roleRepository.save(any(Role.class))).thenReturn(role);
 
 
-
-        //act
         RoleOutputDTO result = roleService.addRole(roleInputDTO);
 
 
 
-        //assert
         assertNotNull(result);
         assertEquals(987L, result.getId());
     }
@@ -92,13 +88,15 @@ class RoleServiceTest {
 
         List<RoleOutputDTO> roleOutputDTOList = roleService.getAllRoles();
 
+        verify(roleRepository, times(1)).findAll();
+
         //assert
         assertEquals(2, roleOutputDTOList.size());
 
         assertEquals(1L, roleOutputDTOList.get(0).getId());
         assertEquals("Role1", roleOutputDTOList.get(0).getRoleName());
 
-        assertEquals(2, roleOutputDTOList.get(1).getId());
+        assertEquals(2L, roleOutputDTOList.get(1).getId());
         assertEquals("Role2", roleOutputDTOList.get(1).getRoleName());
         
     }
@@ -121,14 +119,15 @@ class RoleServiceTest {
         assertEquals("Testrol", roleOutputDTO.getRoleName());
     }
 
+
     @Test
-    void shouldThrowRecordNotFoundExceptionWhenRoleNotFoundInGet(){
+    void shouldThrowResponseStatusExceptionWhenRoleNotFoundInGet() {
+        lenient().when(roleRepository.findById(1L)).thenReturn(Optional.empty());
 
-        when(roleRepository.findById(1L)).thenReturn(Optional.empty());
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> roleService.getRoleById(1L));
 
-
-        assertThrows(RecordNotFoundException.class, () -> roleService.getRoleById(1L));
-
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+        assertEquals("role not found", exception.getReason());
     }
 
 
@@ -147,8 +146,8 @@ class RoleServiceTest {
         updatedRole.setId(1L);
         updatedRole.setRoleName("new role name");
 
-        when(roleRepository.findById(1L)).thenReturn(Optional.of(existingRole));
-        when(roleRepository.save(any(Role.class))).thenReturn(updatedRole);
+        lenient().when(roleRepository.findById(1L)).thenReturn(Optional.of(existingRole));
+        lenient().when(roleRepository.save(any(Role.class))).thenReturn(updatedRole);
 
         RoleOutputDTO roleOutputDTO = roleService.updateRole(roleInputDTO, 1L);
 
@@ -162,7 +161,6 @@ class RoleServiceTest {
         RoleInputDTO roleInputDTO = new RoleInputDTO();
         roleInputDTO.setRoleName("newRoleName");
 
-        when(roleRepository.findById(1L)).thenReturn(Optional.empty());
 
 
         assertThrows(RecordNotFoundException.class, () -> roleService.updateRole(roleInputDTO, 1L));
@@ -173,32 +171,37 @@ class RoleServiceTest {
 
     @Test
     void shouldDeleteExistingRole() {
-
-        Long roleId = 2L;
+        // Arrange
+        Long roleId = 1L;
         Role role = new Role();
         role.setId(roleId);
-        role.setRoleName("testrol");
+        role.setRoleName("testRole");
+
         when(roleRepository.findById(roleId)).thenReturn(Optional.of(role));
 
+        // Act
         Role deletedRole = roleService.deleteRole(roleId);
 
+        // Assert
+        assertNotNull(deletedRole);
         assertEquals(roleId, deletedRole.getId());
-        assertEquals("testrol", deletedRole.getRoleName());
+        assertEquals("testRole", deletedRole.getRoleName());
 
-
+        // Verify that the repository delete method is called with the correct role
+        verify(roleRepository, times(1)).delete(role);
     }
 
     @Test
     void shouldThrowExceptionWhenDeletingNonExistentRole(){
 
+        Long roleId = 2L;
 
-        Long nonExistingRoleId = 2L;
-
-        when(roleRepository.findById(nonExistingRoleId)).thenReturn(Optional.empty());
+        lenient().when(roleRepository.findById(roleId)).thenReturn(Optional.empty());
 
 
-        assertThrows(RecordNotFoundException.class, () -> {
-        roleService.deleteRole(nonExistingRoleId);});
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> roleService.deleteRole(roleId));
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+        assertEquals("role not found", exception.getReason());
 
     }
 
@@ -212,7 +215,7 @@ class RoleServiceTest {
         role.setId(1L);
         role.setRoleName("Test role");
 
-        when(roleRepository.findById(1L)).thenReturn(Optional.of(role));
+        lenient().when(roleRepository.findById(1L)).thenReturn(Optional.of(role));
 
 
         Role resultRole = roleService.transferInputDtoRoleToRole(roleInputDTO);

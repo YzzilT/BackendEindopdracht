@@ -17,7 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
-
+@SpringBootTest
 class RepairServiceTest {
 
     @InjectMocks
