@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.web.server.ResponseStatusException;
 
 
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
+@MockBean
 class UserServiceTest {
 
     @InjectMocks
@@ -40,7 +43,7 @@ class UserServiceTest {
 
     @Test
     void shouldAddUser() throws Exception {
-        //arrange
+
         UserInputDTO userInputDTO = new UserInputDTO();
         userInputDTO.setId(1L);
         userInputDTO.setFirstName("Lizzy");
@@ -61,10 +64,10 @@ class UserServiceTest {
        savedUser.setId(1L);
 
 
-        //act
+
         UserOutputDTO addedUser = userService.addUser(userInputDTO);
 
-        //assert
+
         assertEquals(userInputDTO.getId(), addedUser.getId());
         assertEquals(userInputDTO.getFirstName(), addedUser.getFirstName());
         assertEquals(userInputDTO.getLastName(),addedUser.getLastName());
@@ -77,7 +80,7 @@ class UserServiceTest {
     void shouldNotReturnUserWhenRoleIsNull(){
         UserInputDTO userInputDTO = new UserInputDTO();
 
-        assertThrows(RecordNotFoundException.class, () -> userService.addUser(userInputDTO));
+        assertThrows(ResponseStatusException.class, () -> userService.addUser(userInputDTO));
     }
 
     @Test
@@ -88,14 +91,14 @@ class UserServiceTest {
 
         when(roleRepository.findById(roleId)).thenReturn(Optional.empty());
 
-        assertThrows(RecordNotFoundException.class, () -> {
+        assertThrows(ResponseStatusException.class, () -> {
             userService.addUser(userInputDTO);
         });
     }
 
     @Test
     void shouldGetAllUsers(){
-        //arrange
+
 
         Role role1 = new Role();
         role1.setId(1L);
@@ -129,10 +132,10 @@ class UserServiceTest {
         userList.add(user2);
         when(userRepository.findAll()).thenReturn(userList);
 
-        //act
+
         List<UserOutputDTO> userOutputDTOList = userService.getAllUsers();
 
-        //assert
+
         assertEquals(2, userOutputDTOList.size());
 
         UserOutputDTO userOutputDTO1 = userOutputDTOList.get(0);
@@ -191,7 +194,7 @@ class UserServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
 
-        assertThrows(RecordNotFoundException.class, () -> userService.getUserById(userId));
+        assertThrows(ResponseStatusException.class, () -> userService.getUserById(userId));
 
     }
 
@@ -217,7 +220,7 @@ class UserServiceTest {
 
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-        assertThrows(RecordNotFoundException.class, () -> userService.deleteUser(userId));
+        assertThrows(ResponseStatusException.class, () -> userService.deleteUser(userId));
 
     }
 
@@ -317,7 +320,7 @@ class UserServiceTest {
 
         when(roleRepository.findById(2L)).thenReturn(Optional.empty());
 
-        assertThrows(RecordNotFoundException.class, () -> userService.transferInputDtoUserToUser(userInputDTO));
+        assertThrows(ResponseStatusException.class, () -> userService.transferInputDtoUserToUser(userInputDTO));
     }
 
     @Test
@@ -362,5 +365,3 @@ class UserServiceTest {
 
     }
 }
-
-

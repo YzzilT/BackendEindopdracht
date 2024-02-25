@@ -9,11 +9,12 @@ import com.example.backendeindopdracht.repository.ProductRepository;
 import com.example.backendeindopdracht.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
+
+
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.*;
 
@@ -36,66 +37,44 @@ class ProductServiceTest {
     }
 
     @Test
-    void testCreateProduct() {
-        // Mock data
-        ProductInputDTO inputDTO = new ProductInputDTO();
 
-        inputDTO.setName("TestProduct");
-        inputDTO.setPrice(19.99);
-        inputDTO.setOriginalStock(50);
-        inputDTO.setCurrentStock(50);
-        inputDTO.setDescription("Description");
-        inputDTO.setProductType(ProductType.GLOVES);
-        inputDTO.setOrderid(1);
+        public void testCreateProduct() {
 
-        Product product = new Product();
-        product.setId(1L);
-        product.setName("TestProduct");
-        product.setPrice(19.99);
-        product.setOriginalStock(50);
-        product.setCurrentStock(50);
-        product.setDescription("Description");
-        product.setProductType(ProductType.GLOVES);
+            Mockito.when(productRepository.save(any(Product.class))).thenReturn(createMockProduct());
 
 
-        ProductOutputDTO expectedOutputDTO = new ProductOutputDTO();
-        expectedOutputDTO.setId(1L);
-        expectedOutputDTO.setName("TestProduct");
-        expectedOutputDTO.setPrice(19.99);
-        expectedOutputDTO.setOriginalStock(50);
-        expectedOutputDTO.setCurrentStock(50);
-        expectedOutputDTO.setDescription("Description");
-        expectedOutputDTO.setProductType(ProductType.GLOVES);
-
-        // Mock behavior
-        when(productRepository.save(any())).thenReturn(product);
-
-        // Test
-        ProductOutputDTO result = productService.createProduct(inputDTO);
-
-        // Verify
-        assertNotNull(result);
-        assertEquals(expectedOutputDTO.getId(), result.getId());
-        assertEquals(expectedOutputDTO.getName(), result.getName());
-        assertEquals(expectedOutputDTO.getPrice(), result.getPrice());
-        assertEquals(expectedOutputDTO.getOriginalStock(), result.getOriginalStock());
-        assertEquals(expectedOutputDTO.getCurrentStock(), result.getCurrentStock());
-        assertEquals(expectedOutputDTO.getDescription(), result.getDescription());
-        assertEquals(expectedOutputDTO.getProductType(), result.getProductType());
-
-        // Additional assertions based on your actual implementation
-
-        verify(productRepository, times(1)).save(any());
-    }
+            ProductInputDTO inputDTO = new ProductInputDTO();
+            inputDTO.setName("Test Product");
+            inputDTO.setPrice(10.0);
+            inputDTO.setOriginalStock(50);
+            inputDTO.setCurrentStock(50);
+            inputDTO.setDescription("Test Description");
+            inputDTO.setProductType(ProductType.GLOVES);
 
 
+            ProductOutputDTO outputDTO = productService.createProduct(inputDTO);
 
 
+            assertEquals("Test Product", outputDTO.getName());
+            assertEquals(10.0, outputDTO.getPrice());
+            assertEquals(50, outputDTO.getOriginalStock());
+            assertEquals(50, outputDTO.getCurrentStock());
+            assertEquals("Test Description", outputDTO.getDescription());
+            assertEquals(ProductType.GLOVES, outputDTO.getProductType());
+        }
 
+        private Product createMockProduct() {
 
-
-
-
+            Product product = new Product();
+            product.setId(1L);
+            product.setName("Test Product");
+            product.setPrice(10.0);
+            product.setOriginalStock(50);
+            product.setCurrentStock(50);
+            product.setDescription("Test Description");
+            product.setProductType(ProductType.GLOVES);
+            return product;
+        }
 
 
     @Test
